@@ -13,7 +13,6 @@ import java.util.List;
  * @author Gyusik - Я ебанутый помогите!
  * @since 27.01.2026
  */
-
 public class PluginsUtil {
     private static final List<String> SPECIAL_AUTHORS = Arrays.asList("Gyusik", "YouLow_Skill");
 
@@ -22,7 +21,7 @@ public class PluginsUtil {
         MessageUtil.sendMessage(sender, "&8Плагины сервера: ");
         sender.sendMessage("");
 
-        List<String> normalPlugins = new ArrayList<>();
+        List<String> normalPluginNames = new ArrayList<>();
         List<String> specialPlugins = new ArrayList<>();
 
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -40,11 +39,11 @@ public class PluginsUtil {
             }
 
             if (!isSpecial) {
-                String nameColor = plugin.isEnabled() ? "&f" : "&c";
-                normalPlugins.add(nameColor + name);
+                normalPluginNames.add(name);
             }
         }
 
+        normalPluginNames.sort(String.CASE_INSENSITIVE_ORDER);
         specialPlugins.sort(Comparator.comparingInt(String::length));
 
         if (!specialPlugins.isEmpty()) {
@@ -55,13 +54,9 @@ public class PluginsUtil {
             MessageUtil.sendMessage(sender, "");
         }
 
-        if (!normalPlugins.isEmpty()) {
-            MessageUtil.sendMessage(sender, "&7Обычные (" + normalPlugins.size() + "&7)");
-            for (int i = 0; i < normalPlugins.size(); i += 7) {
-                String line = String.join(MessageUtil.colorize("&8, "),
-                        normalPlugins.subList(i, Math.min(i + 7, normalPlugins.size())));
-                MessageUtil.sendMessage(sender, "  " + line);
-            }
+        if (!normalPluginNames.isEmpty()) {
+            MessageUtil.sendMessage(sender, "&7Обычные (" + normalPluginNames.size() + ")");
+            MessageUtil.sendMessage(sender, "  &f" + String.join("&8, &f", normalPluginNames));
         }
 
         sender.sendMessage("");
