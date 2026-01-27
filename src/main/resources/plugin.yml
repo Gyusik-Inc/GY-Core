@@ -1,0 +1,11 @@
+name: GY-Core
+version: '1.0.0'
+main: mc.core.GY
+api-version: '1.21'
+prefix: GY-Core
+authors: [ Gyusik, YouLow_Skill ]
+load: STARTUP
+commands:
+  plugins:
+    aliases:
+      - pl
