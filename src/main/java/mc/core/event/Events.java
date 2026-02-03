@@ -2,14 +2,10 @@ package mc.core.event;
 
 import mc.core.GY;
 import mc.core.command.PluginsCommand;
-import mc.core.utilites.math.MathUtil;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -52,21 +48,6 @@ public class Events implements Listener {
         }
     }
 
-
-    @EventHandler
-    public void onMobKill(EntityDeathEvent e) {
-        if (e.getEntity() instanceof Player) return;
-
-        EntityType type = e.getEntity().getType();
-        String eggName = type.name() + "_SPAWN_EGG";
-        Material eggMaterial = Material.matchMaterial(eggName);
-
-        if (eggMaterial != null && MathUtil.chance(99.9)) {
-            ItemStack egg = new ItemStack(eggMaterial);
-            e.getDrops().add(egg);
-        }
-    }
-
     @EventHandler
     public void onPickupPotion(PlayerPickupItemEvent e) {
         ItemStack item = e.getItem().getItemStack();
@@ -102,4 +83,6 @@ public class Events implements Listener {
             item.setItemMeta(meta);
         }
     }
+
+
 }

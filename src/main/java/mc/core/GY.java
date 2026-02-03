@@ -1,9 +1,16 @@
 package mc.core;
 
 import lombok.Getter;
+import mc.core.basecommands.base.CommandManager;
+import mc.core.basecommands.impl.EventCommand;
+import mc.core.basecommands.impl.player.VanishCmd;
+import mc.core.chat.ChatEvent;
+import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
+import mc.core.event.HideMessages;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.HomeData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,11 +20,16 @@ import java.util.Objects;
 public final class GY extends JavaPlugin {
     @Getter
     private static GY instance;
+    @Getter
+    private CommandManager commandManager;
     private static final String RESET = "\u001B[0m", GRAY = "\u001B[90m", RED = "\u001B[91m", BLUE = "\u001B[94m";
 
     @Override
     public void onEnable() {
         instance = this;
+        commandManager = new CommandManager();
+        HomeData.loadHomes();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");
@@ -29,6 +41,11 @@ public final class GY extends JavaPlugin {
         logState(BLUE, "включён");
 
         getServer().getPluginManager().registerEvents(new Events(), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(), this);
+        getServer().getPluginManager().registerEvents(new JoinEvent(), this);
+        getServer().getPluginManager().registerEvents(new HideMessages(), this);
+        getServer().getPluginManager().registerEvents(new EventCommand(), this);
+
         Objects.requireNonNull(getCommand("plugins")).setExecutor(new PluginsCommand());
     }
 
@@ -39,6 +56,8 @@ public final class GY extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        VanishCmd.removeAllVanishes();
+        HomeData.saveHomes();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");

@@ -9,3 +9,29 @@ commands:
   plugins:
     aliases:
       - pl
+  near:
+    aliases:
+      - gynear
+      - gy-near
+
+  day:
+  night:
+  sun:
+  storm:
+  tpa:
+    aliases:
+      - call
+  tpaccept:
+    aliases:
+      - tpyes
+  tpadeny:
+    aliases:
+      - tpacancel
+  sethome:
+  home:
+  delhome:
+    aliases:
+      - removehome
+  vanish:
+    aliases:
+      - v

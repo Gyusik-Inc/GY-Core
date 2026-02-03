@@ -13,6 +13,7 @@ import java.util.List;
  * @author Gyusik - Я ебанутый помогите!
  * @since 27.01.2026
  */
+
 public class PluginsUtil {
     private static final List<String> SPECIAL_AUTHORS = Arrays.asList("Gyusik", "YouLow_Skill");
 
