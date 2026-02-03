@@ -39,13 +39,15 @@ public class CommandManager {
 
         registerCommand(TpaCmd.class);
         registerCommand(TpacceptCmd.class);
-        registerCommand(TpaDeny.class);
+        registerCommand(TpaDenyCmd.class);
+        registerCommand(TpCmd.class);
 
         registerCommand(SetHomeCmd.class);
         registerCommand(HomeCmd.class);
         registerCommand(DelHomeCmd.class);
 
         registerCommand(VanishCmd.class);
+        registerCommand(EcCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

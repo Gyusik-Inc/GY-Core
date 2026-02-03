@@ -27,6 +27,10 @@ commands:
   tpadeny:
     aliases:
       - tpacancel
+  tp:
+  ec:
+    aliases:
+      - enderchest
   sethome:
   home:
   delhome:

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @BaseCommandInfo(name = "tpadeny", permission = "", cooldown = 3)
-public class TpaDeny implements BaseCommand {
+public class TpaDenyCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
