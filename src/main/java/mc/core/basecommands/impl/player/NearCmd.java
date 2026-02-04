@@ -35,6 +35,9 @@ public class NearCmd implements BaseCommand {
     private static final String DONATOR_PERMISSION = "gy-core.near.vip";
     private static final String NETHERITE_PERMISSION = "gy-core.near.netherite";
 
+    public enum ArmorType {
+        NETHERITE, DIAMOND, NONE
+    }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
@@ -73,15 +76,15 @@ public class NearCmd implements BaseCommand {
             if (angle < 0) angle += 360;
 
             String direction = MessageUtil.colorize(DIRECTIONS[(int) ((angle + 22.5f) / 45f) % 8]);
-            String msg;
-            if (isWearingNetherite(target)) {
-                msg = String.format("#3C2513%s &8» &f%.0f блоков &7(%s)",
+            ArmorType armorType = getDominantArmor(target);
+            String msg = switch (armorType) {
+                case NETHERITE -> String.format("#574e57\uD83D\uDEE1 &#B1B7BE%s &8» &f%.0f блоков &7(%s)",
                         target.getName(), distance, direction);
-            } else {
-                msg = String.format("#30578C%s &8» &f%.0f блоков &7(%s)",
+                case DIAMOND -> String.format("#42968d\uD83D\uDEE1 &#B1B7BE%s &8» &f%.0f блоков &7(%s)",
                         target.getName(), distance, direction);
-            }
-
+                default -> String.format("&#B1B7BE%s &8» &f%.0f блоков &7(%s)",
+                        target.getName(), distance, direction);
+            };
 
             player.sendMessage(MessageUtil.colorize(msg));
             foundAny = true;
@@ -99,14 +102,31 @@ public class NearCmd implements BaseCommand {
         return List.of();
     }
 
-    private boolean isWearingNetherite(Player player) {
+    private ArmorType getDominantArmor(Player player) {
         ItemStack[] armor = player.getInventory().getArmorContents();
+        int netheriteCount = 0;
+        int diamondCount = 0;
 
         for (ItemStack item : armor) {
-            if (item == null || !item.getType().toString().contains("NETHERITE")) {
-                return false;
+            if (item == null) continue;
+
+            String material = item.getType().toString().toUpperCase();
+            if (material.contains("NETHERITE")) {
+                netheriteCount++;
+            } else if (material.contains("DIAMOND")) {
+                diamondCount++;
             }
         }
-        return true;
+
+        if (netheriteCount > diamondCount || (netheriteCount == diamondCount && netheriteCount >= 2)) {
+            return ArmorType.NETHERITE;
+        } else if (diamondCount >= 2) {
+            return ArmorType.DIAMOND;
+        }
+        return ArmorType.NONE;
+    }
+
+    private boolean isWearingNetherite(Player player) {
+        return getDominantArmor(player) == ArmorType.NETHERITE;
     }
 }

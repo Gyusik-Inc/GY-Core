@@ -60,6 +60,8 @@ public class CommandManager {
         registerCommand(SetWarp.class);
         registerCommand(WarpCmd.class);
         registerCommand(DelWarp.class);
+
+        registerCommand(InvseeCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {
@@ -72,7 +74,7 @@ public class CommandManager {
         TabCompleter tabCompleter = (sender, command, alias, args) -> {
             try {
                 if (!annotation.permission().isEmpty() && !sender.hasPermission(annotation.permission())) {
-                    return List.of(); 
+                    return List.of();
                 }
 
                 BaseCommand cmd = commandClass.getDeclaredConstructor().newInstance();

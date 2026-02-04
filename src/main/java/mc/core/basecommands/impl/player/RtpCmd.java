@@ -1,6 +1,9 @@
 package mc.core.basecommands.impl.player;
 
+import mc.core.GY;
+import mc.core.utilites.chat.AnimateGradientUtil;
 import mc.core.utilites.chat.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -23,18 +26,16 @@ public class RtpCmd implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (args.length == 0) {
             handleRtp(player);
         } else if (args[0].equalsIgnoreCase("near")) {
             handleNear(player);
         } else {
-            MessageUtil.sendMessage(player, "Использование: /rtp или /rtp near");
+            MessageUtil.sendMessage(player, "Использование: §f/rtp §7или §f/rtp near");
         }
 
         return true;
@@ -50,6 +51,8 @@ public class RtpCmd implements TabExecutor {
         worldPlayers.remove(player);
 
         if (worldPlayers.isEmpty()) {
+            MessageUtil.sendMessage(player, "В этом мире нет других игроков.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
 
@@ -60,8 +63,8 @@ public class RtpCmd implements TabExecutor {
 
         do {
             if (selectionAttempts >= maxSelectionAttempts) {
-                MessageUtil.sendMessage(player, "Нет подходящих игроков.");
-                player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,1, 1);
+                MessageUtil.sendMessage(player, "Нет подходящих игроков поблизости.");
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                 return;
             }
 
@@ -75,6 +78,7 @@ public class RtpCmd implements TabExecutor {
 
             selectionAttempts++;
         } while (true);
+
         int attempts = 0;
         final int maxAttempts = 100;
         Location safeLocation = null;
@@ -94,29 +98,45 @@ public class RtpCmd implements TabExecutor {
             attempts++;
         } while (!isSafeLocation(safeLocation) && attempts < maxAttempts);
 
-        if (attempts >= maxAttempts || safeLocation == null) {
+        if (attempts >= maxAttempts) {
             MessageUtil.sendMessage(player, "Не найдено безопасное место рядом с игроком.");
-            player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,1, 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
 
         if (player.getLocation().distance(target.getLocation()) <= 30) {
-            MessageUtil.sendMessage(player, "Нет подходящих игроков.");
-            player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,1, 1);
+            MessageUtil.sendMessage(player, "Игрок слишком близко.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
 
-        player.teleport(safeLocation);
-        MessageUtil.sendMessage(player, "Ближайший игрок &#30578C" + target.getName());
-        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_HIT,1, 1);
+        AnimateGradientUtil.animateGradientTitle(
+                player,
+                "#30578C",
+                "#7495C1",
+                "ɴᴏʀᴛʜ-ᴍᴄ",
+                "Телепорт к игроку!",
+                500
+        );
+
+        Location finalSafeLocation = safeLocation;
+        Player finalTarget = target;
+        Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
+            player.teleport(finalSafeLocation);
+            MessageUtil.sendMessage(player,
+                    "Ближайший игрок §f&#30578C" + finalTarget.getName() +
+                            " §7(" + (int) finalSafeLocation.getX() + ", " + (int) finalSafeLocation.getY() + ", " + (int) finalSafeLocation.getZ() + ")");
+            player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+        }, 10L);
     }
+
 
     private void teleportRandom(Player player, int radius) {
         World world = player.getWorld();
         int attempts = 0;
         final int maxAttempts = 100;
+        Location safeLocation = null;
 
-        Location safeLocation;
         do {
             int x = random.nextInt(radius * 2) - radius;
             int z = random.nextInt(radius * 2) - radius;
@@ -126,14 +146,32 @@ public class RtpCmd implements TabExecutor {
         } while (!isSafeLocation(safeLocation) && attempts < maxAttempts);
 
         if (attempts >= maxAttempts) {
-            MessageUtil.sendMessage(player, "Не найдено безопасное место.");
+            MessageUtil.sendMessage(player, "Не найдено безопасное место в радиусе " + radius + " блоков.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
 
-        player.teleport(safeLocation);
-        MessageUtil.sendMessage(player, "Успешная телепортация. &7(" + safeLocation.getX() + " " + safeLocation.getY() + " " + safeLocation.getZ() + ")");
-        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_HIT,1, 1);
+        AnimateGradientUtil.animateGradientTitle(
+                player,
+                "#30578C",
+                "#7495C1",
+                "ɴᴏʀᴛʜ-ᴍᴄ",
+                "Успешная телепортация!",
+                500
+        );
+
+        Location finalSafeLocation = safeLocation;
+        Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
+            player.teleport(finalSafeLocation);
+            MessageUtil.sendMessage(player,
+                    "Успешная телепортация! §7(" +
+                            (int) finalSafeLocation.getX() + ", " +
+                            (int) finalSafeLocation.getY() + ", " +
+                            (int) finalSafeLocation.getZ() + ")");
+            player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+        }, 10L);
     }
+
     private boolean isSafeLocation(Location loc) {
         World world = loc.getWorld();
         Block feet = world.getBlockAt(loc.getBlockX(), (int) loc.getY() - 1, loc.getBlockZ());
