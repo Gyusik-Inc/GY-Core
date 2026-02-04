@@ -3,10 +3,7 @@ package mc.core.basecommands.base;
 import lombok.Getter;
 import mc.core.GY;
 import mc.core.basecommands.impl.player.*;
-import mc.core.basecommands.impl.world.DayCmd;
-import mc.core.basecommands.impl.world.NightCmd;
-import mc.core.basecommands.impl.world.StormCmd;
-import mc.core.basecommands.impl.world.SunCmd;
+import mc.core.basecommands.impl.world.*;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.math.MathUtil;
 import org.bukkit.Sound;
@@ -41,6 +38,7 @@ public class CommandManager {
         registerCommand(TpacceptCmd.class);
         registerCommand(TpaDenyCmd.class);
         registerCommand(TpCmd.class);
+        registerCommand(TphereCmd.class);
 
         registerCommand(SetHomeCmd.class);
         registerCommand(HomeCmd.class);
@@ -54,6 +52,14 @@ public class CommandManager {
         registerCommand(FeedCmd.class);
         registerCommand(FlyCmd.class);
         registerCommand(GodCmd.class);
+
+        registerCommand(SetSpawnCmd.class);
+        registerCommand(SpawnCmd.class);
+        registerCommand(DelSpawnCmd.class);
+
+        registerCommand(SetWarp.class);
+        registerCommand(WarpCmd.class);
+        registerCommand(DelWarp.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {
@@ -65,6 +71,10 @@ public class CommandManager {
         CommandExecutor executor = new CommandExecutorWrapper(GY.getInstance(), commandClass);
         TabCompleter tabCompleter = (sender, command, alias, args) -> {
             try {
+                if (!annotation.permission().isEmpty() && !sender.hasPermission(annotation.permission())) {
+                    return List.of(); 
+                }
+
                 BaseCommand cmd = commandClass.getDeclaredConstructor().newInstance();
                 return cmd.tabComplete(sender, alias, args);
             } catch (Exception e) {
@@ -72,6 +82,7 @@ public class CommandManager {
                 return List.of();
             }
         };
+
 
         if (GY.getInstance().getCommand(commandName) != null) {
             Objects.requireNonNull(GY.getInstance().getCommand(commandName)).setExecutor(executor);

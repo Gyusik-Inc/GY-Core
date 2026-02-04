@@ -1,7 +1,6 @@
 // HomeData.java
 package mc.core.utilites.data;
 
-import lombok.Getter;
 import mc.core.GY;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,18 +13,7 @@ import java.util.UUID;
 public class HomeData {
     private static final Map<UUID, Map<String, HomeEntry>> homes = new HashMap<>();
     private static final FileConfiguration config = GY.getInstance().getConfig();
-
-    @Getter
-    public static class HomeEntry {
-        private final Location location;
-        private final long timestamp;
-
-        public HomeEntry(Location location, long timestamp) {
-            this.location = location;
-            this.timestamp = timestamp;
-        }
-
-    }
+    public record HomeEntry(Location location, long timestamp) {}
 
     public static void loadHomes() {
         if (!config.contains("homes")) return;
@@ -60,13 +48,13 @@ public class HomeData {
         homes.forEach((uuid, playerHomes) -> {
             playerHomes.forEach((homeName, entry) -> {
                 String path = "homes." + uuid.toString() + "." + homeName;
-                config.set(path + ".world", entry.getLocation().getWorld().getName());
-                config.set(path + ".x", entry.getLocation().getX());
-                config.set(path + ".y", entry.getLocation().getY());
-                config.set(path + ".z", entry.getLocation().getZ());
-                config.set(path + ".yaw", entry.getLocation().getYaw());
-                config.set(path + ".pitch", entry.getLocation().getPitch());
-                config.set(path + ".timestamp", entry.getTimestamp());
+                config.set(path + ".world", entry.location().getWorld().getName());
+                config.set(path + ".x", entry.location().getX());
+                config.set(path + ".y", entry.location().getY());
+                config.set(path + ".z", entry.location().getZ());
+                config.set(path + ".yaw", entry.location().getYaw());
+                config.set(path + ".pitch", entry.location().getPitch());
+                config.set(path + ".timestamp", entry.timestamp());
             });
         });
         GY.getInstance().saveConfig();

@@ -1,4 +1,4 @@
-package mc.core.basecommands.impl.player;
+package mc.core.basecommands.impl.world;
 
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;

@@ -42,7 +42,7 @@ public class HomeCmd implements BaseCommand {
                     MessageUtil.sendMessage(player, "У игрока " + target.getName() + " нет установленных домов.");
                 } else {
                     String list = homes.entrySet().stream()
-                            .map(e -> e.getKey() + " §7(" + formatLocation(e.getValue().getLocation()) + " Мир: " + e.getValue().getLocation().getWorld().getName() + ")")
+                            .map(e -> e.getKey() + " §7(" + formatLocation(e.getValue().location()) + " Мир: " + e.getValue().location().getWorld().getName() + ")")
                             .collect(Collectors.joining(", "));
                     MessageUtil.sendMessage(player, "Дома игрока &#30578C" + target.getName() + ": &#30578C" + list);
                 }
@@ -65,7 +65,7 @@ public class HomeCmd implements BaseCommand {
             return true;
         }
 
-        Location loc = HomeData.getHome(player.getUniqueId(), homeName).getLocation();
+        Location loc = HomeData.getHome(player.getUniqueId(), homeName).location();
         player.teleport(loc);
         MessageUtil.sendMessage(player, "Вы телепортировались в дом '&#30578C" + homeName + "&f'.");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);

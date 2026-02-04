@@ -11,6 +11,8 @@ import mc.core.event.Events;
 import mc.core.event.HideMessages;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
+import mc.core.utilites.data.SpawnData;
+import mc.core.utilites.data.WarpData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +31,9 @@ public final class GY extends JavaPlugin {
         instance = this;
         commandManager = new CommandManager();
         HomeData.loadHomes();
+        SpawnData.init();
+        WarpData.init();
+
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {

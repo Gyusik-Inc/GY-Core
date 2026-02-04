@@ -28,6 +28,9 @@ commands:
     aliases:
       - tpacancel
   tp:
+  tphere:
+    aliases:
+      - s
   ec:
     aliases:
       - enderchest
@@ -46,3 +49,17 @@ commands:
   feed:
   fly:
   god:
+  setspawn:
+  spawn:
+  delspawn:
+    aliases:
+      - removespawn
+      - remspawn
+      - deletespawn
+
+  setwarp:
+  delwarp:
+    aliases:
+      - deletewarp
+      - removewarp
+  warp:
