@@ -4,9 +4,12 @@ import mc.core.basecommands.impl.player.GodCmd;
 import mc.core.basecommands.impl.player.HealCmd;
 import mc.core.basecommands.impl.player.TpCmd;
 import mc.core.basecommands.impl.player.TpaCmd;
+import mc.core.utilites.chat.MessageUtil;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -61,20 +64,28 @@ public class EventCommand implements Listener {
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player player && GodCmd.isGod(player)) {
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "Запрещено в &#30578C/god", true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         if (GodCmd.isGod(e.getPlayer())) {
+            Player player = e.getPlayer();
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "Запрещено в &#30578C/god", true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         if (GodCmd.isGod(e.getPlayer())) {
+            Player player = e.getPlayer();
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "Запрещено в &#30578C/god", true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 
@@ -82,14 +93,19 @@ public class EventCommand implements Listener {
     public void onPickup(EntityPickupItemEvent e) {
         if (e.getEntity() instanceof Player player && GodCmd.isGod(player)) {
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "Запрещено в &#30578C/god", true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (GodCmd.isGod(e.getPlayer())) {
+        if (GodCmd.isGod(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player player = e.getPlayer();
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "Запрещено в &#30578C/god", true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 

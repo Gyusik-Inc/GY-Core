@@ -18,12 +18,11 @@ public class GodCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("Только игрок!");
             return true;
         }
 
-        Player player = (Player) sender;
         Player target = player;
 
         if (args.length > 0) {
