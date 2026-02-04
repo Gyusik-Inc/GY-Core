@@ -48,6 +48,12 @@ public class CommandManager {
 
         registerCommand(VanishCmd.class);
         registerCommand(EcCmd.class);
+
+        registerCommand(GamemodeCmd.class);
+        registerCommand(HealCmd.class);
+        registerCommand(FeedCmd.class);
+        registerCommand(FlyCmd.class);
+        registerCommand(GodCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

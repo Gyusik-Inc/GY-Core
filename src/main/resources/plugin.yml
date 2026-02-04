@@ -39,3 +39,10 @@ commands:
   vanish:
     aliases:
       - v
+  gm:
+    aliases:
+      - gamemode
+  heal:
+  feed:
+  fly:
+  god:
