@@ -55,8 +55,14 @@ public class AntiRelogEvent implements Listener {
             GodCmd.disableGod(target);
         }
 
-        target.setAllowFlight(false);
-        attacker.setAllowFlight(false);
+        if (!target.hasPermission("gy-core.admin")) {
+            target.setAllowFlight(false);
+        }
+
+        if (!attacker.hasPermission("gy-core.admin")) {
+            attacker.setAllowFlight(false);
+        }
+
         AntiRelog.addPlayer(attacker, target);
     }
 

@@ -23,6 +23,7 @@ dependencies {
     compileOnly('org.projectlombok:lombok:1.18.38')
     annotationProcessor('org.projectlombok:lombok:1.18.38')
     compileOnly files('libs/Vault.jar')
+    compileOnly files('libs/placeholderapi-2.11.17.jar')
 
     compileOnly 'net.luckperms:api:5.4'
 }

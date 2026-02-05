@@ -12,6 +12,7 @@ import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
 import mc.core.event.HideMessages;
+import mc.core.placeholder.AnimatedLogo;
 import mc.core.pvp.antirelog.AntiRelog;
 import mc.core.pvp.antirelog.AntiRelogEvent;
 import mc.core.pvp.command.PvpMenuEvent;
@@ -19,6 +20,7 @@ import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
 import mc.core.utilites.data.SpawnData;
 import mc.core.utilites.data.WarpData;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,6 +49,8 @@ public final class GY extends JavaPlugin {
         HomeData.loadHomes();
         SpawnData.init();
         WarpData.init();
+
+        new AnimatedLogo().register();
 
         if (!setupEconomy() ) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -87,6 +91,7 @@ public final class GY extends JavaPlugin {
         VanishCmd.removeAllVanishes();
         HomeData.saveHomes();
         AntiRelog.shutdown();
+        Events.onDisable();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");
