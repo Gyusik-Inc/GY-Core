@@ -151,13 +151,13 @@ public class RtpCmd implements TabExecutor {
             return;
         }
 
-        AnimateGradientUtil.animateGradientTitle(
+        AnimateGradientUtil.animateGradientTitleNoDelay(
                 player,
                 "#30578C",
                 "#7495C1",
                 "ɴᴏʀᴛʜ-ᴍᴄ",
                 "Успешная телепортация!",
-                500
+                1000
         );
 
         Location finalSafeLocation = safeLocation;

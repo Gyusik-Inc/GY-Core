@@ -21,6 +21,15 @@ public class AnimateGradientUtil {
         new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs).start();
     }
 
+    public static void animateGradientTitleNoDelay(Player player,
+                                                   String edgeColor,
+                                                   String centerColor,
+                                                   String title,
+                                                   String subtitle,
+                                                   long durationMs) {
+        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs).startNoDelay();
+    }
+
     private static class GradientTitleAnimator implements Runnable {
 
         private final Player player;
@@ -36,7 +45,7 @@ public class AnimateGradientUtil {
         private boolean subtitlePhase = false;
         private boolean finishing = false;
 
-        private String staticTitle;
+        private final String staticTitle;
         private static final String SUB_BASE_COLOR = "#FFFFFF";
         private static final int START_DELAY_TICKS = 15;
 
@@ -76,7 +85,7 @@ public class AnimateGradientUtil {
                 }
 
                 tick++;
-                Bukkit.getScheduler().runTaskLater(GY.getInstance(), this, 1);
+                Bukkit.getScheduler().runTaskLater(GY.getInstance(), this, 0);
                 return;
             }
 
@@ -103,6 +112,19 @@ public class AnimateGradientUtil {
             }
         }
 
+        public void startNoDelay() {
+            player.resetTitle();
+            Bukkit.getScheduler().runTask(GY.getInstance(), this); // 0 тиков задержки
+        }
+
+        public void start() {
+            player.resetTitle();
+            Bukkit.getScheduler().runTaskLater(
+                    GY.getInstance(),
+                    () -> Bukkit.getScheduler().runTask(GY.getInstance(), this),
+                    START_DELAY_TICKS
+            );
+        }
 
         private String buildTitleFrame(double progress) {
             int length = title.length();
@@ -126,12 +148,11 @@ public class AnimateGradientUtil {
             return MessageUtil.colorize(out.toString());
         }
 
-
         private String buildSubtitleFrame(double progress) {
             int length = subtitle.length();
             double center = (length - 1) / 2.0;
 
-            double wave = Math.sin(progress * Math.PI); // 0→1→0
+            double wave = Math.sin(progress * Math.PI);
             double softness = 0.22;
 
             StringBuilder out = new StringBuilder();
@@ -163,19 +184,5 @@ public class AnimateGradientUtil {
 
             return String.format("#%02X%02X%02X", r, g, b);
         }
-
-        public void start() {
-            player.resetTitle();
-            Bukkit.getScheduler().runTaskLater(
-                    GY.getInstance(),
-                    () -> Bukkit.getScheduler().runTask(GY.getInstance(), this),
-                    START_DELAY_TICKS
-            );
-        }
     }
 }
-
-
-
-
-

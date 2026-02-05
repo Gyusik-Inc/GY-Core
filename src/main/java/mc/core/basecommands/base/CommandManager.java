@@ -4,6 +4,7 @@ import lombok.Getter;
 import mc.core.GY;
 import mc.core.basecommands.impl.player.*;
 import mc.core.basecommands.impl.world.*;
+import mc.core.pvp.command.PvpCmd;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.math.MathUtil;
 import org.bukkit.Sound;

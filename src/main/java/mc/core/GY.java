@@ -11,6 +11,9 @@ import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
 import mc.core.event.HideMessages;
+import mc.core.pvp.antirelog.AntiRelog;
+import mc.core.pvp.antirelog.AntiRelogEvent;
+import mc.core.pvp.command.PvpMenuEvent;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
 import mc.core.utilites.data.SpawnData;
@@ -32,6 +35,7 @@ public final class GY extends JavaPlugin {
     public void onEnable() {
         instance = this;
         commandManager = new CommandManager();
+        AntiRelog.init();
         HomeData.loadHomes();
         SpawnData.init();
         WarpData.init();
@@ -52,6 +56,8 @@ public final class GY extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
         getServer().getPluginManager().registerEvents(new HideMessages(), this);
         getServer().getPluginManager().registerEvents(new EventCommand(), this);
+        getServer().getPluginManager().registerEvents(new PvpMenuEvent(), this);
+        getServer().getPluginManager().registerEvents(new AntiRelogEvent(), this);
 
         Objects.requireNonNull(getCommand("plugins")).setExecutor(new PluginsCommand());
         Objects.requireNonNull(getCommand("rtp")).setExecutor(new RtpCmd());
@@ -67,6 +73,7 @@ public final class GY extends JavaPlugin {
     public void onDisable() {
         VanishCmd.removeAllVanishes();
         HomeData.saveHomes();
+        AntiRelog.shutdown();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");

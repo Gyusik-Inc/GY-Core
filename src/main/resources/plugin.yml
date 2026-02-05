@@ -68,6 +68,8 @@ commands:
     aliases:
       - inv
   clear:
+    aliases:
+      - ci
   fix:
     aliases:
       - repair
