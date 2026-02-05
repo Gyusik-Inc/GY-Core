@@ -19,7 +19,7 @@ public class CustomizationCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length != 2) {
-            MessageUtil.sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard> <enable|disable>");
+            MessageUtil.sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard|mention> <enable|disable>");
             return true;
         }
 
@@ -54,7 +54,11 @@ public class CustomizationCmd implements BaseCommand {
                 MessageUtil.sendMessage(player, "Scoreboard " + (enable ? "&aвключён" : "&cотключён"));
                 Bukkit.getServer().dispatchCommand(player, "sb");
             }
-            default -> MessageUtil.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard");
+            case "mention" -> {
+                data.setMentionSoundEnabled(enable);
+                MessageUtil.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён" : "&cотключён"));
+            }
+            default -> MessageUtil.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention");
         }
 
         return true;
@@ -62,7 +66,7 @@ public class CustomizationCmd implements BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard");
+        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention");
         if (args.length == 2) return List.of("enable", "disable");
         return List.of();
     }

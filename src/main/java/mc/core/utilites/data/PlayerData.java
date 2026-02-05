@@ -131,4 +131,13 @@ public class PlayerData {
         playerConfig.set("customization.scoreboard_enabled", enabled);
         saveData();
     }
+
+    public boolean isMentionSoundEnabled() {
+        return playerConfig.getBoolean("customization.mention_sound_enabled", true);
+    }
+
+    public void setMentionSoundEnabled(boolean enabled) {
+        playerConfig.set("customization.mention_sound_enabled", enabled);
+        saveData();
+    }
 }

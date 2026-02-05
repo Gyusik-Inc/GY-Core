@@ -1,6 +1,7 @@
 package mc.core.chat;
 
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -159,11 +160,15 @@ public class ChatEvent implements Listener {
         if (!sender.equals(recipient) && message.toLowerCase().contains(recipient.getName().toLowerCase())) {
             String highlightedName = "#30578C&n" + recipient.getName() + msgColor;
             processedMessage = message.replaceAll("(?i)" + recipient.getName(), highlightedName);
-            recipient.playSound(recipient.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1.0f, 1.0f);
+            PlayerData recipientData = new PlayerData(recipient.getUniqueId());
+            if (recipientData.isMentionSoundEnabled()) {
+                recipient.playSound(recipient.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1.0f, 1.0f);
+            }
         }
 
         return processedMessage;
     }
+
 
     private boolean isInRange(Location loc1, Location loc2) {
         if (!loc1.getWorld().equals(loc2.getWorld())) {
