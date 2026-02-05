@@ -53,6 +53,7 @@ public class CommandManager {
         registerCommand(FlyCmd.class);
         registerCommand(GodCmd.class);
         registerCommand(ClearCmd.class);
+        registerCommand(PvpCmd.class);
 
         registerCommand(SetSpawnCmd.class);
         registerCommand(SpawnCmd.class);

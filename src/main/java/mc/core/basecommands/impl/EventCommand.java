@@ -1,14 +1,11 @@
 package mc.core.basecommands.impl;
 
 import mc.core.GY;
-import mc.core.basecommands.impl.player.GodCmd;
-import mc.core.basecommands.impl.player.HealCmd;
-import mc.core.basecommands.impl.player.InvseeCmd;
-import mc.core.basecommands.impl.player.TpCmd;
-import mc.core.basecommands.impl.player.TpaCmd;
+import mc.core.basecommands.impl.player.*;
 import mc.core.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,12 +15,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class EventCommand implements Listener {
     private final HealCmd healCmd;
@@ -156,6 +156,36 @@ public class EventCommand implements Listener {
             e.setCancelled(true);
             MessageUtil.sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+        }
+    }
+
+    @EventHandler(
+            priority = EventPriority.HIGHEST
+    )
+    public void onInventoryClick(InventoryClickEvent event) {
+        HumanEntity var3 = event.getWhoClicked();
+        if (var3 instanceof Player) {
+            Player player = (Player)var3;
+            if (event.getView().getTitle().equals("§cPvP Меню")) {
+                event.setCancelled(true);
+                int slot = event.getRawSlot();
+                if ((slot == 10 || slot == 16) && (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT)) {
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5F, 1.0F);
+                    PvpCmd.handleMenuClick(player, slot);
+                }
+
+            }
+        }
+    }
+
+    @EventHandler
+    public void onArmorChange(InventoryClickEvent event) {
+        HumanEntity var3 = event.getWhoClicked();
+        if (var3 instanceof Player) {
+            Player player = (Player)var3;
+            Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
+                PvpCmd.checkArmorChange(player);
+            }, 1L);
         }
     }
 }
