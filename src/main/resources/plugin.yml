@@ -74,3 +74,4 @@ commands:
     aliases:
       - repair
   pvp:
+  helper:

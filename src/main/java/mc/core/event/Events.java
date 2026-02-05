@@ -2,6 +2,8 @@ package mc.core.event;
 
 import mc.core.GY;
 import mc.core.command.PluginsCommand;
+import mc.core.utilites.data.SpawnData;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -85,4 +88,11 @@ public class Events implements Listener {
     }
 
 
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Location spawn = SpawnData.getSpawn();
+        if (spawn != null) {
+            e.setRespawnLocation(spawn);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package mc.core.pvp.antirelog;
 
-import mc.core.utilites.chat.AnimateGradientUtil;
+import mc.core.basecommands.impl.player.GodCmd;
+import mc.core.basecommands.impl.player.VanishCmd;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.math.MathUtil;
 import org.bukkit.Bukkit;
@@ -44,6 +45,18 @@ public class AntiRelogEvent implements Listener {
                 !(e.getEntity() instanceof Player target)) return;
 
         if (attacker == target) return;
+        if (VanishCmd.isVanished(attacker) || VanishCmd.isVanished(target)) {
+            e.setCancelled(true);
+            return;
+        }
+
+        if (GodCmd.isGod(attacker) || GodCmd.isGod(target)) {
+            GodCmd.disableGod(attacker);
+            GodCmd.disableGod(target);
+        }
+
+        target.setAllowFlight(false);
+        attacker.setAllowFlight(false);
         AntiRelog.addPlayer(attacker, target);
     }
 

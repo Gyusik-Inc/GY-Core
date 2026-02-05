@@ -65,6 +65,7 @@ public class CommandManager {
         registerCommand(DelWarp.class);
 
         registerCommand(InvseeCmd.class);
+        registerCommand(HelperCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

@@ -19,7 +19,6 @@ public class GodCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Только игрок!");
             return true;
         }
 
@@ -28,7 +27,7 @@ public class GodCmd implements BaseCommand {
         if (args.length > 0) {
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                MessageUtil.sendMessage(player, "Игрок не найден!");
+                MessageUtil.sendMessage(player, "Игрок не найден.");
                 return true;
             }
         }
@@ -45,7 +44,7 @@ public class GodCmd implements BaseCommand {
             target.setHealth(target.getMaxHealth());
         }
 
-        String status = isGod ? "&cвыключен" : "&aвключён";
+        String status = isGod ? "&cвыключен." : "&aвключён.";
         if (target == player) {
             MessageUtil.sendMessage(player, "Режим бога " + status);
         } else {
@@ -58,6 +57,25 @@ public class GodCmd implements BaseCommand {
 
     public static boolean isGod(Player player) {
         return godPlayers.contains(player.getUniqueId().toString());
+    }
+
+    public static void disableGod(Player player) {
+        String uuid = player.getUniqueId().toString();
+        if (godPlayers.remove(uuid)) {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+            MessageUtil.sendMessage(player, "&Режим бога &cвыключен.");
+        }
+    }
+
+    public static void disableAllGod() {
+        for (String uuidStr : new HashSet<>(godPlayers)) {
+            Player player = Bukkit.getPlayer(java.util.UUID.fromString(uuidStr));
+            if (player != null && player.isOnline()) {
+                disableGod(player);
+            }
+            godPlayers.remove(uuidStr);
+        }
     }
 
     @Override
