@@ -66,6 +66,8 @@ public class CommandManager {
 
         registerCommand(InvseeCmd.class);
         registerCommand(HelperCmd.class);
+
+        registerCommand(BaltopCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

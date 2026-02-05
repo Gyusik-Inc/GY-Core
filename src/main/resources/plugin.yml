@@ -75,3 +75,7 @@ commands:
       - repair
   pvp:
   helper:
+  baltop:
+    aliases:
+      - balancetop
+      - btop

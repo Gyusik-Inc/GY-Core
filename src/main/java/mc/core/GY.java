@@ -18,8 +18,10 @@ import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
 import mc.core.utilites.data.SpawnData;
 import mc.core.utilites.data.WarpData;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -30,6 +32,8 @@ public final class GY extends JavaPlugin {
     @Getter
     private CommandManager commandManager;
     private static final String RESET = "\u001B[0m", GRAY = "\u001B[90m", RED = "\u001B[91m", BLUE = "\u001B[94m";
+    @Getter
+    private static Economy econ = null;
 
     @Override
     public void onEnable() {
@@ -40,6 +44,11 @@ public final class GY extends JavaPlugin {
         SpawnData.init();
         WarpData.init();
 
+        if (!setupEconomy() ) {
+            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
@@ -108,5 +117,17 @@ public final class GY extends JavaPlugin {
         for (String line : lines) {
             getLogger().info(color + line + RESET);
         }
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
     }
 }

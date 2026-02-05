@@ -12,12 +12,17 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly('org.projectlombok:lombok:1.18.38')
     annotationProcessor('org.projectlombok:lombok:1.18.38')
+    compileOnly files('libs/Vault.jar')
 
     compileOnly 'net.luckperms:api:5.4'
 }
