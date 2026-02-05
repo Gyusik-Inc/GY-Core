@@ -1,6 +1,7 @@
 package mc.core;
 
 import lombok.Getter;
+import mc.core.autorestart.AutoRestart;
 import mc.core.basecommands.base.CommandManager;
 import mc.core.basecommands.impl.EventCommand;
 import mc.core.basecommands.impl.player.FixCmd;
@@ -34,11 +35,14 @@ public final class GY extends JavaPlugin {
     private static final String RESET = "\u001B[0m", GRAY = "\u001B[90m", RED = "\u001B[91m", BLUE = "\u001B[94m";
     @Getter
     private static Economy econ = null;
+    @Getter
+    private AutoRestart autoRestart;
 
     @Override
     public void onEnable() {
         instance = this;
         commandManager = new CommandManager();
+        autoRestart = new AutoRestart();
         AntiRelog.init();
         HomeData.loadHomes();
         SpawnData.init();

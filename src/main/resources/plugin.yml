@@ -93,3 +93,7 @@ commands:
   customization:
     aliases:
       - customize
+  autorestart:
+    aliases:
+      - restart
+      - ar

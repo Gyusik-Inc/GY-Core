@@ -75,6 +75,7 @@ public class CommandManager {
         registerCommand(PayCmd.class);
 
         registerCommand(CustomizationCmd.class);
+        registerCommand(AutoRestartCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {
