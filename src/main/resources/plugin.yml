@@ -67,3 +67,8 @@ commands:
   invsee:
     aliases:
       - inv
+  clear:
+  fix:
+    aliases:
+      - repair
+  pvp:

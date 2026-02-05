@@ -3,6 +3,7 @@ package mc.core;
 import lombok.Getter;
 import mc.core.basecommands.base.CommandManager;
 import mc.core.basecommands.impl.EventCommand;
+import mc.core.basecommands.impl.player.FixCmd;
 import mc.core.basecommands.impl.player.RtpCmd;
 import mc.core.basecommands.impl.player.VanishCmd;
 import mc.core.chat.ChatEvent;
@@ -54,6 +55,7 @@ public final class GY extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("plugins")).setExecutor(new PluginsCommand());
         Objects.requireNonNull(getCommand("rtp")).setExecutor(new RtpCmd());
+        Objects.requireNonNull(getCommand("fix")).setExecutor(new FixCmd());
     }
 
     @Override

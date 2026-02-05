@@ -35,6 +35,7 @@ public class FeedCmd implements BaseCommand {
             }
         }
 
+        target.setFoodLevel(20);
         target.setSaturation(20.0f);
 
         if (target == player) {
