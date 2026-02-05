@@ -3,6 +3,12 @@ package mc.core.basecommands.impl.player;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -77,16 +83,50 @@ public class NearCmd implements BaseCommand {
 
             String direction = MessageUtil.colorize(DIRECTIONS[(int) ((angle + 22.5f) / 45f) % 8]);
             ArmorType armorType = getDominantArmor(target);
-            String msg = switch (armorType) {
-                case NETHERITE -> String.format("#574e57\uD83D\uDEE1 &#B1B7BE%s &8» &f%.0f блоков &7(%s)",
-                        target.getName(), distance, direction);
-                case DIAMOND -> String.format("#42968d\uD83D\uDEE1 &#B1B7BE%s &8» &f%.0f блоков &7(%s)",
-                        target.getName(), distance, direction);
-                default -> String.format("&#B1B7BE%s &8» &f%.0f блоков &7(%s)",
-                        target.getName(), distance, direction);
+
+            Component msg = switch (armorType) {
+                case NETHERITE -> Component.text()
+                        .append(Component.text("\uD83D\uDEE1", TextColor.fromHexString("#574e57"))
+                                .append(Component.text(" ", NamedTextColor.DARK_GRAY)))
+                        .append(Component.text(target.getName())
+                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
+                        .append(Component.text(String.format("%.0f блоков", distance))
+                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(" (", NamedTextColor.GRAY)
+                                .append(Component.text(direction, NamedTextColor.WHITE))
+                                .append(Component.text(")", NamedTextColor.GRAY)))
+                        .append(getInventoryButton(player, target))
+                        .build();
+
+                case DIAMOND -> Component.text()
+                        .append(Component.text("\uD83D\uDEE1", TextColor.fromHexString("#42968d"))
+                                .append(Component.text(" ", NamedTextColor.DARK_GRAY)))
+                        .append(Component.text(target.getName())
+                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
+                        .append(Component.text(String.format("%.0f блоков", distance))
+                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(" (", NamedTextColor.GRAY)
+                                .append(Component.text(direction, NamedTextColor.WHITE))
+                                .append(Component.text(")", NamedTextColor.GRAY)))
+                        .append(getInventoryButton(player, target))
+                        .build();
+
+                default -> Component.text()
+                        .append(Component.text(target.getName())
+                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
+                        .append(Component.text(String.format("%.0f блоков", distance))
+                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(" (", NamedTextColor.GRAY)
+                                .append(Component.text(direction, NamedTextColor.WHITE))
+                                .append(Component.text(")", NamedTextColor.GRAY)))
+                        .append(getInventoryButton(player, target))
+                        .build();
             };
 
-            player.sendMessage(MessageUtil.colorize(msg));
+            player.sendMessage(msg);
             foundAny = true;
         }
 
@@ -129,4 +169,23 @@ public class NearCmd implements BaseCommand {
     private boolean isWearingNetherite(Player player) {
         return getDominantArmor(player) == ArmorType.NETHERITE;
     }
+
+    private Component getInventoryButton(Player player, Player target) {
+        if (!player.hasPermission("gy-core.invsee")) {
+            return Component.empty();
+        }
+
+        return Component.text(" [")
+                .color(TextColor.fromHexString("#B1B7BE"))
+                .append(Component.text("Инвентарь", TextColor.fromHexString("#30578C"))
+                        .clickEvent(ClickEvent.runCommand("/invsee " + target.getName()))
+                        .hoverEvent(HoverEvent.showText(
+                                Component.text("Открыть инвентарь ", NamedTextColor.GRAY)
+                                        .append(Component.text(target.getName(), TextColor.fromHexString("#30578C")))
+                        )))
+                .append(Component.text("]"))
+                .color(TextColor.fromHexString("#B1B7BE"));
+    }
+
+
 }
