@@ -3,6 +3,7 @@ package mc.core.basecommands.impl.player;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -12,14 +13,13 @@ import java.util.*;
 
 @BaseCommandInfo(name = "msg", permission = "gy-core.msg", cooldown = 3)
 public class MsgCmd implements BaseCommand {
+
     public static final Map<UUID, UUID> lastMessageMap = new HashMap<>();
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
 
-        if (!(sender instanceof Player player)) {
-            return true;
-        }
+        if (!(sender instanceof Player player)) return true;
 
         if (args.length < 2) {
             MessageUtil.sendUsageMessage(player, "/msg [Игрок] [Сообщение]");
@@ -27,7 +27,6 @@ public class MsgCmd implements BaseCommand {
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
-
         if (target == null || !target.isOnline()) {
             MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
@@ -35,6 +34,13 @@ public class MsgCmd implements BaseCommand {
 
         if (target.equals(player)) {
             MessageUtil.sendMessage(player, "&cНельзя писать самому себе.");
+            return true;
+        }
+
+        PlayerData targetData = new PlayerData(target.getUniqueId());
+        if (!targetData.isMsgEnabled()) {
+            MessageUtil.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 

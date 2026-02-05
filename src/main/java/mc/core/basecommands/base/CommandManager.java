@@ -73,6 +73,8 @@ public class CommandManager {
         registerCommand(MsgCmd.class);
         registerCommand(ReplyCmd.class);
         registerCommand(PayCmd.class);
+
+        registerCommand(CustomizationCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

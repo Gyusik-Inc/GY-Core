@@ -3,6 +3,7 @@ package mc.core.basecommands.impl.player;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -19,9 +20,7 @@ public class ReplyCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
 
-        if (!(sender instanceof Player player)) {
-            return true;
-        }
+        if (!(sender instanceof Player player)) return true;
 
         if (args.length == 0) {
             MessageUtil.sendUsageMessage(player, "/reply [Сообщение]");
@@ -47,7 +46,15 @@ public class ReplyCmd implements BaseCommand {
             return true;
         }
 
+        PlayerData targetData = new PlayerData(target.getUniqueId());
+        if (!targetData.isMsgEnabled()) {
+            MessageUtil.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+            return true;
+        }
+
         String message = String.join(" ", args);
+
         lastMessageMap.put(player.getUniqueId(), target.getUniqueId());
         lastMessageMap.put(target.getUniqueId(), player.getUniqueId());
 

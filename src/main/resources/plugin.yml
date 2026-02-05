@@ -90,3 +90,6 @@ commands:
     aliases:
       - r
   pay:
+  customization:
+    aliases:
+      - customize

@@ -3,6 +3,7 @@ package mc.core.basecommands.impl.player;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import mc.core.GY;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -13,7 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +27,7 @@ public class TpaCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            return true;
-        }
+        if (!(sender instanceof Player player)) return true;
 
         if (args.length != 1) {
             MessageUtil.sendUsageMessage(sender, "/tpa [Игрок]");
@@ -43,7 +41,14 @@ public class TpaCmd implements BaseCommand {
         }
 
         if (target.equals(player)) {
-            MessageUtil.sendMessage(player, "Нельзя отправить запрос себе!");
+            MessageUtil.sendMessage(player, "&cНельзя отправить запрос себе!");
+            return true;
+        }
+
+        PlayerData targetData = new PlayerData(target.getUniqueId());
+        if (!targetData.isTpEnabled()) {
+            MessageUtil.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил телепортацию.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
@@ -54,21 +59,22 @@ public class TpaCmd implements BaseCommand {
             public void run() {
                 if (tpaRequests.remove(player.getUniqueId()) != null) {
                     MessageUtil.sendMessage(player, "Ваш запрос на телепортацию к &#30578C" + target.getName() + " &fистёк.");
-                    MessageUtil.sendMessage(target, "Запрос на телепортацию от &#30578C" + player.getName() + "&f истёк.");
+                    MessageUtil.sendMessage(target, "Запрос на телепортацию от &#30578C" + player.getName() + " &fистёк.");
                 }
             }
         }.runTaskLater(GY.getInstance(), 20L * 60);
 
-        Component accept = Component.text("§a[Принять]").clickEvent(ClickEvent.runCommand("/tpaccept")).hoverEvent(HoverEvent.showText(Component.text("Клик")));
-        Component deny = Component.text(" §c[Отклонить]").clickEvent(ClickEvent.runCommand("/tpadeny")).hoverEvent(HoverEvent.showText(Component.text("Клик")));
+        Component accept = Component.text("§a[Принять]")
+                .clickEvent(ClickEvent.runCommand("/tpaccept"))
+                .hoverEvent(HoverEvent.showText(Component.text("Клик")));
+        Component deny = Component.text(" §c[Отклонить]")
+                .clickEvent(ClickEvent.runCommand("/tpadeny"))
+                .hoverEvent(HoverEvent.showText(Component.text("Клик")));
+        Component messageComp = Component.empty().append(accept).append(deny);
 
-        Component message = Component.empty()
-                .append(accept)
-                .append(deny);
-
-        MessageUtil.sendMessage(target, "&#30578C" + player.getName() + "&f хочет телепортироваться к тебе!" );
+        MessageUtil.sendMessage(target, "&#30578C" + player.getName() + "&f хочет телепортироваться к тебе!");
         MessageUtil.sendMessage(target, "Используй: &#30578C/tpaccept");
-        target.sendMessage(message);
+        target.sendMessage(messageComp);
         target.playSound(target.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
         MessageUtil.sendMessage(player, "Запрос отправлен игроку &#30578C" + target.getName());

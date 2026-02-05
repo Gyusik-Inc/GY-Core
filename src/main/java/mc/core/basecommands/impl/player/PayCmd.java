@@ -4,6 +4,7 @@ import mc.core.GY;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -17,7 +18,6 @@ import java.util.List;
 public class PayCmd implements BaseCommand {
 
     private static final DecimalFormat FORMAT = (DecimalFormat) DecimalFormat.getInstance(java.util.Locale.US);
-
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
@@ -36,7 +36,6 @@ public class PayCmd implements BaseCommand {
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
-
         if (target == null || !target.isOnline()) {
             MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
@@ -44,6 +43,13 @@ public class PayCmd implements BaseCommand {
 
         if (target.equals(player)) {
             MessageUtil.sendMessage(player, "Нельзя перевести деньги самому себе.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+            return true;
+        }
+
+        PlayerData targetData = new PlayerData(target.getUniqueId());
+        if (!targetData.isPayEnabled()) {
+            MessageUtil.sendMessage(player, "Игрок '&#30578C" + target.getName() + "&f' отключил переводы.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -64,7 +70,6 @@ public class PayCmd implements BaseCommand {
         }
 
         double balance = econ.getBalance(player);
-
         if (balance < amount) {
             MessageUtil.sendMessage(player, "Недостаточно средств. &7(" + balance + "&8/&#30578C" + amount + ")");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
@@ -82,6 +87,7 @@ public class PayCmd implements BaseCommand {
         MessageUtil.sendMessage(target,
                 "&#30578C$ &fВы получили &e" + formatted + "$ &fот &#30578C" + player.getName());
         target.playSound(target.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
+
         return true;
     }
 
@@ -94,8 +100,7 @@ public class PayCmd implements BaseCommand {
         } else if (input.endsWith("b") || input.endsWith("bn") || input.endsWith("млрд")) {
             multiplier = 1_000_000_000D;
             input = input.replaceAll("(b|bn|млрд)$", "");
-
-        } else if (input.endsWith("kk") || input.endsWith("кк")) {           // 1
+        } else if (input.endsWith("kk") || input.endsWith("кк")) {
             multiplier = 1_000_000D;
             input = input.substring(0, input.length() - 2);
         } else if (input.endsWith("m") || input.endsWith("mln") || input.endsWith("млн")) {
@@ -108,7 +113,6 @@ public class PayCmd implements BaseCommand {
 
         return Double.parseDouble(input) * multiplier;
     }
-
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {

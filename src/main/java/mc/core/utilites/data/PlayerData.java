@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-/**
- * @author Gyusik - Я ебанутый помогите!
- * @since 05.02.2026
- */
 public class PlayerData {
 
     private static final File DATA_FOLDER = new File(GY.getInstance().getDataFolder(), "playerdata");
@@ -23,9 +19,7 @@ public class PlayerData {
     private static final FileConfiguration counterConfig;
 
     static {
-        if (!DATA_FOLDER.exists()) {
-            DATA_FOLDER.mkdirs();
-        }
+        if (!DATA_FOLDER.exists()) DATA_FOLDER.mkdirs();
         counterConfig = YamlConfiguration.loadConfiguration(COUNTER_FILE);
     }
 
@@ -99,5 +93,42 @@ public class PlayerData {
         if (!data.hasPlayedBefore()) {
             data.setFirstJoin();
         }
+    }
+
+    // --- Customization flags ---
+    public boolean isMsgEnabled() {
+        return playerConfig.getBoolean("customization.msg_enabled", true);
+    }
+
+    public void setMsgEnabled(boolean enabled) {
+        playerConfig.set("customization.msg_enabled", enabled);
+        saveData();
+    }
+
+    public boolean isTpEnabled() {
+        return playerConfig.getBoolean("customization.tp_enabled", true);
+    }
+
+    public void setTpEnabled(boolean enabled) {
+        playerConfig.set("customization.tp_enabled", enabled);
+        saveData();
+    }
+
+    public boolean isPayEnabled() {
+        return playerConfig.getBoolean("customization.pay_enabled", true);
+    }
+
+    public void setPayEnabled(boolean enabled) {
+        playerConfig.set("customization.pay_enabled", enabled);
+        saveData();
+    }
+
+    public boolean isScoreboardEnabled() {
+        return playerConfig.getBoolean("customization.scoreboard_enabled", true);
+    }
+
+    public void setScoreboardEnabled(boolean enabled) {
+        playerConfig.set("customization.scoreboard_enabled", enabled);
+        saveData();
     }
 }
