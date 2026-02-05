@@ -16,7 +16,6 @@ public class EcCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player viewer)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
@@ -31,7 +30,7 @@ public class EcCmd implements BaseCommand {
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            MessageUtil.sendMessage(viewer, "Игрок не найден.");
+            MessageUtil.sendUnknownPlayerMessage(viewer, args[0]);
             return true;
         }
 

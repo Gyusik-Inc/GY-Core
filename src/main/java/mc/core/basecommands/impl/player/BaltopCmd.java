@@ -28,7 +28,6 @@ public class BaltopCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
         Economy econ = GY.getEcon();
         if (econ == null) {
-            sender.sendMessage(Component.text("Экономика недоступна.", NamedTextColor.RED));
             return true;
         }
 
@@ -40,12 +39,11 @@ public class BaltopCmd implements BaseCommand {
             } catch (NumberFormatException ignored) {}
         }
 
-        // Собираем балансы, исключая админов
         Map<UUID, Double> balances = new HashMap<>();
         for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
             Player onlinePlayer = Bukkit.getPlayer(offlinePlayer.getUniqueId());
             if (onlinePlayer != null && onlinePlayer.hasPermission("gy-core.admin")) {
-                continue; // Пропускаем админов
+                continue;
             }
             double balance = econ.getBalance(offlinePlayer);
             balances.put(offlinePlayer.getUniqueId(), balance);

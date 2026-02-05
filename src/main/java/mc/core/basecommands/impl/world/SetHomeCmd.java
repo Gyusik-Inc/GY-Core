@@ -17,12 +17,11 @@ public class SetHomeCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: /sethome <название>");
+            MessageUtil.sendUsageMessage(player, "/sethome [Дом]");
             return true;
         }
 

@@ -59,7 +59,7 @@ public class FixCmd implements TabExecutor {
             }
             Player target = player.getServer().getPlayerExact(args[1]);
             if (target == null) {
-                MessageUtil.sendMessage(player, "Игрок не найден.");
+                MessageUtil.sendUnknownPlayerMessage(sender, args[1]);
                 return true;
             }
             handleFixAll(player, target, true);
@@ -145,7 +145,7 @@ public class FixCmd implements TabExecutor {
         inv.setItemInOffHand(off);
 
         if (!isAdmin && !repairedSomething) {
-            MessageUtil.sendMessage(executor, "В инвентаре ничего нету, что можно починить");
+            MessageUtil.sendMessage(executor, "Вещи для починки не найдены.");
             return;
         }
 

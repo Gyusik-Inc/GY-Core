@@ -17,7 +17,6 @@ public class ClearCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                MessageUtil.sendMessage(sender, "Команда доступна только игрокам.");
                 return true;
             }
 
@@ -34,7 +33,7 @@ public class ClearCmd implements BaseCommand {
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            MessageUtil.sendMessage(sender, "Игрок не найден.");
+            MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 

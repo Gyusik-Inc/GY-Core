@@ -16,12 +16,11 @@ public class DelHomeCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: &#30578C/delhome <название>");
+            MessageUtil.sendUsageMessage(player, "/delhome [Дом]");
             return true;
         }
 

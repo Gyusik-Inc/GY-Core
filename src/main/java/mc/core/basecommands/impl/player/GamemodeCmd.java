@@ -14,31 +14,23 @@ import java.util.Arrays;
 @BaseCommandInfo(name = "gm", permission = "", cooldown = 3)
 public class GamemodeCmd implements BaseCommand {
     private String getRussianName(GameMode mode) {
-        switch (mode) {
-            case SURVIVAL:
-                return "Выживание";
-            case CREATIVE:
-                return "Креатив";
-            case ADVENTURE:
-                return "Приключения";
-            case SPECTATOR:
-                return "Наблюдатель";
-            default:
-                return mode.name();
-        }
+        return switch (mode) {
+            case SURVIVAL -> "Выживание";
+            case CREATIVE -> "Креатив";
+            case ADVENTURE -> "Приключения";
+            case SPECTATOR -> "Наблюдатель";
+            default -> mode.name();
+        };
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Только игрок!");
+        if (!(sender instanceof Player player)) {
             return true;
         }
 
-        Player player = (Player) sender;
-
         if (args.length == 0) {
-            MessageUtil.sendMessage(player, "Использование: /gm <0/1/2/3>");
+            MessageUtil.sendUsageMessage(player, "gm [0/1/2/3]");
             return true;
         }
 
@@ -74,8 +66,6 @@ public class GamemodeCmd implements BaseCommand {
         }
 
         player.setGameMode(gameMode);
-
-        // Правильный формат цветного сообщения для Minecraft
         MessageUtil.sendMessage(player, "&fРежим изменён на &#30578C" + getRussianName(gameMode));
 
         return true;

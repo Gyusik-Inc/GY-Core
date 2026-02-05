@@ -27,12 +27,11 @@ public class TpCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: &#30578C/tp <ник>");
+            MessageUtil.sendUsageMessage(sender, "/tp [Игрок]");
             return true;
         }
 

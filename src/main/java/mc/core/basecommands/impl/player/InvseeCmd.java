@@ -72,13 +72,13 @@ public class InvseeCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: /invsee <ник>");
+            MessageUtil.sendUsageMessage(sender, "/invsee [Игрок]");
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            MessageUtil.sendMessage(player, "Игрок не найден.");
+            MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 

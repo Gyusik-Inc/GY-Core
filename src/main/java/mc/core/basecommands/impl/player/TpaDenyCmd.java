@@ -17,7 +17,6 @@ public class TpaDenyCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player target)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 

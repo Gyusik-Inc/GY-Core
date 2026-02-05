@@ -25,7 +25,7 @@ public class HelperCmd implements BaseCommand {
         if (args.length == 1) {
             suspect = Bukkit.getPlayer(args[0]);
             if (suspect == null) {
-                player.sendMessage(MessageUtil.getGYString("Игрок &c" + args[0] + "&f не найден!"));
+                MessageUtil.sendUnknownPlayerMessage(player, args[0]);
                 return true;
             }
         } else if (args.length != 0) {

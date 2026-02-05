@@ -22,7 +22,7 @@ public class WarpCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length < 1 || args.length > 2) {
-            MessageUtil.sendMessage(player, "Использование: /warp <название> [ник]");
+            MessageUtil.sendUsageMessage(player, "/warp [Название]");
             return true;
         }
 
@@ -30,12 +30,11 @@ public class WarpCmd implements BaseCommand {
         Player targetPlayer = player;
         if (args.length == 2) {
             if (!player.hasPermission("gy-core.admin")) {
-                MessageUtil.sendMessage(player, "Нет прав телепортировать других игроков.");
                 return true;
             }
             targetPlayer = Bukkit.getPlayerExact(args[1]);
             if (targetPlayer == null) {
-                MessageUtil.sendMessage(player, "Игрок не найден.");
+                MessageUtil.sendUnknownPlayerMessage(sender, args[1]);
                 return true;
             }
         }

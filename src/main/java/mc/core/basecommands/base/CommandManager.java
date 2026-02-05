@@ -68,6 +68,11 @@ public class CommandManager {
         registerCommand(HelperCmd.class);
 
         registerCommand(BaltopCmd.class);
+        registerCommand(BroadcastCmd.class);
+
+        registerCommand(MsgCmd.class);
+        registerCommand(ReplyCmd.class);
+        registerCommand(PayCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

@@ -35,7 +35,7 @@ public class RtpCmd implements TabExecutor {
         } else if (args[0].equalsIgnoreCase("near")) {
             handleNear(player);
         } else {
-            MessageUtil.sendMessage(player, "Использование: §f/rtp §7или §f/rtp near");
+            MessageUtil.sendUsageMessage(sender, "/rtp, /rtp near");
         }
 
         return true;

@@ -19,19 +19,17 @@ public class SetWarp implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length < 1) {
-            MessageUtil.sendMessage(player, "Использование: /setwarp <название> ИЛИ /setwarp admin <название>");
+            MessageUtil.sendUsageMessage(player, "/setwarp [Название]");
             return true;
         }
 
         boolean adminWarp = false;
         String name;
 
-        // 🔹 Админ-варпы
         if (args[0].equalsIgnoreCase("admin")) {
 
             if (!player.hasPermission("gy-core.admin")) {
@@ -47,15 +45,12 @@ public class SetWarp implements BaseCommand {
             adminWarp = true;
             name = args[1];
 
-            // проверка перезаписи админ-варпа
             if (WarpData.getAdminWarp(name) != null) {
                 MessageUtil.sendMessage(player, "Этот админ-варп уже существует и будет перезаписан.");
             }
 
         } else {
             name = args[0];
-
-            // лимит варпов обычного игрока
             int limit = 1;
             if (player.hasPermission("gy-core.warp.plus")) limit = 3;
             if (player.hasPermission("gy-core.admin")) limit = Integer.MAX_VALUE;
@@ -70,8 +65,6 @@ public class SetWarp implements BaseCommand {
                 }
             }
 
-
-            // проверка лимита только для новых варпов
             if (!exists && WarpData.getPlayerWarpCount(player.getUniqueId()) >= limit) {
                 MessageUtil.sendMessage(player, "Вы достигли лимита варпов &#30578C(" + limit + ")");
                 return true;

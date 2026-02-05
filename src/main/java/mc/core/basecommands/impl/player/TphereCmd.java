@@ -21,7 +21,7 @@ public class TphereCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: /tphere <ник>");
+            MessageUtil.sendUsageMessage(player, "/tphere [Игрок]");
             return true;
         }
 
@@ -29,12 +29,13 @@ public class TphereCmd implements BaseCommand {
         Player target = Bukkit.getPlayerExact(targetName);
 
         if (target == null) {
-            MessageUtil.sendMessage(player, "Игрок не найден.");
+            MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         if (target.equals(player)) {
             MessageUtil.sendMessage(player, "Вы не можете телепортировать себя к себе.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 

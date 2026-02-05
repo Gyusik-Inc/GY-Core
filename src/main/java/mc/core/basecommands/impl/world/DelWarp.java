@@ -24,7 +24,7 @@ public class DelWarp implements BaseCommand {
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: /delwarp <название>");
+            MessageUtil.sendUsageMessage(player, "/delwarp [Название]");
             return true;
         }
 

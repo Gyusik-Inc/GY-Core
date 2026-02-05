@@ -19,12 +19,11 @@ public class HomeCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length == 0) {
-            MessageUtil.sendMessage(player, "Использование: /home <название> или /home list [игрок]");
+            MessageUtil.sendUsageMessage(player, "/home [Дом, list]");
             return true;
         }
 
@@ -34,7 +33,7 @@ public class HomeCmd implements BaseCommand {
             if (args.length == 2 && player.hasPermission("gy-core.home.admin")) {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target == null) {
-                    MessageUtil.sendMessage(player, "Игрок не найден.");
+                    MessageUtil.sendUnknownPlayerMessage(player, args[1]);
                     return true;
                 }
                 var homes = HomeData.getHomes(target.getUniqueId());

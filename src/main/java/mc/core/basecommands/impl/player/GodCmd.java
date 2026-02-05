@@ -27,7 +27,7 @@ public class GodCmd implements BaseCommand {
         if (args.length > 0) {
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                MessageUtil.sendMessage(player, "Игрок не найден.");
+                MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
         }

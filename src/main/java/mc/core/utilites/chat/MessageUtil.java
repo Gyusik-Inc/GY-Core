@@ -4,6 +4,7 @@ import lombok.Getter;
 import mc.core.utilites.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -34,6 +35,20 @@ public class MessageUtil {
         PriorityData(int priority) {
             this.priority = priority;
             this.timestamp = System.currentTimeMillis();
+        }
+    }
+
+    public static void sendUnknownPlayerMessage(CommandSender sender, String unkPlayer) {
+        sender.sendMessage(colorize(prefix + "Игрок '&#30578C" + unkPlayer + "&f' не найден."));
+        if (sender instanceof Player player) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+        }
+    }
+
+    public static void sendUsageMessage(CommandSender sender, String command) {
+        sender.sendMessage(colorize(prefix + "Использование: &#30578C" + command));
+        if (sender instanceof Player player) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
 

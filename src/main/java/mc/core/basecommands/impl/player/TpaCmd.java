@@ -28,18 +28,17 @@ public class TpaCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            MessageUtil.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length != 1) {
-            MessageUtil.sendMessage(player, "Использование: &#30578C/tpa <ник>");
+            MessageUtil.sendUsageMessage(sender, "/tpa [Игрок]");
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null || !target.isOnline()) {
-            MessageUtil.sendMessage(player, "Игрок не найден!");
+            MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 

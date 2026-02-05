@@ -79,3 +79,14 @@ commands:
     aliases:
       - balancetop
       - btop
+  broadcast:
+    aliases:
+      - bc
+  msg:
+    aliases:
+      - m
+      - tell
+  reply:
+    aliases:
+      - r
+  pay:

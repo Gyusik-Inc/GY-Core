@@ -32,7 +32,7 @@ public class SpawnCmd implements BaseCommand {
 
             Player target = Bukkit.getPlayerExact(args[0]);
             if (target == null) {
-                sender.sendMessage("Игрок не найден.");
+                MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
 
