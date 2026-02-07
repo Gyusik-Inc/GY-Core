@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 /**
- * @author Gyusik - Я ебанутый помогите!
+ * @author Gyusik
  * @since 03.02.2026
  */
 
@@ -26,20 +26,14 @@ import java.util.List;
 public class NearCmd implements BaseCommand {
 
     private static final String[] DIRECTIONS = {
-            "⬅",
-            "⬉",
-            "⬆",
-            "⬈",
-            "➡",
-            "⬊",
-            "⬇",
-            "⬋"
+            "⬅", "⬉", "⬆", "⬈", "➡", "⬊", "⬇", "⬋"
     };
 
     private static final double DEFAULT_RADIUS = 100.0;
     private static final double DONATOR_RADIUS = 150.0;
     private static final String DONATOR_PERMISSION = "gy-core.near.vip";
     private static final String NETHERITE_PERMISSION = "gy-core.near.netherite";
+    private static final String ADMIN_PERMISSION = "gy-core.admin";
 
     public enum ArmorType {
         NETHERITE, DIAMOND, NONE
@@ -47,25 +41,30 @@ public class NearCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            return true;
-        }
+        if (!(sender instanceof Player player)) return true;
 
         Location pLoc = player.getLocation();
         double maxRadius = player.hasPermission(DONATOR_PERMISSION) ? DONATOR_RADIUS : DEFAULT_RADIUS;
         boolean foundAny = false;
+        boolean isAdminViewer = player.hasPermission(ADMIN_PERMISSION);
 
         MessageUtil.sendMessage(player, "&7Окружающие игроки: ");
 
         for (Player target : player.getWorld().getPlayers()) {
+
             if (target == player ||
                     target.getGameMode().equals(GameMode.SPECTATOR) ||
-                    target.hasPermission("gy-core.near.ignore") ||
                     VanishCmd.isVanished(target)) {
                 continue;
             }
 
-            if (target.hasPermission(NETHERITE_PERMISSION) && !isWearingNetherite(target)) {
+            // Админы видят всех, обычные игроки НЕ видят игнор
+            if (!isAdminViewer && target.hasPermission("gy-core.near.ignore")) {
+                continue;
+            }
+
+            // Проверка на нехеритовую броню только для обычных игроков
+            if (!isAdminViewer && target.hasPermission(NETHERITE_PERMISSION) && !isWearingNetherite(target)) {
                 continue;
             }
 
@@ -74,55 +73,60 @@ public class NearCmd implements BaseCommand {
             double dz = tLoc.getZ() - pLoc.getZ();
             double distance = Math.sqrt(dx * dx + dz * dz);
 
-            if (distance > maxRadius) {
-                continue;
-            }
+            // Радиус только для обычных игроков
+            if (!isAdminViewer && distance > maxRadius) continue;
 
             float angle = (float) Math.toDegrees(Math.atan2(dz, dx) - Math.toRadians(pLoc.getYaw()));
             if (angle < 0) angle += 360;
 
-            String direction = MessageUtil.colorize(DIRECTIONS[(int) ((angle + 22.5f) / 45f) % 8]);
+            String direction = DIRECTIONS[(int) ((angle + 22.5f) / 45f) % 8];
             ArmorType armorType = getDominantArmor(target);
+            boolean isIgnored = target.hasPermission("gy-core.near.ignore");
 
+            // Компонент статуса скрытости (только для админов)
+            Component hiddenMark = Component.empty();
+            if (isAdminViewer && isIgnored) {
+                hiddenMark = Component.text(" ")
+                        .append(Component.text("Скрыт", NamedTextColor.GRAY));
+            }
+
+            // компонент сообщения
             Component msg = switch (armorType) {
                 case NETHERITE -> Component.text()
                         .append(Component.text("\uD83D\uDEE1", TextColor.fromHexString("#574e57"))
                                 .append(Component.text(" ", NamedTextColor.DARK_GRAY)))
-                        .append(Component.text(target.getName())
-                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(target.getName(), TextColor.fromHexString("#B1B7BE")))
                         .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
-                        .append(Component.text(String.format("%.0f блоков", distance))
-                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(String.format("%.0f блоков", distance), NamedTextColor.WHITE))
                         .append(Component.text(" (", NamedTextColor.GRAY)
                                 .append(Component.text(direction, NamedTextColor.WHITE))
                                 .append(Component.text(")", NamedTextColor.GRAY)))
                         .append(getInventoryButton(player, target))
+                        .append(hiddenMark)
                         .build();
 
                 case DIAMOND -> Component.text()
                         .append(Component.text("\uD83D\uDEE1", TextColor.fromHexString("#42968d"))
                                 .append(Component.text(" ", NamedTextColor.DARK_GRAY)))
-                        .append(Component.text(target.getName())
-                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(target.getName(), TextColor.fromHexString("#B1B7BE")))
                         .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
-                        .append(Component.text(String.format("%.0f блоков", distance))
-                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(String.format("%.0f блоков", distance), NamedTextColor.WHITE))
                         .append(Component.text(" (", NamedTextColor.GRAY)
                                 .append(Component.text(direction, NamedTextColor.WHITE))
                                 .append(Component.text(")", NamedTextColor.GRAY)))
                         .append(getInventoryButton(player, target))
+                        .append(hiddenMark)
                         .build();
 
                 default -> Component.text()
-                        .append(Component.text(target.getName())
-                                .color(TextColor.fromHexString("#B1B7BE")))
+                        .append(Component.text(target.getName(), TextColor.fromHexString("#B1B7BE")))
                         .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
-                        .append(Component.text(String.format("%.0f блоков", distance))
-                                .color(NamedTextColor.WHITE))
+                        .append(Component.text(String.format("%.0f блоков", distance), NamedTextColor.WHITE))
                         .append(Component.text(" (", NamedTextColor.GRAY)
                                 .append(Component.text(direction, NamedTextColor.WHITE))
                                 .append(Component.text(")", NamedTextColor.GRAY)))
                         .append(getInventoryButton(player, target))
+                        .append(hiddenMark)
                         .build();
             };
 
@@ -144,25 +148,19 @@ public class NearCmd implements BaseCommand {
 
     private ArmorType getDominantArmor(Player player) {
         ItemStack[] armor = player.getInventory().getArmorContents();
-        int netheriteCount = 0;
-        int diamondCount = 0;
+        int netheriteCount = 0, diamondCount = 0;
 
         for (ItemStack item : armor) {
             if (item == null) continue;
 
             String material = item.getType().toString().toUpperCase();
-            if (material.contains("NETHERITE")) {
-                netheriteCount++;
-            } else if (material.contains("DIAMOND")) {
-                diamondCount++;
-            }
+            if (material.contains("NETHERITE")) netheriteCount++;
+            else if (material.contains("DIAMOND")) diamondCount++;
         }
 
-        if (netheriteCount > diamondCount || (netheriteCount == diamondCount && netheriteCount >= 2)) {
+        if (netheriteCount > diamondCount || (netheriteCount == diamondCount && netheriteCount >= 2))
             return ArmorType.NETHERITE;
-        } else if (diamondCount >= 2) {
-            return ArmorType.DIAMOND;
-        }
+        else if (diamondCount >= 2) return ArmorType.DIAMOND;
         return ArmorType.NONE;
     }
 
@@ -170,22 +168,22 @@ public class NearCmd implements BaseCommand {
         return getDominantArmor(player) == ArmorType.NETHERITE;
     }
 
-    private Component getInventoryButton(Player player, Player target) {
-        if (!player.hasPermission("gy-core.invsee")) {
-            return Component.empty();
+    private Component getInventoryButton(Player viewer, Player target) {
+        Component base = Component.empty();
+
+        if (viewer.hasPermission("gy-core.invsee")) {
+            base = Component.text(" [")
+                    .color(TextColor.fromHexString("#B1B7BE"))
+                    .append(Component.text("Инвентарь", TextColor.fromHexString("#30578C"))
+                            .clickEvent(ClickEvent.runCommand("/invsee " + target.getName()))
+                            .hoverEvent(HoverEvent.showText(
+                                    Component.text("Открыть инвентарь ", NamedTextColor.GRAY)
+                                            .append(Component.text(target.getName(), TextColor.fromHexString("#30578C")))
+                            )))
+                    .append(Component.text("]"))
+                    .color(TextColor.fromHexString("#B1B7BE"));
         }
 
-        return Component.text(" [")
-                .color(TextColor.fromHexString("#B1B7BE"))
-                .append(Component.text("Инвентарь", TextColor.fromHexString("#30578C"))
-                        .clickEvent(ClickEvent.runCommand("/invsee " + target.getName()))
-                        .hoverEvent(HoverEvent.showText(
-                                Component.text("Открыть инвентарь ", NamedTextColor.GRAY)
-                                        .append(Component.text(target.getName(), TextColor.fromHexString("#30578C")))
-                        )))
-                .append(Component.text("]"))
-                .color(TextColor.fromHexString("#B1B7BE"));
+        return base;
     }
-
-
 }

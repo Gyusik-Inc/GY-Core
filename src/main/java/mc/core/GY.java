@@ -7,6 +7,7 @@ import mc.core.basecommands.impl.EventCommand;
 import mc.core.basecommands.impl.player.FixCmd;
 import mc.core.basecommands.impl.player.RtpCmd;
 import mc.core.basecommands.impl.player.VanishCmd;
+import mc.core.basecommands.impl.world.RtpFallProtection;
 import mc.core.chat.ChatEvent;
 import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
@@ -63,6 +64,7 @@ public final class GY extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventCommand(), this);
         getServer().getPluginManager().registerEvents(new PvpMenuEvent(), this);
         getServer().getPluginManager().registerEvents(new AntiRelogEvent(), this);
+        getServer().getPluginManager().registerEvents(new RtpFallProtection(), this);
 
         Objects.requireNonNull(getCommand("plugins")).setExecutor(new PluginsCommand());
         Objects.requireNonNull(getCommand("rtp")).setExecutor(new RtpCmd());

@@ -1,6 +1,7 @@
 package mc.core.basecommands.impl.player;
 
 import mc.core.GY;
+import mc.core.basecommands.impl.world.RtpFallProtection;
 import mc.core.utilites.chat.AnimateGradientUtil;
 import mc.core.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
@@ -104,7 +105,7 @@ public class RtpCmd implements TabExecutor {
             return;
         }
 
-        if (player.getLocation().distance(target.getLocation()) <= 30) {
+        if (distance2D(player.getLocation(), target.getLocation()) <= 30) {
             MessageUtil.sendMessage(player, "Игрок слишком близко.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
@@ -122,14 +123,14 @@ public class RtpCmd implements TabExecutor {
         Location finalSafeLocation = safeLocation;
         Player finalTarget = target;
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
-            player.teleport(finalSafeLocation);
+            teleportWithSkyFall(player, finalSafeLocation);
+
             MessageUtil.sendMessage(player,
                     "Ближайший игрок §f&#30578C" + finalTarget.getName() +
                             " §7(" + (int) finalSafeLocation.getX() + ", " + (int) finalSafeLocation.getY() + ", " + (int) finalSafeLocation.getZ() + ")");
             player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         }, 10L);
     }
-
 
     private void teleportRandom(Player player, int radius) {
         World world = player.getWorld();
@@ -162,15 +163,41 @@ public class RtpCmd implements TabExecutor {
 
         Location finalSafeLocation = safeLocation;
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
-            player.teleport(finalSafeLocation);
+            teleportWithSkyFall(player, finalSafeLocation);
+
             MessageUtil.sendMessage(player,
                     "Успешная телепортация! §7(" +
                             (int) finalSafeLocation.getX() + ", " +
                             (int) finalSafeLocation.getY() + ", " +
                             (int) finalSafeLocation.getZ() + ")");
             player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-        }, 10L);
+        }, 1L);
     }
+
+    private void teleportWithSkyFall(Player player, Location groundLoc) {
+        Location skyLoc = new Location(
+                groundLoc.getWorld(),
+                groundLoc.getX(),
+                200,
+                groundLoc.getZ(),
+                groundLoc.getYaw(),
+                groundLoc.getPitch()
+        );
+
+        RtpFallProtection.give(player);
+
+        player.teleport(skyLoc);
+        player.setFallDistance(0);
+        player.setVelocity(player.getVelocity().setY(0));
+    }
+
+    private double distance2D(Location a, Location b) {
+        double dx = a.getX() - b.getX();
+        double dz = a.getZ() - b.getZ();
+        return Math.sqrt(dx * dx + dz * dz);
+    }
+
+
 
     private boolean isSafeLocation(Location loc) {
         World world = loc.getWorld();
