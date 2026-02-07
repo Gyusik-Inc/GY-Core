@@ -75,27 +75,21 @@ public class AutoRestart {
         }
     }
 
-    public boolean cancelRestart() {
-        if (countdownTask != null) {
-            countdownTask.cancel();
-            countdownTask = null;
-            restartScheduled = false;
-            broadcastMessage("Перезагрузка отменена!");
-            return true;
-        }
-        return false;
-    }
-
     private void startCountdown(long totalSeconds) {
         countdownTask = new BukkitRunnable() {
             long remaining = totalSeconds;
 
             @Override
             public void run() {
+                if (!restartScheduled) {
+                    cancel();
+                    return;
+                }
+
                 if (remaining <= 0) {
                     broadcastMessage("Сервер перезагружается!");
-                    Bukkit.shutdown();
                     cancel();
+                    Bukkit.shutdown();
                     return;
                 }
 
@@ -113,8 +107,23 @@ public class AutoRestart {
                 remaining--;
             }
         };
+
+        restartScheduled = true;
         countdownTask.runTaskTimer(GY.getInstance(), 0L, 20L);
     }
+
+    public boolean cancelRestart() {
+        if (countdownTask != null) {
+            restartScheduled = false;
+            countdownTask.cancel();
+            countdownTask = null;
+
+            broadcastMessage("Перезагрузка отменена!");
+            return true;
+        }
+        return false;
+    }
+
 
     private void broadcastMessage(String message) {
         Bukkit.broadcast(
