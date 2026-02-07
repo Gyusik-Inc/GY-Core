@@ -72,7 +72,6 @@ public class CommandManager {
 
         registerCommand(MsgCmd.class);
         registerCommand(ReplyCmd.class);
-        registerCommand(PayCmd.class);
 
         registerCommand(CustomizationCmd.class);
         registerCommand(AutoRestartCmd.class);

@@ -1,17 +1,16 @@
 package mc.core.basecommands.impl.player;
 
-import mc.core.GY;
+import mc.GY;
 import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
+import mc.economy.money.MoneyDB;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -26,7 +25,7 @@ public class BaltopCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        Economy econ = GY.getEcon();
+        mc.GY econ = GY.getInstance();
         if (econ == null) {
             return true;
         }
@@ -45,7 +44,9 @@ public class BaltopCmd implements BaseCommand {
             if (onlinePlayer != null && onlinePlayer.hasPermission("gy-core.admin")) {
                 continue;
             }
-            double balance = econ.getBalance(offlinePlayer);
+
+            MoneyDB moneyDB = GY.getMoneySystem().getDatabase();
+            double balance = moneyDB.getBalance(offlinePlayer);
             balances.put(offlinePlayer.getUniqueId(), balance);
         }
 

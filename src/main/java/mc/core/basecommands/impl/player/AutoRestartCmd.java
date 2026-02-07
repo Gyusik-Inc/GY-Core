@@ -33,7 +33,7 @@ public class AutoRestartCmd implements BaseCommand {
         AutoRestart autoRestart = GY.getInstance().getAutoRestart();
         if (input.equals("cancel")) {
             if (autoRestart.cancelRestart()) {
-                MessageUtil.sendMessage(player, "&Перезагрузка отменена.");
+                MessageUtil.sendMessage(player, "Перезагрузка отменена.");
             } else {
                 MessageUtil.sendMessage(player, "&cПерезагрузка не была запланирована.");
             }
