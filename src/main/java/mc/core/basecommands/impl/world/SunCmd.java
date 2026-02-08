@@ -29,7 +29,7 @@ public class SunCmd implements BaseCommand {
         for (org.bukkit.World world : worlds) {
             world.setStorm(false);
             world.setThundering(false);
-            world.setWeatherDuration(10000);
+            world.setWeatherDuration(48000);
         }
 
         MessageUtil.sendMessage(sender, "&#30578CЯсная &fпогода установлена.");

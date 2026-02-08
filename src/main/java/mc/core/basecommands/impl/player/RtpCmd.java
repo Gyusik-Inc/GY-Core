@@ -43,7 +43,34 @@ public class RtpCmd implements TabExecutor {
     }
 
     private void handleRtp(Player player) {
-        teleportRandom(player, 500);
+        World world = player.getWorld();
+        Location safeLocation = findSafeLocation(world, 0, 0, 500);
+
+        if (safeLocation == null) {
+            MessageUtil.sendMessage(player, "Не найдено безопасное место в радиусе 500 блоков.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+            return;
+        }
+
+        AnimateGradientUtil.animateGradientTitleNoDelay(
+                player,
+                "#30578C",
+                "#7495C1",
+                "ɴᴏʀᴛʜ-ᴍᴄ",
+                "Успешная телепортация!",
+                1000
+        );
+
+        Location finalSafeLocation = safeLocation;
+        Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
+            teleportWithSkyFall(player, finalSafeLocation);
+            MessageUtil.sendMessage(player,
+                    "Успешная телепортация! §7(" +
+                            (int) finalSafeLocation.getX() + ", " +
+                            (int) finalSafeLocation.getY() + ", " +
+                            (int) finalSafeLocation.getZ() + ")");
+            player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+        }, 1L);
     }
 
     private void handleNear(Player player) {
@@ -80,26 +107,8 @@ public class RtpCmd implements TabExecutor {
             selectionAttempts++;
         } while (true);
 
-        int attempts = 0;
-        final int maxAttempts = 100;
-        Location safeLocation = null;
-
-        do {
-            double distance = 50 + random.nextDouble() * 45;
-            double angle = random.nextDouble() * 2 * Math.PI;
-
-            double offsetX = Math.cos(angle) * distance;
-            double offsetZ = Math.sin(angle) * distance;
-
-            int x = (int) (targetLoc.getX() + offsetX);
-            int z = (int) (targetLoc.getZ() + offsetZ);
-            int y = world.getHighestBlockYAt(x, z);
-
-            safeLocation = new Location(world, x + 0.5, y + 1, z + 0.5);
-            attempts++;
-        } while (!isSafeLocation(safeLocation) && attempts < maxAttempts);
-
-        if (attempts >= maxAttempts) {
+        Location safeLocation = findSafeNearLocation(world, targetLoc, 50, 95);
+        if (safeLocation == null) {
             MessageUtil.sendMessage(player, "Не найдено безопасное место рядом с игроком.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
@@ -132,46 +141,90 @@ public class RtpCmd implements TabExecutor {
         }, 10L);
     }
 
-    private void teleportRandom(Player player, int radius) {
-        World world = player.getWorld();
+    private Location findSafeLocation(World world, int centerX, int centerZ, int radius) {
         int attempts = 0;
-        final int maxAttempts = 100;
-        Location safeLocation = null;
+        final int maxAttempts = 200;
 
         do {
-            int x = random.nextInt(radius * 2) - radius;
-            int z = random.nextInt(radius * 2) - radius;
-            int y = world.getHighestBlockYAt(x, z);
-            safeLocation = new Location(world, x + 0.5, y + 1, z + 0.5);
+            int x = centerX + random.nextInt(radius * 2) - radius;
+            int z = centerZ + random.nextInt(radius * 2) - radius;
+
+            Location candidate = findSafeLanding(world, x, z);
+            if (candidate != null) {
+                return candidate;
+            }
             attempts++;
-        } while (!isSafeLocation(safeLocation) && attempts < maxAttempts);
+        } while (attempts < maxAttempts);
 
-        if (attempts >= maxAttempts) {
-            MessageUtil.sendMessage(player, "Не найдено безопасное место в радиусе " + radius + " блоков.");
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
-            return;
+        return null;
+    }
+
+    private Location findSafeNearLocation(World world, Location center, double minRadius, double maxRadius) {
+        int attempts = 0;
+        final int maxAttempts = 100;
+
+        do {
+            double distance = minRadius + random.nextDouble() * (maxRadius - minRadius);
+            double angle = random.nextDouble() * 2 * Math.PI;
+
+            double offsetX = Math.cos(angle) * distance;
+            double offsetZ = Math.sin(angle) * distance;
+
+            int x = (int) (center.getX() + offsetX);
+            int z = (int) (center.getZ() + offsetZ);
+
+            Location candidate = findSafeLanding(world, x, z);
+            if (candidate != null) {
+                return candidate;
+            }
+            attempts++;
+        } while (attempts < maxAttempts);
+
+        return null;
+    }
+
+    private Location findSafeLanding(World world, int x, int z) {
+        if (world == null) return null;
+
+        int surfaceY = world.getHighestBlockYAt(x, z);
+        Location landing = new Location(world, x + 0.5, surfaceY + 1, z + 0.5);
+
+        // ✅ Проверяем посадочную точку на поверхности
+        Block feet = world.getBlockAt(landing.getBlockX(), surfaceY, landing.getBlockZ());   // Под ноги
+        Block head = world.getBlockAt(landing.getBlockX(), surfaceY + 1, landing.getBlockZ()); // Голова
+
+        // ❌ Вода/лава под ногами = НЕТ
+        if (isLiquid(feet.getType())) return null;
+
+        // ❌ Не твердый блок под ногами = НЕТ
+        if (!feet.getType().isSolid()) return null;
+
+        // ❌ Голова не в воздухе = НЕТ
+        if (head.getType() != Material.AIR) return null;
+
+        // ❌ Вода рядом = НЕТ
+        if (hasWaterNearby(world, landing.getBlockX(), surfaceY, landing.getBlockZ())) return null;
+
+        return landing;
+    }
+
+    private boolean isLiquid(Material material) {
+        return material == Material.WATER ||
+                material == Material.LAVA;
+    }
+
+    private boolean hasWaterNearby(World world, int x, int y, int z) {
+        // Проверяем 3x3 вокруг под ногами на воду
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (dx == 0 && dz == 0) continue;
+                Block nearby = world.getBlockAt(x + dx, y, z + dz);
+                if (nearby.getType() == Material.WATER) {
+                    return true;
+                }
+            }
         }
-
-        AnimateGradientUtil.animateGradientTitleNoDelay(
-                player,
-                "#30578C",
-                "#7495C1",
-                "ɴᴏʀᴛʜ-ᴍᴄ",
-                "Успешная телепортация!",
-                1000
-        );
-
-        Location finalSafeLocation = safeLocation;
-        Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
-            teleportWithSkyFall(player, finalSafeLocation);
-
-            MessageUtil.sendMessage(player,
-                    "Успешная телепортация! §7(" +
-                            (int) finalSafeLocation.getX() + ", " +
-                            (int) finalSafeLocation.getY() + ", " +
-                            (int) finalSafeLocation.getZ() + ")");
-            player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-        }, 1L);
+        return false;
     }
 
     private void teleportWithSkyFall(Player player, Location groundLoc) {
@@ -185,7 +238,6 @@ public class RtpCmd implements TabExecutor {
         );
 
         RtpFallProtection.give(player);
-
         player.teleport(skyLoc);
         player.setFallDistance(0);
         player.setVelocity(player.getVelocity().setY(0));
@@ -195,15 +247,6 @@ public class RtpCmd implements TabExecutor {
         double dx = a.getX() - b.getX();
         double dz = a.getZ() - b.getZ();
         return Math.sqrt(dx * dx + dz * dz);
-    }
-
-
-
-    private boolean isSafeLocation(Location loc) {
-        World world = loc.getWorld();
-        Block feet = world.getBlockAt(loc.getBlockX(), (int) loc.getY() - 1, loc.getBlockZ());
-        Block head = world.getBlockAt(loc.getBlockX(), (int) loc.getY(), loc.getBlockZ());
-        return head.getType() == Material.AIR && feet.getType() != Material.LAVA;
     }
 
     @Override

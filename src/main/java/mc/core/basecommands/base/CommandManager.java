@@ -121,7 +121,7 @@ public class CommandManager {
         @Override
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
             if (!annotation.permission().isEmpty() && !sender.hasPermission(annotation.permission())) {
-                MessageUtil.sendMessage(sender, "Нет прав на использование.");
+                MessageUtil.sendPermissionMessage(sender);
                 if (sender instanceof Player player) {
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                 }

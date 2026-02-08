@@ -22,16 +22,25 @@ public class GodCmd implements BaseCommand {
             return true;
         }
 
-        Player target = player;
-
         if (args.length > 0) {
-            target = Bukkit.getPlayer(args[0]);
+            if (!player.hasPermission("gy-core.admin")) {
+                MessageUtil.sendPermissionMessage(player);
+                return true;
+            }
+
+            Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 MessageUtil.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
+
+            return toggleGodMode(player, target);
         }
 
+        return toggleGodMode(player, player);
+    }
+
+    private boolean toggleGodMode(Player sender, Player target) {
         String uuid = target.getUniqueId().toString();
         boolean isGod = godPlayers.contains(uuid);
 
@@ -45,11 +54,12 @@ public class GodCmd implements BaseCommand {
         }
 
         String status = isGod ? "&cвыключен." : "&aвключён.";
-        if (target == player) {
-            MessageUtil.sendMessage(player, "Режим бога " + status);
+
+        if (target == sender) {
+            MessageUtil.sendMessage(target, "Режим бога " + status);
         } else {
-            MessageUtil.sendMessage(player, "Режим бога &#30578C" + target.getName() + " " + status);
-            MessageUtil.sendMessage(target, "Режим бога " + status + "!");
+            MessageUtil.sendMessage(sender, "Режим бога для &#30578C" + target.getName() + " " + status);
+            MessageUtil.sendMessage(target, "Режим бога " + status + " &7(§e" + sender.getName() + "&7)");
         }
 
         return true;
@@ -64,7 +74,7 @@ public class GodCmd implements BaseCommand {
         if (godPlayers.remove(uuid)) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            MessageUtil.sendMessage(player, "&Режим бога &cвыключен.");
+            MessageUtil.sendMessage(player, "Режим бога &cвыключен.");
         }
     }
 
@@ -80,10 +90,12 @@ public class GodCmd implements BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) {
+        if (args.length == 1 && sender.hasPermission("gy-core.admin")) {
+            Player player = sender instanceof Player ? (Player) sender : null;
             return Bukkit.getOnlinePlayers().stream()
+                    .filter(p -> !p.equals(player))
                     .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .filter(name -> args[0].isEmpty() || name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         }
         return List.of();

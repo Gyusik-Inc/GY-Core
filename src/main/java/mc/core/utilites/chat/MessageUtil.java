@@ -38,6 +38,13 @@ public class MessageUtil {
         }
     }
 
+    public static void sendPermissionMessage(CommandSender sender) {
+        MessageUtil.sendMessage(sender, "&cВам нельзя этого делать!");
+        if (sender instanceof Player player) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+        }
+    }
+
     public static void sendUnknownPlayerMessage(CommandSender sender, String unkPlayer) {
         sender.sendMessage(colorize(prefix + "Игрок '&#30578C" + unkPlayer + "&f' не найден."));
         if (sender instanceof Player player) {

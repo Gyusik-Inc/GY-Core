@@ -27,7 +27,7 @@ public class ClearCmd implements BaseCommand {
         }
 
         if (!sender.hasPermission("gy-core.clear.others")) {
-            MessageUtil.sendMessage(sender, "Нет прав!");
+            MessageUtil.sendPermissionMessage(sender);
             return true;
         }
 

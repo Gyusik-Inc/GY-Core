@@ -36,7 +36,7 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 0) {
             if (!player.hasPermission("gy-core.fix")) {
-                MessageUtil.sendMessage(player, "Нет прав!");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
             handleFixHand(player);
@@ -45,7 +45,7 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
             if (!player.hasPermission("gy-core.fix.other")) {
-                MessageUtil.sendMessage(player, "Нет прав!");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
             handleFixAll(player, player, false);
@@ -54,7 +54,7 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 2 && args[0].equalsIgnoreCase("all")) {
             if (!player.hasPermission("gy-core.fix.admin")) {
-                MessageUtil.sendMessage(player, "Нет прав!");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
             Player target = player.getServer().getPlayerExact(args[1]);

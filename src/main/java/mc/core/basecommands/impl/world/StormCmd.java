@@ -29,7 +29,7 @@ public class StormCmd implements BaseCommand {
         for (org.bukkit.World world : worlds) {
             world.setStorm(true);
             world.setThundering(true);
-            world.setWeatherDuration(10000);
+            world.setWeatherDuration(48000);
         }
 
         MessageUtil.sendMessage(sender, "&#30578CШтормовая&f погода установлена.");

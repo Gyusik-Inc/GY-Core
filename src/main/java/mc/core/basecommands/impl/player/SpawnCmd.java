@@ -37,7 +37,7 @@ public class SpawnCmd implements BaseCommand {
             }
 
             if (sender instanceof Player player && !player.hasPermission("gy-core.admin")) {
-                MessageUtil.sendMessage(player, "У вас нет прав.");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
 

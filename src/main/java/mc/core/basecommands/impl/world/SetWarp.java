@@ -33,7 +33,7 @@ public class SetWarp implements BaseCommand {
         if (args[0].equalsIgnoreCase("admin")) {
 
             if (!player.hasPermission("gy-core.admin")) {
-                MessageUtil.sendMessage(player, "Нет прав на админ-варпы.");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
 

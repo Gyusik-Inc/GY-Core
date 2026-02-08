@@ -22,7 +22,7 @@ public class FeedCmd implements BaseCommand {
 
         if (args.length > 0) {
             if (!player.hasPermission("gy-core.heal.admin")) {
-                MessageUtil.sendMessage(player, "Нет прав!");
+                MessageUtil.sendPermissionMessage(player);
                 return true;
             }
 
@@ -37,25 +37,25 @@ public class FeedCmd implements BaseCommand {
         target.setSaturation(20.0f);
 
         if (target == player) {
-            MessageUtil.sendMessage(player, "Голод восстановлен");
+            MessageUtil.sendMessage(player, "Голод восстановлен.");
         } else {
-            MessageUtil.sendMessage(player, "Голод &#30578C" + target.getName() + "&f восстановлен");
-            MessageUtil.sendMessage(target, "Голод восстановлен");
+            MessageUtil.sendMessage(player, "Голод для &#30578C" + target.getName() + "&f восстановлен.");
+            MessageUtil.sendMessage(target, "Голод восстановлен.");
         }
 
         return true;
     }
 
-    @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) {
-            if (sender.hasPermission("gy-core.feed.admin")) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
-                        .toList();
-            }
+        if (args.length == 1 && sender.hasPermission("gy-core.feed.admin")) {
+            Player player = sender instanceof Player ? (Player) sender : null;
+            return Bukkit.getOnlinePlayers().stream()
+                    .filter(p -> !p.equals(player))
+                    .map(Player::getName)
+                    .filter(name -> args[0].isEmpty() || name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .toList();
         }
         return List.of();
     }
+
 }
