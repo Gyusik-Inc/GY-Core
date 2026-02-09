@@ -92,8 +92,9 @@ public class KitPreviewGui implements Listener {
 
             ItemStack arrowNext = new ItemStack(Material.SPECTRAL_ARROW);
             ItemMeta metaNext = arrowNext.getItemMeta();
-            metaPrev.setDisplayName(MessageUtil.colorize("&#30578CСледующая"));
+            metaNext.setDisplayName(MessageUtil.colorize("&#30578CСледующая"));
             arrowNext.setItemMeta(metaNext);
+
 
             if (page > 0) inv.setItem(46, arrowPrev);
             else inv.setItem(46, whitePane);
