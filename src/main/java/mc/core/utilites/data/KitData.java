@@ -87,10 +87,9 @@ public class KitData {
     }
 
     public void resetAllCooldowns() {
-        config.set("usage", null); // удаляем всю секцию usage
+        config.set("usage", null);
         save();
     }
-
 
     private void save() {
         try {

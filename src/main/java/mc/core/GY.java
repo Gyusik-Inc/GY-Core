@@ -13,6 +13,7 @@ import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
 import mc.core.event.HideMessages;
+import mc.core.kits.KitPreviewGui;
 import mc.core.placeholder.AnimatedLogo;
 import mc.core.pvp.antirelog.AntiRelog;
 import mc.core.pvp.antirelog.AntiRelogEvent;

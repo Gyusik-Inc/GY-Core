@@ -5,11 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-/**
- * @author Gyusik - Я ебанутый помогите!
- * @since 03.02.2026
- */
-
 public class AnimateGradientUtil {
 
     public static void animateGradientTitle(Player player,
@@ -18,7 +13,7 @@ public class AnimateGradientUtil {
                                             String title,
                                             String subtitle,
                                             long durationMs) {
-        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs).start();
+        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs, true).start();
     }
 
     public static void animateGradientTitleNoDelay(Player player,
@@ -27,7 +22,25 @@ public class AnimateGradientUtil {
                                                    String title,
                                                    String subtitle,
                                                    long durationMs) {
-        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs).startNoDelay();
+        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs, true).startNoDelay();
+    }
+
+    public static void animateGradientFailTitle(Player player,
+                                                String edgeColor,
+                                                String centerColor,
+                                                String title,
+                                                String subtitle,
+                                                long durationMs) {
+        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs, false).start();
+    }
+
+    public static void animateGradientFailTitleNoDelay(Player player,
+                                                       String edgeColor,
+                                                       String centerColor,
+                                                       String title,
+                                                       String subtitle,
+                                                       long durationMs) {
+        new GradientTitleAnimator(player, edgeColor, centerColor, title, subtitle, durationMs, false).startNoDelay();
     }
 
     private static class GradientTitleAnimator implements Runnable {
@@ -37,31 +50,34 @@ public class AnimateGradientUtil {
         private final String centerColor;
         private final String title;
         private final String subtitle;
+        private final boolean successSound;
 
         private final int totalTicks;
         private final int subtitleTotalTicks;
+        private final String staticTitle;
 
         private int tick = 0;
         private boolean subtitlePhase = false;
         private boolean finishing = false;
 
-        private final String staticTitle;
         private static final String SUB_BASE_COLOR = "#FFFFFF";
         private static final int START_DELAY_TICKS = 15;
 
-        GradientTitleAnimator(Player player,
-                              String edgeColor,
-                              String centerColor,
-                              String title,
-                              String subtitle,
-                              long durationMs) {
+        public GradientTitleAnimator(Player player,
+                                     String edgeColor,
+                                     String centerColor,
+                                     String title,
+                                     String subtitle,
+                                     long durationMs,
+                                     boolean successSound) {
             this.player = player;
             this.edgeColor = edgeColor;
             this.centerColor = centerColor;
             this.title = title;
             this.subtitle = subtitle;
+            this.successSound = successSound;
             this.totalTicks = (int) (durationMs / 50L);
-            this.subtitleTotalTicks = (int) (totalTicks);
+            this.subtitleTotalTicks = totalTicks;
             this.staticTitle = MessageUtil.colorize(edgeColor + "&l" + title);
         }
 
@@ -80,9 +96,7 @@ public class AnimateGradientUtil {
                 double progress = (double) tick / totalTicks;
                 player.sendTitle(buildTitleFrame(progress), subtitle, 0, 25, 0);
 
-                if (tick == 0 || tick == totalTicks / 2) {
-                    player.playSound(player.getLocation(), "minecraft:entity.experience_orb.pickup", 1.0f, 1.0f);
-                }
+                playSoundTick(tick, totalTicks / 2, 0);
 
                 tick++;
                 Bukkit.getScheduler().runTaskLater(GY.getInstance(), this, 0);
@@ -92,29 +106,21 @@ public class AnimateGradientUtil {
             if (!finishing) {
                 if (tick >= subtitleTotalTicks) {
                     finishing = true;
-
                     String finalSubtitle = MessageUtil.colorize(SUB_BASE_COLOR + subtitle);
                     player.sendTitle(staticTitle, finalSubtitle, 0, 10, 40);
 
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                    playSoundFinish();
                     return;
                 }
 
                 double progress = (double) tick / subtitleTotalTicks;
                 player.sendTitle(staticTitle, buildSubtitleFrame(progress), 0, 20, 0);
 
-                if (tick == subtitleTotalTicks / 2) {
-                    player.playSound(player.getLocation(), "minecraft:block.note_block.bell", 0.8f, 1.2f);
-                }
+                playSoundTick(tick, subtitleTotalTicks / 2, 1);
 
                 tick++;
                 Bukkit.getScheduler().runTaskLater(GY.getInstance(), this, 1);
             }
-        }
-
-        public void startNoDelay() {
-            player.resetTitle();
-            Bukkit.getScheduler().runTask(GY.getInstance(), this); // 0 тиков задержки
         }
 
         public void start() {
@@ -126,46 +132,43 @@ public class AnimateGradientUtil {
             );
         }
 
+        public void startNoDelay() {
+            player.resetTitle();
+            Bukkit.getScheduler().runTask(GY.getInstance(), this);
+        }
+
         private String buildTitleFrame(double progress) {
             int length = title.length();
             double center = (length - 1) / 2.0;
-
             double waveCenter = progress * 1.4;
             double softness = 0.18;
 
             StringBuilder out = new StringBuilder();
-
             for (int i = 0; i < length; i++) {
                 double dist = Math.abs(i - center) / center;
                 double d = dist - waveCenter;
                 double t = Math.exp(-(d * d) / (2 * softness * softness));
-
                 out.append(lerpColor(edgeColor, centerColor, t))
                         .append("§l")
                         .append(title.charAt(i));
             }
-
             return MessageUtil.colorize(out.toString());
         }
 
         private String buildSubtitleFrame(double progress) {
             int length = subtitle.length();
             double center = (length - 1) / 2.0;
-
             double wave = Math.sin(progress * Math.PI);
             double softness = 0.22;
 
             StringBuilder out = new StringBuilder();
-
             for (int i = 0; i < length; i++) {
                 double dist = Math.abs(i - center) / center;
                 double d = dist - (1.0 - wave);
                 double t = Math.exp(-(d * d) / (2 * softness * softness));
-
                 out.append(lerpColor(SUB_BASE_COLOR, centerColor, t))
                         .append(subtitle.charAt(i));
             }
-
             return MessageUtil.colorize(out.toString());
         }
 
@@ -183,6 +186,26 @@ public class AnimateGradientUtil {
             int b = (int) (b1 + (b2 - b1) * t);
 
             return String.format("#%02X%02X%02X", r, g, b);
+        }
+
+        private void playSoundTick(int tick, int midTick, int phase) {
+            if (!successSound) {
+                if (tick == 0 || tick == midTick) {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
+                }
+            } else {
+                if (tick == 0 || tick == midTick) {
+                    player.playSound(player.getLocation(), "minecraft:entity.experience_orb.pickup", 1.0f, 1.0f);
+                }
+            }
+        }
+
+        private void playSoundFinish() {
+            if (!successSound) {
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+            } else {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+            }
         }
     }
 }
