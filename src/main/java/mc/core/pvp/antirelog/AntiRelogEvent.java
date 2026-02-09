@@ -43,6 +43,7 @@ public class AntiRelogEvent implements Listener {
     public void onDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Player attacker) ||
                 !(e.getEntity() instanceof Player target)) return;
+        if (attacker.hasPermission("gy-core.admin") || target.hasPermission("gy-core.admin")) return;
 
         if (attacker == target) return;
         if (VanishCmd.isVanished(attacker) || VanishCmd.isVanished(target)) {
@@ -69,6 +70,7 @@ public class AntiRelogEvent implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
+        if (player.hasPermission("gy-core.admin")) return;
         if (AntiRelog.isInPvp(player)) {
             player.setHealth(0);
             Bukkit.broadcast(MessageUtil.getGYString("Игрок &#30578C" + player.getName() + "&f покинул игру, во время боя."), "");
@@ -119,8 +121,6 @@ public class AntiRelogEvent implements Listener {
 
         playerCooldowns.put(item.getType(), now);
     }
-
-
 
     @EventHandler
     public void onItemUse(PlayerInteractEvent e) {

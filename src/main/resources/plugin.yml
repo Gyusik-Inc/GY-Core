@@ -95,3 +95,6 @@ commands:
     aliases:
       - restart
       - ar
+  kit:
+    aliases:
+      - kits

@@ -4,6 +4,7 @@ import lombok.Getter;
 import mc.core.GY;
 import mc.core.basecommands.impl.player.*;
 import mc.core.basecommands.impl.world.*;
+import mc.core.kits.KitCmd;
 import mc.core.pvp.command.PvpCmd;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.math.MathUtil;
@@ -75,6 +76,8 @@ public class CommandManager {
 
         registerCommand(CustomizationCmd.class);
         registerCommand(AutoRestartCmd.class);
+
+        registerCommand(KitCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

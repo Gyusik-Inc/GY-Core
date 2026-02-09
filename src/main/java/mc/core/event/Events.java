@@ -98,7 +98,6 @@ public class Events implements Listener {
         }
     }
 
-
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Location spawn = SpawnData.getSpawn();

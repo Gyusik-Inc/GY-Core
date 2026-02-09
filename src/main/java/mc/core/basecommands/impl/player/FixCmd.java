@@ -74,7 +74,7 @@ public class FixCmd implements TabExecutor {
         UUID uuid = player.getUniqueId();
 
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType().isAir()) {
+        if (item.getType().isAir()) {
             MessageUtil.sendMessage(player, "Этот предмет нельзя починить");
             return;
         }
@@ -131,8 +131,8 @@ public class FixCmd implements TabExecutor {
         }
 
         ItemStack[] armor = inv.getArmorContents();
-        for (int i = 0; i < armor.length; i++) {
-            if (repairItem(armor[i])) {
+        for (ItemStack itemStack : armor) {
+            if (repairItem(itemStack)) {
                 repairedSomething = true;
             }
         }
