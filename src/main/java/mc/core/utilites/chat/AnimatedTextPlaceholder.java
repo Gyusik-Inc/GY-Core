@@ -2,7 +2,6 @@ package mc.core.utilites.chat;
 
 import lombok.Getter;
 import mc.core.GY;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AnimatedTextPlaceholder {
@@ -12,8 +11,8 @@ public class AnimatedTextPlaceholder {
     private final String centerColor;
     private final int updateIntervalTicks;
 
-    private double wavePosition = 0.0; // 0 = центр, 1 = края
-    private boolean outward = true;     // направление волны: true = к краям, false = к центру
+    private double wavePosition = 0.0;
+    private boolean outward = true;
 
     @Getter
     private String currentFrame = "";
@@ -32,7 +31,7 @@ public class AnimatedTextPlaceholder {
             @Override
             public void run() {
                 currentFrame = buildFrame();
-                double speed = 0.035;
+                double speed = 0.02;
                 if (outward) {
                     wavePosition += speed;
                     if (wavePosition >= 1.0) outward = false;
@@ -47,21 +46,30 @@ public class AnimatedTextPlaceholder {
     private String buildFrame() {
         int length = text.length();
         double centerIndex = (length - 1) / 2.0;
-        double softness = 0.4;
+        double softness = 0.6;
+        double falloffPower = 1.5;
+        double bias = 3;
 
         StringBuilder out = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
-            double normalizedDistFromCenter = Math.abs(i - centerIndex) / centerIndex;
-            double distanceToWave;
-            if (outward) {
-                distanceToWave = normalizedDistFromCenter - wavePosition;
-            } else {
-                distanceToWave = wavePosition - normalizedDistFromCenter;
-            }
-            distanceToWave = Math.abs(distanceToWave);
+            double distFromCenter = Math.abs(i - centerIndex) / centerIndex;
 
-            double t = Math.exp(-Math.pow(distanceToWave / softness, 3));
+            double waveDist;
+            if (outward) {
+                waveDist = distFromCenter - wavePosition;
+            } else {
+                waveDist = wavePosition - distFromCenter;
+            }
+
+            double distanceToWave = Math.abs(waveDist);
+            double gaussian = Math.exp(-Math.pow(distanceToWave / softness, falloffPower));
+            double smoothstep = gaussian * gaussian * (3.0 - 2.0 * gaussian);
+            double t = Math.pow(smoothstep, bias);
+
+            t = Math.pow(t, 0.82);
+            t = Math.max(0.0, Math.min(1.0, t));
+
             out.append(lerpColor(edgeColor, centerColor, t))
                     .append("§l")
                     .append(text.charAt(i));
@@ -69,7 +77,6 @@ public class AnimatedTextPlaceholder {
 
         return out.toString();
     }
-
 
     private String lerpColor(String c1, String c2, double t) {
         int r1 = Integer.parseInt(c1.substring(1, 3), 16);

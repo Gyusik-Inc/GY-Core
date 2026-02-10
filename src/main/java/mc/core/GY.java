@@ -15,6 +15,7 @@ import mc.core.event.Events;
 import mc.core.event.HideMessages;
 import mc.core.kits.KitPreviewGui;
 import mc.core.placeholder.AnimatedLogo;
+import mc.core.placeholder.PlayerTimePlaceholder;
 import mc.core.pvp.antirelog.AntiRelog;
 import mc.core.pvp.antirelog.AntiRelogEvent;
 import mc.core.pvp.command.PvpMenuEvent;
@@ -48,6 +49,7 @@ public final class GY extends JavaPlugin {
         WarpData.init();
 
         new AnimatedLogo().register();
+        new PlayerTimePlaceholder().register();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");

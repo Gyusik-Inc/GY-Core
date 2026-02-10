@@ -16,7 +16,7 @@ public class AnimatedLogo extends PlaceholderExpansion {
     private final AnimatedTextPlaceholder animatedText;
 
     public AnimatedLogo() {
-        this.animatedText = new AnimatedTextPlaceholder(MessageUtil.colorize("ɴᴏʀᴛʜ-ᴍᴄ"), "#30578C", "#789DCB", 1);
+        this.animatedText = new AnimatedTextPlaceholder(MessageUtil.colorize("ɴᴏʀᴛʜ-ᴍᴄ"), "#30578C", "#889DB8", 1);
     }
 
     @Override
