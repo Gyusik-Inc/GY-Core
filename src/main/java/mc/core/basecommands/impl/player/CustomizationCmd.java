@@ -39,24 +39,28 @@ public class CustomizationCmd implements BaseCommand {
         switch (feature) {
             case "msg" -> {
                 data.setMsgEnabled(enable);
-                MessageUtil.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены" : "&cотключены"));
+                MessageUtil.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
+            }
+            case "damage-text" -> {
+                data.setDamageTextEnabled(enable);
+                MessageUtil.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
             }
             case "tp" -> {
                 data.setTpEnabled(enable);
-                MessageUtil.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены" : "&cотключены"));
+                MessageUtil.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
             }
             case "pay" -> {
                 data.setPayEnabled(enable);
-                MessageUtil.sendMessage(player, "Переводы денег " + (enable ? "&aвключены" : "&cотключены"));
+                MessageUtil.sendMessage(player, "Переводы денег " + (enable ? "&aвключены." : "&cотключены."));
             }
             case "scoreboard" -> {
                 data.setScoreboardEnabled(enable);
-                MessageUtil.sendMessage(player, "Scoreboard " + (enable ? "&aвключён" : "&cотключён"));
+                MessageUtil.sendMessage(player, "Scoreboard " + (enable ? "&aвключён." : "&cотключён."));
                 Bukkit.getServer().dispatchCommand(player, "sb");
             }
             case "mention" -> {
                 data.setMentionSoundEnabled(enable);
-                MessageUtil.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён" : "&cотключён"));
+                MessageUtil.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
             }
             default -> MessageUtil.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention");
         }
@@ -66,7 +70,7 @@ public class CustomizationCmd implements BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention");
+        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention", "damage-text");
         if (args.length == 2) return List.of("enable", "disable");
         return List.of();
     }

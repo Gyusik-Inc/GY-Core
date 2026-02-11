@@ -3,14 +3,12 @@ package mc.core.event;
 import mc.core.GY;
 import mc.core.command.PluginsCommand;
 import mc.core.utilites.chat.MessageUtil;
+import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.entity.Display;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -111,7 +109,11 @@ public class Events implements Listener {
         if (!(e.getDamager() instanceof Player player)) return;
         Entity target = e.getEntity();
         double damage = e.getFinalDamage();
-        spawnDamageText(target, damage, player);
+        PlayerData data = new PlayerData(player.getUniqueId());
+
+        if (data.isDamageTextEnabled()) {
+            spawnDamageText(target, damage, player);
+        }
     }
 
     private static final List<TextDisplay> activeDisplays = new ArrayList<>();
@@ -122,10 +124,12 @@ public class Events implements Listener {
         Vector perp = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize().multiply(side * 0.7);
         double height = target.getHeight() + (Math.random() - 0.5);
         Location loc = target.getLocation().clone().add(perp).add(0, height, 0);
+        double maxHealth = target instanceof LivingEntity ? ((LivingEntity) target).getMaxHealth() : 20.0;
+        double healthPercent = (damage / maxHealth) * 100.0;
 
         String color;
-        if (damage < 1) color = MessageUtil.colorize("#87C68E");
-        else if (damage < 3) color = MessageUtil.colorize("#C6AB87");
+        if (healthPercent < 5) color = MessageUtil.colorize("#87C68E");     
+        else if (healthPercent < 15) color = MessageUtil.colorize("#C6AB87");
         else color = MessageUtil.colorize("#D97676");
 
         String formattedDamage = String.format("%.1f", damage);
@@ -146,6 +150,7 @@ public class Events implements Listener {
             activeDisplays.remove(display);
         }, 30L);
     }
+
 
     public static void onDisable() {
         for (TextDisplay display : activeDisplays) {

@@ -33,6 +33,11 @@ public class PlayerTimePlaceholder extends PlaceholderExpansion {
         if (player == null) return "0ч 0м";
 
         String formatted = PlaceholderAPI.setPlaceholders(player, "%statistic_time_played%");
+        if (formatted == null || formatted.trim().isEmpty() ||
+                formatted.equals("0s") || formatted.equals("0m")) {
+            return "0ч 0м";
+        }
+
         formatted = formatted
                 .replace("d", "д")
                 .replace("h", "ч")
@@ -40,6 +45,6 @@ public class PlayerTimePlaceholder extends PlaceholderExpansion {
                 .replaceAll("\\d+s", "")
                 .trim();
 
-        return formatted;
+        return formatted.isEmpty() ? "0ч 0м" : formatted;
     }
 }

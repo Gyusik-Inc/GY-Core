@@ -95,7 +95,15 @@ public class PlayerData {
         }
     }
 
-    // --- Customization flags ---
+    public boolean isDamageTextEnabled() {
+        return playerConfig.getBoolean("customization.damage_text_enabled", true);
+    }
+
+    public void setDamageTextEnabled(boolean enabled) {
+        playerConfig.set("customization.damage_text_enabled", enabled);
+        saveData();
+    }
+
     public boolean isMsgEnabled() {
         return playerConfig.getBoolean("customization.msg_enabled", true);
     }
