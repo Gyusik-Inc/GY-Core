@@ -124,13 +124,13 @@ public class Events implements Listener {
         Vector perp = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize().multiply(side * 0.7);
         double height = target.getHeight() + (Math.random() - 0.5);
         Location loc = target.getLocation().clone().add(perp).add(0, height, 0);
-        double maxHealth = target instanceof LivingEntity ? ((LivingEntity) target).getMaxHealth() : 20.0;
-        double healthPercent = (damage / maxHealth) * 100.0;
+        double currentHealth = target instanceof LivingEntity ? ((LivingEntity) target).getHealth() : 20.0;
+        double healthPercent = (damage / currentHealth) * 100.0;
 
         String color;
-        if (healthPercent < 5) color = MessageUtil.colorize("#87C68E");     
+        if (healthPercent < 5) color = MessageUtil.colorize("#87C68E");
         else if (healthPercent < 15) color = MessageUtil.colorize("#C6AB87");
-        else color = MessageUtil.colorize("#D97676");
+        else color = MessageUtil.colorize("#D97676");                        
 
         String formattedDamage = String.format("%.1f", damage);
         TextDisplay display = target.getWorld().spawn(loc, TextDisplay.class, d -> {
@@ -150,6 +150,7 @@ public class Events implements Listener {
             activeDisplays.remove(display);
         }, 30L);
     }
+
 
 
     public static void onDisable() {
