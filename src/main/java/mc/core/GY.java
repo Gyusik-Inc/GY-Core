@@ -13,7 +13,8 @@ import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
 import mc.core.event.HideMessages;
-import mc.core.kits.KitPreviewGui;
+import mc.core.grant.GrantCmd;
+import mc.core.grant.GrantManager;
 import mc.core.placeholder.AnimatedLogo;
 import mc.core.placeholder.PlayerTimePlaceholder;
 import mc.core.pvp.antirelog.AntiRelog;
@@ -37,12 +38,18 @@ public final class GY extends JavaPlugin {
     private static final String RESET = "\u001B[0m", GRAY = "\u001B[90m", RED = "\u001B[91m", BLUE = "\u001B[94m";
     @Getter
     private AutoRestart autoRestart;
+    @Getter
+    private GrantManager grantManager;
 
     @Override
     public void onEnable() {
         instance = this;
         commandManager = new CommandManager();
         autoRestart = new AutoRestart();
+
+        grantManager = new GrantManager();
+        GrantCmd.setGrantManager(grantManager);
+
         AntiRelog.init();
         HomeData.loadHomes();
         SpawnData.init();
@@ -50,12 +57,14 @@ public final class GY extends JavaPlugin {
 
         new AnimatedLogo().register();
         new PlayerTimePlaceholder().register();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");
                 MessageUtil.sendMessage(player, "&8(Админ)&f Плагин &aвключён.");
                 player.sendMessage("");
             }
+            grantManager.loadPlayerData(player);
         }
 
         logState(BLUE, "включён");

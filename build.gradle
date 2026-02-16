@@ -12,7 +12,6 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
-
     flatDir {
         dirs 'libs'
     }
