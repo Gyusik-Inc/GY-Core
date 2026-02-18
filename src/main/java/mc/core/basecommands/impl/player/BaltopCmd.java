@@ -25,10 +25,6 @@ public class BaltopCmd implements BaseCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        mc.GY econ = GY.getInstance();
-        if (econ == null) {
-            return true;
-        }
 
         int page = 1;
         if (args.length > 0) {

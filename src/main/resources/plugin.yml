@@ -98,4 +98,6 @@ commands:
   kit:
     aliases:
       - kits
-  grant:
+  balance:
+    aliases:
+      - bal

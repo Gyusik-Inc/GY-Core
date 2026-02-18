@@ -79,6 +79,7 @@ public class CommandManager {
         registerCommand(AutoRestartCmd.class);
 
         registerCommand(KitCmd.class);
+        registerCommand(BalanceCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {
