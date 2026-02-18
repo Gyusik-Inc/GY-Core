@@ -41,6 +41,10 @@ public class CustomizationCmd implements BaseCommand {
                 data.setMsgEnabled(enable);
                 MessageUtil.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
             }
+            case "modern-eco" -> {
+                data.setModernEcoEnabled(enable);
+                MessageUtil.sendMessage(player, "Современный дизайн экономики " + (enable ? "&aвключен." : "&cотключен."));
+            }
             case "damage-text" -> {
                 data.setDamageTextEnabled(enable);
                 MessageUtil.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
@@ -62,7 +66,7 @@ public class CustomizationCmd implements BaseCommand {
                 data.setMentionSoundEnabled(enable);
                 MessageUtil.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
             }
-            default -> MessageUtil.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention");
+            default -> MessageUtil.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention, damage-text, modern-eco");
         }
 
         return true;
@@ -70,7 +74,7 @@ public class CustomizationCmd implements BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention", "damage-text");
+        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention", "damage-text", "modern-eco");
         if (args.length == 2) return List.of("enable", "disable");
         return List.of();
     }

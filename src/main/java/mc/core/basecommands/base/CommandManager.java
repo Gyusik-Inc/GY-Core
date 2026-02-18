@@ -2,9 +2,9 @@ package mc.core.basecommands.base;
 
 import lombok.Getter;
 import mc.core.GY;
+import mc.core.autorestart.AutoRestartCmd;
 import mc.core.basecommands.impl.player.*;
 import mc.core.basecommands.impl.world.*;
-import mc.core.grant.GrantCmd;
 import mc.core.kits.KitCmd;
 import mc.core.pvp.command.PvpCmd;
 import mc.core.utilites.chat.MessageUtil;
@@ -79,8 +79,6 @@ public class CommandManager {
         registerCommand(AutoRestartCmd.class);
 
         registerCommand(KitCmd.class);
-
-        registerCommand(GrantCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

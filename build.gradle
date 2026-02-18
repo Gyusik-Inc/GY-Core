@@ -12,6 +12,7 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
+    maven { url = "https://repo.viaversion.com" }
     flatDir {
         dirs 'libs'
     }
@@ -23,6 +24,7 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.38')
     compileOnly files('libs/GY-Economic-1.0.jar')
     compileOnly files('libs/placeholderapi-2.11.17.jar')
+    compileOnly "com.viaversion:viaversion-api:5.7.1"
 
     compileOnly 'net.luckperms:api:5.4'
 }

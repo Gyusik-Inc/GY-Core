@@ -1,5 +1,7 @@
 package mc.core.event;
 
+import com.viaversion.viaversion.api.Via;
+import lombok.Getter;
 import mc.core.GY;
 import mc.core.command.PluginsCommand;
 import mc.core.utilites.chat.MessageUtil;
@@ -22,10 +24,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Events implements Listener {
+    @Getter
+    private static Events instance;
 
     public Events() {
         new BukkitRunnable() {
@@ -38,6 +42,7 @@ public class Events implements Listener {
                 }
             }
         }.runTaskTimer(GY.getInstance(), 0L, 20L);
+        instance = this;
     }
 
     private boolean hasPotions(Player player) {
@@ -116,46 +121,81 @@ public class Events implements Listener {
         }
     }
 
-    private static final List<TextDisplay> activeDisplays = new ArrayList<>();
+    private final Set<Entity> activeDisplays = ConcurrentHashMap.newKeySet();
 
     private void spawnDamageText(Entity target, double damage, Player damager) {
+        int protocolVersion = Via.getAPI().getPlayerVersion(damager.getUniqueId());
+        boolean useTextDisplay = protocolVersion >= 762;
+
         int side = Math.random() < 0.5 ? -1 : 1;
         Vector lookDir = damager.getLocation().getDirection().setY(0).normalize();
         Vector perp = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize().multiply(side * 0.7);
-        double height = target.getHeight() + (Math.random() - 0.5);
-        Location loc = target.getLocation().clone().add(perp).add(0, height, 0);
-        double currentHealth = target instanceof LivingEntity ? ((LivingEntity) target).getHealth() : 20.0;
+
+        double heightOffset = target.getHeight() + (Math.random() - 0.5) * 0.4;
+        Location spawnLoc = target.getLocation().clone().add(perp).add(0, heightOffset, 0);
+        double currentHealth = (target instanceof LivingEntity le) ? le.getHealth() : 20.0;
         double healthPercent = (damage / currentHealth) * 100.0;
 
         String color;
-        if (healthPercent < 5) color = MessageUtil.colorize("#87C68E");
-        else if (healthPercent < 15) color = MessageUtil.colorize("#C6AB87");
-        else color = MessageUtil.colorize("#D97676");                        
+        if (healthPercent < 5) {
+            color = MessageUtil.colorize("#87C68E");
+        } else if (healthPercent < 15) {
+            color = MessageUtil.colorize("#C6AB87");
+        } else {
+            color = MessageUtil.colorize("#D97676");
+        }
 
         String formattedDamage = String.format("%.1f", damage);
-        TextDisplay display = target.getWorld().spawn(loc, TextDisplay.class, d -> {
-            d.setText(color + "-" + formattedDamage);
-            d.setBillboard(Display.Billboard.CENTER);
-            d.setAlignment(TextDisplay.TextAlignment.CENTER);
-            d.setShadowed(true);
-            d.setGlowing(true);
-            d.setPersistent(false);
-            d.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
-        });
+        String text = color + "-" + formattedDamage;
 
-        activeDisplays.add(display);
+        Entity displayEntity;
+
+        if (useTextDisplay) {
+            displayEntity = target.getWorld().spawn(spawnLoc, TextDisplay.class, d -> {
+                d.setText(text);
+                d.setBillboard(Display.Billboard.CENTER);
+                d.setAlignment(TextDisplay.TextAlignment.CENTER);
+                d.setShadowed(true);
+                d.setGlowing(true);
+                d.setPersistent(false);
+                d.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
+                d.setSeeThrough(true);
+                d.setDisplayWidth(1.2f);
+                d.setDisplayHeight(0.3f);
+            });
+        } else {
+        Location farLoc = spawnLoc.clone().add(0, 200, 0);
+
+        displayEntity = target.getWorld().spawnEntity(farLoc, EntityType.ARMOR_STAND);
+        ArmorStand as = (ArmorStand) displayEntity;
+        as.setVisible(false);
+        as.setCustomName(text);
+        as.setCustomNameVisible(true);
+        as.setMarker(true);
+        as.setGravity(false);
+        as.setInvulnerable(true);
+        as.setSmall(true);
+        as.setCollidable(false);
+        as.setSilent(true);
+        as.teleport(spawnLoc);
+    }
+
+        activeDisplays.add(displayEntity);
 
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
-            display.remove();
-            activeDisplays.remove(display);
+            if (!displayEntity.isDead()) {
+                displayEntity.remove();
+            }
+            activeDisplays.remove(displayEntity);
         }, 30L);
     }
 
 
-
-    public static void onDisable() {
-        for (TextDisplay display : activeDisplays) {
-            if (!display.isDead()) display.remove();
+    public void onDisable() {
+        for (Entity entity : activeDisplays) {
+            if (entity != null && !entity.isDead()) {
+                entity.remove();
+            }
         }
         activeDisplays.clear();
     }

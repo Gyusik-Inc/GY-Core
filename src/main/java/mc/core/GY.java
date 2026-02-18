@@ -1,5 +1,7 @@
 package mc.core;
 
+import com.viaversion.viaversion.api.Via;
+import com.viaversion.viaversion.api.ViaManager;
 import lombok.Getter;
 import mc.core.autorestart.AutoRestart;
 import mc.core.basecommands.base.CommandManager;
@@ -13,8 +15,6 @@ import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
 import mc.core.event.Events;
 import mc.core.event.HideMessages;
-import mc.core.grant.GrantCmd;
-import mc.core.grant.GrantManager;
 import mc.core.placeholder.AnimatedLogo;
 import mc.core.placeholder.PlayerTimePlaceholder;
 import mc.core.pvp.antirelog.AntiRelog;
@@ -22,33 +22,67 @@ import mc.core.pvp.antirelog.AntiRelogEvent;
 import mc.core.pvp.command.PvpMenuEvent;
 import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
+import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
 import mc.core.utilites.data.WarpData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class GY extends JavaPlugin {
+
     @Getter
     private static GY instance;
+
     @Getter
     private CommandManager commandManager;
-    private static final String RESET = "\u001B[0m", GRAY = "\u001B[90m", RED = "\u001B[91m", BLUE = "\u001B[94m";
+
+    private static final String RESET = "\u001B[0m";
+    private static final String GRAY = "\u001B[90m";
+    private static final String RED = "\u001B[91m";
+    private static final String BLUE = "\u001B[94m";
+
     @Getter
     private AutoRestart autoRestart;
+
     @Getter
-    private GrantManager grantManager;
+    private ViaManager versionManager;
+
+    private final Map<UUID, PlayerData> playerDataCache = new ConcurrentHashMap<>();
+    public static PlayerData getPlayerData(UUID uuid) {
+        if (instance == null) {
+            throw new IllegalStateException("GY-Core plugin instance is not initialized yet");
+        }
+        return instance.playerDataCache.computeIfAbsent(uuid, PlayerData::new);
+    }
+
+    public static PlayerData getPlayerData(Player player) {
+        return getPlayerData(player.getUniqueId());
+    }
+
+    public static void refreshPlayerData(UUID uuid) {
+        if (instance == null) {
+            throw new IllegalStateException("GY-Core plugin instance is not initialized yet");
+        }
+        instance.playerDataCache.remove(uuid);
+        getPlayerData(uuid);
+    }
+
+    public static void refreshPlayerData(Player player) {
+        refreshPlayerData(player.getUniqueId());
+    }
 
     @Override
     public void onEnable() {
         instance = this;
         commandManager = new CommandManager();
         autoRestart = new AutoRestart();
-
-        grantManager = new GrantManager();
-        GrantCmd.setGrantManager(grantManager);
+        versionManager = Via.getManager();
 
         AntiRelog.init();
         HomeData.loadHomes();
@@ -64,7 +98,6 @@ public final class GY extends JavaPlugin {
                 MessageUtil.sendMessage(player, "&8(Админ)&f Плагин &aвключён.");
                 player.sendMessage("");
             }
-            grantManager.loadPlayerData(player);
         }
 
         logState(BLUE, "включён");
@@ -93,7 +126,8 @@ public final class GY extends JavaPlugin {
         VanishCmd.removeAllVanishes();
         HomeData.saveHomes();
         AntiRelog.shutdown();
-        Events.onDisable();
+        Events.getInstance().onDisable();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");

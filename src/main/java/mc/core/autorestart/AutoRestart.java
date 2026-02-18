@@ -7,45 +7,61 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class AutoRestart {
 
-    @Getter
-    private boolean restartScheduled = false;
-    private BukkitRunnable countdownTask;
+    @Getter private static AutoRestart instance;
+
+    @Getter private boolean restartScheduled = false;
+    private BukkitTask countdownTask;
+    private LocalTime nextRestartTime = null;
+    private final Set<LocalTime> skippedToday = new HashSet<>();
 
     private final List<Integer> MINUTES_NOTIFY = Arrays.asList(15, 10, 5, 4, 3, 2, 1);
     private final List<Integer> SECONDS_NOTIFY = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
 
     private final List<LocalTime> AUTO_RESTART_TIMES = Arrays.asList(
             LocalTime.of(0, 0),
-            LocalTime.of(6, 0),
-            LocalTime.of(17, 0)
+            LocalTime.of(21, 0),
+            LocalTime.of(6, 0)
     );
 
     public AutoRestart() {
+        instance = this;
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (restartScheduled) return;
 
                 LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+                if (now.isBefore(LocalTime.of(0, 1))) {
+                    skippedToday.clear();
+                }
+
+                LocalTime candidate = null;
+                long minSeconds = Long.MAX_VALUE;
 
                 for (LocalTime restartTime : AUTO_RESTART_TIMES) {
-                    long secondsUntilRestart = Duration.between(now, restartTime).getSeconds();
-                    if (secondsUntilRestart < 0) {
-                        secondsUntilRestart += 24 * 3600;
-                    }
+                    if (skippedToday.contains(restartTime)) continue;
 
-                    if (secondsUntilRestart <= 15 * 60) {
-                        startRestartInSeconds(secondsUntilRestart);
-                        break;
+                    long seconds = Duration.between(now, restartTime).getSeconds();
+                    if (seconds < 0) seconds += 24 * 3600;
+
+                    if (seconds < minSeconds) {
+                        minSeconds = seconds;
+                        candidate = restartTime;
                     }
+                }
+
+                if (candidate != null && minSeconds <= 15 * 60) {
+                    nextRestartTime = candidate;
+                    startRestartInSeconds(minSeconds);
                 }
             }
         }.runTaskTimer(GY.getInstance(), 0L, 20L * 60);
@@ -54,25 +70,28 @@ public class AutoRestart {
     public void startRestartInSeconds(long seconds) {
         if (restartScheduled) return;
         restartScheduled = true;
-
         startCountdown(seconds);
     }
 
-    public void startRestartInMinutes(long minutes) {
-        startRestartInSeconds(minutes * 60);
-    }
-
-    public void scheduleRestart(String timeStr) throws IllegalArgumentException {
-        timeStr = timeStr.toLowerCase().replace(" ", "");
-        if (timeStr.endsWith("m")) {
-            long minutes = Long.parseLong(timeStr.replace("m", ""));
-            startRestartInMinutes(minutes);
-        } else if (timeStr.endsWith("s")) {
-            long seconds = Long.parseLong(timeStr.replace("s", ""));
-            startRestartInSeconds(seconds);
-        } else {
-            throw new IllegalArgumentException("Неверный формат времени! Используй 1m или 30s");
+    public void cancelRestart() {
+        if (!restartScheduled) {
+            broadcastMessage("Перезагрузка и так не запланирована.");
+            return;
         }
+
+        restartScheduled = false;
+        if (nextRestartTime != null) {
+            skippedToday.add(nextRestartTime);
+        }
+
+        if (countdownTask != null) {
+            countdownTask.cancel();
+            countdownTask = null;
+        }
+
+        nextRestartTime = null;
+
+        broadcastMessage("Перезагрузка отменена!");
     }
 
     private void startCountdown(long totalSeconds) {
@@ -81,70 +100,40 @@ public class AutoRestart {
 
             @Override
             public void run() {
-                if (!restartScheduled) {
+                if (!restartScheduled || remaining <= 0) {
+                    if (remaining <= 0 && restartScheduled) {
+                        broadcastMessage("Сервер перезагружается!");
+                        Bukkit.shutdown();
+                    }
                     cancel();
-                    return;
-                }
-
-                if (remaining <= 0) {
-                    broadcastMessage("Сервер перезагружается!");
-                    cancel();
-                    Bukkit.shutdown();
                     return;
                 }
 
                 long minutes = remaining / 60;
-                long seconds = remaining % 60;
+                long secondsLeft = remaining % 60;
 
-                if (MINUTES_NOTIFY.contains((int) minutes) && seconds == 0) {
+                if (secondsLeft == 0 && MINUTES_NOTIFY.contains((int) minutes)) {
                     broadcastMessage("До перезагрузки: &#30578C" + minutes + " мин.");
                 }
-
-                if (SECONDS_NOTIFY.contains((int) remaining) && remaining <= 5 * 60) {
-                    broadcastMessage("До перезагрузки: &#30578C" + seconds + " сек.");
+                if (SECONDS_NOTIFY.contains((int) remaining)) {
+                    broadcastMessage("До перезагрузки: &#30578C" + remaining + " сек.");
                 }
 
                 remaining--;
             }
-        };
-
-        restartScheduled = true;
-        countdownTask.runTaskTimer(GY.getInstance(), 0L, 20L);
+        }.runTaskTimer(GY.getInstance(), 0L, 20L);
     }
-
-    public boolean cancelRestart() {
-        if (countdownTask != null) {
-            restartScheduled = false;
-            countdownTask.cancel();
-            countdownTask = null;
-
-            broadcastMessage("Перезагрузка отменена!");
-            return true;
-        }
-        return false;
-    }
-
 
     private void broadcastMessage(String message) {
-        Bukkit.broadcast(
-                MessageUtil.colorize(
-                        "\n" +
-                                "&#30578C┃ &#30578CОбъявление\n" +
-                                "&#30578C┃ &7Содержимое: &f" + message + "\n" +
-                                "&#30578C┃ &7От: &#B1B7BE&nCONSOLE" + "\n"
-                ),
-                ""
-        );
+        String prefix = "\n&#30578C┃ &#30578CОбъявление\n&#30578C┃ &7Содержимое: &f" + message + "\n&#30578C┃ &7От: &#B1B7BE&nCONSOLE\n";
+        Bukkit.broadcast(MessageUtil.colorize(prefix), "");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendTitle(
                     MessageUtil.colorize("&#30578CПерезагрузка"),
                     MessageUtil.colorize("&7" + message),
-                    10,
-                    70,
-                    10
+                    10, 70, 10
             );
-
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);
         }
     }

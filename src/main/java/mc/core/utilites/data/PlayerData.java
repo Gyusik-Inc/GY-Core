@@ -1,5 +1,6 @@
 package mc.core.utilites.data;
 
+import lombok.Getter;
 import mc.core.GY;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class PlayerData {
+    @Getter
+    private static PlayerData instance;
 
     private static final File DATA_FOLDER = new File(GY.getInstance().getDataFolder(), "playerdata");
     private static final File COUNTER_FILE = new File(DATA_FOLDER, "total_new_players.yml");
@@ -30,6 +33,7 @@ public class PlayerData {
     public PlayerData(UUID playerUUID) {
         this.playerUUID = playerUUID;
         loadData();
+        instance = this;
     }
 
     private void loadData() {
@@ -113,6 +117,15 @@ public class PlayerData {
         saveData();
     }
 
+    public boolean isModernEcoEnabled() {
+        return playerConfig.getBoolean("customization.modern_eco", true);
+    }
+
+    public void setModernEcoEnabled(boolean enabled) {
+        playerConfig.set("customization.modern_eco", enabled);
+        saveData();
+    }
+
     public boolean isTpEnabled() {
         return playerConfig.getBoolean("customization.tp_enabled", true);
     }
@@ -129,10 +142,6 @@ public class PlayerData {
     public void setPayEnabled(boolean enabled) {
         playerConfig.set("customization.pay_enabled", enabled);
         saveData();
-    }
-
-    public boolean isScoreboardEnabled() {
-        return playerConfig.getBoolean("customization.scoreboard_enabled", true);
     }
 
     public void setScoreboardEnabled(boolean enabled) {
