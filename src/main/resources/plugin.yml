@@ -4,6 +4,10 @@ main: mc.core.GY
 api-version: '1.21'
 prefix: GY-Core
 authors: [ Gyusik, YouLow_Skill ]
+depend:
+  - GY-Economic
+  - PlaceholderAPI
+  - ViaVersion
 commands:
   plugins:
     aliases:

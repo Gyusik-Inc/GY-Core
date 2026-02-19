@@ -5,7 +5,6 @@ import mc.core.basecommands.base.BaseCommand;
 import mc.core.basecommands.base.BaseCommandInfo;
 import mc.core.utilites.chat.MessageUtil;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,16 +18,6 @@ public class AutoRestartCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
 
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cЭта команда только для игроков.");
-            return true;
-        }
-
-        if (!player.hasPermission("gy-core.admin")) {
-            MessageUtil.sendMessage(player, "&cНет прав.");
-            return true;
-        }
-
         if (args.length != 1) {
             MessageUtil.sendUsageMessage(sender, "/autorestart <время | cancel>");
             MessageUtil.sendMessage(sender, "&7Примеры: &f30s  &75m  &f2h  &f90  &fcancel");
@@ -40,28 +29,28 @@ public class AutoRestartCmd implements BaseCommand {
 
         if (input.equals("cancel")) {
             autoRestart.cancelRestart();
-            MessageUtil.sendMessage(player, "&aПерезагрузка отменена.");
+            MessageUtil.sendMessage(sender, "Перезагрузка отменена.");
             return true;
         }
 
         long seconds = parseTime(input);
 
         if (seconds <= 0) {
-            MessageUtil.sendMessage(player, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
+            MessageUtil.sendMessage(sender, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
             return true;
         }
 
         if (seconds < 10) {
-            MessageUtil.sendMessage(player, "&cСлишком мало — минимум 10 секунд.");
+            MessageUtil.sendMessage(sender, "&cСлишком мало — минимум 10 секунд.");
             return true;
         }
 
         try {
             autoRestart.startRestartInSeconds(seconds);
             String readableTime = formatReadableTime(seconds);
-            MessageUtil.sendMessage(player, "&aПерезагрузка запланирована через &f" + readableTime);
+            MessageUtil.sendMessage(sender, "Перезагрузка запланирована через &#30578C" + readableTime);
         } catch (Exception e) {
-            MessageUtil.sendMessage(player, "&cОшибка: " + e.getMessage());
+            MessageUtil.sendMessage(sender, "&cОшибка: " + e.getMessage());
         }
 
         return true;
@@ -94,7 +83,7 @@ public class AutoRestartCmd implements BaseCommand {
 
         String unit = matcher.group(2);
         if (unit == null) {
-            return number;
+            return number; // просто число → секунды
         }
 
         return switch (unit.toLowerCase()) {
@@ -116,10 +105,11 @@ public class AutoRestartCmd implements BaseCommand {
 
         StringBuilder sb = new StringBuilder();
 
-        if (days > 0)    sb.append(days).append("д ");
-        if (hours > 0)   sb.append(hours).append("ч ");
+        if (days    > 0) sb.append(days)   .append("д ");
+        if (hours   > 0) sb.append(hours)  .append("ч ");
         if (minutes > 0) sb.append(minutes).append("мин ");
-        if (seconds > 0 || sb.isEmpty()) sb.append(seconds).append("сек");
+        if (seconds > 0 || sb.isEmpty())
+            sb.append(seconds).append("сек");
 
         return sb.toString().trim();
     }
