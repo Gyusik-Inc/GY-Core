@@ -80,6 +80,7 @@ public class CommandManager {
 
         registerCommand(KitCmd.class);
         registerCommand(BalanceCmd.class);
+        registerCommand(PingCmd.class);
     }
 
     private void registerCommand(Class<? extends BaseCommand> commandClass) {

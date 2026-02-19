@@ -101,3 +101,4 @@ commands:
   balance:
     aliases:
       - bal
+  ping:
