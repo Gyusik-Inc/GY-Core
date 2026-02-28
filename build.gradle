@@ -25,7 +25,7 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.38')
     compileOnly files('libs/placeholderapi-2.11.17.jar')
     compileOnly "com.viaversion:viaversion-api:5.7.1"
-    implementation 'com.github.Gyusik-Inc:GY-API:1.1.1'
+    implementation 'com.github.Gyusik-Inc:GY-API:1.1.2'
     implementation 'com.github.NuzhdinKirill:GY-Economic:1.0.0'
     compileOnly 'net.luckperms:api:5.4'
 }
