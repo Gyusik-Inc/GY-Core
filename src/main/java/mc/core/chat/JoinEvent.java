@@ -4,8 +4,8 @@ import mc.core.GY;
 
 import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
-import mc.core.utilites.version.VersionCache;
 import mc.north.utilites.chat.AnimateGradientUtil;
+import mc.north.utilites.version.VersionCache;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -47,7 +47,6 @@ public class JoinEvent implements Listener {
         GY.msg.sendMessage(player, "Помощь по серверу - #30578C/help");
         player.sendMessage("");
     }
-
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
