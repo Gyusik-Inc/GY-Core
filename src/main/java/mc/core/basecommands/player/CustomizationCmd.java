@@ -50,6 +50,10 @@ public class CustomizationCmd implements BaseCommand {
                 data.setDamageTextEnabled(enable);
                 GY.msg.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
             }
+            case "enchant-text" -> {
+                data.setEnchantTextEnabled(enable);
+                GY.msg.sendMessage(player, "Текст зачарований " + (enable ? "&aвключен." : "&cотключен."));
+            }
             case "tp" -> {
                 data.setTpEnabled(enable);
                 GY.msg.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
@@ -75,7 +79,7 @@ public class CustomizationCmd implements BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention", "damage-text", "modern-eco");
+        if (args.length == 1) return List.of("msg", "tp", "pay", "scoreboard", "mention", "damage-text", "enchant-text", "modern-eco");
         if (args.length == 2) return List.of("enable", "disable");
         return List.of();
     }

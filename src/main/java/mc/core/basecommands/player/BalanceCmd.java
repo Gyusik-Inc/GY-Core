@@ -63,8 +63,8 @@ public class BalanceCmd implements BaseCommand {
         sender.sendMessage(MessageUtil.colorize(header));
         sender.sendMessage(MessageUtil.colorize("&#30578C┃"));
 
-        String lineMoney = "&#30578C┃ &7Монет: &e%gy_money%";
-        String lineRub   = "&#30578C┃ &7Рублей: &#30578C%gy_rub%";
+        String lineMoney = "&#30578C┃ &7Монет: &e%gyvisual_money%";
+        String lineRub   = "&#30578C┃ &7Рублей: &#30578C%gyvisual_rub%";
 
         Player parsePlayer = viewerPlayer;
 

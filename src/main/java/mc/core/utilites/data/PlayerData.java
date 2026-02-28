@@ -108,6 +108,15 @@ public class PlayerData {
         saveData();
     }
 
+    public boolean isEnchantTextEnabled() {
+        return playerConfig.getBoolean("customization.enchant_text_enabled", true);
+    }
+
+    public void setEnchantTextEnabled(boolean enabled) {
+        playerConfig.set("customization.enchant_text_enabled", enabled);
+        saveData();
+    }
+
     public boolean isMsgEnabled() {
         return playerConfig.getBoolean("customization.msg_enabled", true);
     }
