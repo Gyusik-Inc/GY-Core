@@ -1,11 +1,12 @@
 package mc.core.kits;
 
-import mc.core.basecommands.base.BaseCommand;
-import mc.core.basecommands.base.BaseCommandInfo;
-import mc.core.utilites.chat.AnimateGradientUtil;
-import mc.core.utilites.chat.MessageUtil;
+import mc.core.GY;
+import mc.north.commands.basecommands.BaseCommand;
+import mc.north.commands.basecommands.BaseCommandInfo;
+
 import mc.core.utilites.data.KitData;
-import mc.core.utilites.math.MathUtil;
+import mc.north.utilites.chat.AnimateGradientUtil;
+import mc.north.utilites.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class KitCmd implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length == 0) {
-            MessageUtil.sendUsageMessage(sender, "/kit [Название]");
+            GY.getMsg().sendUsageMessage(sender, "/kit [Название]");
             return true;
         }
 
@@ -45,13 +46,13 @@ public class KitCmd implements BaseCommand {
         boolean isAdmin = player.hasPermission("gy-core.admin");
 
         if (!isAdmin && !player.hasPermission("gy-core.kits." + kitLower)) {
-            MessageUtil.sendPermissionMessage(player);
+            GY.getMsg().sendPermissionMessage(player);
             return true;
         }
 
         ItemStack[] kitItems = kitData.getKitItems(kitLower);
         if (kitItems == null) {
-            MessageUtil.sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
+            GY.getMsg().sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
             return true;
         }
 
@@ -70,7 +71,7 @@ public class KitCmd implements BaseCommand {
                         "Задержка!",
                         1000
                 );
-                MessageUtil.sendMessage(player, "Подождите еще &#30578C" + MathUtil.formatTime(remaining) + "&f, прежде чем взять набор '&#30578C" + kitName + "&f'.");
+                GY.getMsg().sendMessage(player, "Подождите еще &#30578C" + MathUtil.formatTime(remaining) + "&f, прежде чем взять набор '&#30578C" + kitName + "&f'.");
                 return true;
             }
 
@@ -78,7 +79,7 @@ public class KitCmd implements BaseCommand {
         }
 
         giveItems(player, kitItems);
-        MessageUtil.sendMessage(player, "Вы получили набор '&#30578C" + kitName + "&f'.");
+        GY.getMsg().sendMessage(player, "Вы получили набор '&#30578C" + kitName + "&f'.");
         AnimateGradientUtil.animateGradientTitleNoDelay(
                 player,
                 "#30578C",
@@ -127,7 +128,7 @@ public class KitCmd implements BaseCommand {
     private boolean handleAdminCommand(CommandSender sender, String[] args) {
 
         if (!sender.hasPermission("gy-core.admin")) {
-            MessageUtil.sendPermissionMessage(sender);
+            GY.getMsg().sendPermissionMessage(sender);
             return true;
         }
 
@@ -137,24 +138,24 @@ public class KitCmd implements BaseCommand {
 
             case "create", "setinv" -> {
                 if (args.length < 2) {
-                    MessageUtil.sendUsageMessage(sender, "/kit " + sub + " [Кит]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit " + sub + " [Кит]");
                     return true;
                 }
                 if (!(sender instanceof Player player)) return true;
 
                 String kitLower = args[1].toLowerCase();
                 kitData.saveKit(kitLower, player.getInventory().getContents());
-                MessageUtil.sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' " + (sub.equals("create") ? "создан." : "обновлён."));
+                GY.getMsg().sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' " + (sub.equals("create") ? "создан." : "обновлён."));
             }
 
             case "preview" -> {
                 if (!(sender instanceof Player player)) {
-                    MessageUtil.sendMessage(sender, "§cТолько игроки могут использовать /kit preview!");
+                    GY.getMsg().sendMessage(sender, "§cТолько игроки могут использовать /kit preview!");
                     return true;
                 }
 
                 if (args.length != 2) {
-                    MessageUtil.sendUsageMessage(sender, "/kit preview [Кит]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit preview [Кит]");
                     return true;
                 }
 
@@ -162,36 +163,36 @@ public class KitCmd implements BaseCommand {
                 ItemStack[] items = kitData.getKitItems(kitName);
 
                 if (items == null) {
-                    MessageUtil.sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
+                    GY.getMsg().sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
                     return true;
                 }
 
                 boolean isAdmin = player.hasPermission("gy-core.admin");
                 if (!isAdmin && !player.hasPermission("gy-core.kits." + kitName)) {
-                    MessageUtil.sendPermissionMessage(player);
+                    GY.getMsg().sendPermissionMessage(player);
                     return true;
                 }
 
                 new KitPreviewGui().openPreview(player, kitName);
-                MessageUtil.sendMessage(player, "Предпросмотр набора '&#30578C" + kitName + "&f'");
+                GY.getMsg().sendMessage(player, "Предпросмотр набора '&#30578C" + kitName + "&f'");
             }
 
             case "remove" -> {
                 if (args.length < 2) {
-                    MessageUtil.sendUsageMessage(sender, "/kit remove [Кит]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit remove [Кит]");
                     return true;
                 }
                 String kitLower = args[1].toLowerCase();
                 if (kitData.removeKit(kitLower)) {
-                    MessageUtil.sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' удалён.");
+                    GY.getMsg().sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' удалён.");
                 } else {
-                    MessageUtil.sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' не найден.");
+                    GY.getMsg().sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' не найден.");
                 }
             }
 
             case "give" -> {
                 if (args.length != 3) {
-                    MessageUtil.sendUsageMessage(sender, "/kit give [Кит] [Игрок]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit give [Кит] [Игрок]");
                     return true;
                 }
                 String kitLower = args[1].toLowerCase();
@@ -199,21 +200,21 @@ public class KitCmd implements BaseCommand {
                 ItemStack[] items = kitData.getKitItems(kitLower);
 
                 if (target == null) {
-                    MessageUtil.sendUnknownPlayerMessage(sender, args[2]);
+                    GY.getMsg().sendUnknownPlayerMessage(sender, args[2]);
                     return true;
                 }
                 if (items == null) {
-                    MessageUtil.sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' не найден.");
+                    GY.getMsg().sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' не найден.");
                     return true;
                 }
 
                 giveItems(target, items);
-                MessageUtil.sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' выдан игроку '&#30578C" + target.getName() + "&f'.");
+                GY.getMsg().sendMessage(sender, "Набор '&#30578C" + args[1] + "&f' выдан игроку '&#30578C" + target.getName() + "&f'.");
             }
 
             case "setcooldown" -> {
                 if (args.length != 3) {
-                    MessageUtil.sendUsageMessage(sender, "/kit setcooldown [Кит] [Секунды]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit setcooldown [Кит] [Секунды]");
                     return true;
                 }
                 try {
@@ -221,36 +222,36 @@ public class KitCmd implements BaseCommand {
                     long millis = seconds * 1000L;
 
                     kitData.setKitCooldown(args[1].toLowerCase(), seconds);
-                    MessageUtil.sendMessage(sender, "Задержка для набора '&#30578C" + args[1] + "&f' установлена в &#30578C" + MathUtil.formatTime(millis));
+                    GY.getMsg().sendMessage(sender, "Задержка для набора '&#30578C" + args[1] + "&f' установлена в &#30578C" + MathUtil.formatTime(millis));
                 } catch (NumberFormatException e) {
-                    MessageUtil.sendMessage(sender, "Укажи верный формат числа.");
+                    GY.getMsg().sendMessage(sender, "Укажи верный формат числа.");
                 }
             }
 
             case "resetcooldown" -> {
                 if (args.length != 3) {
-                    MessageUtil.sendUsageMessage(sender, "/kit resetcooldown [Кит] [Игрок]");
+                    GY.getMsg().sendUsageMessage(sender, "/kit resetcooldown [Кит] [Игрок]");
                     return true;
                 }
                 Player target = Bukkit.getPlayer(args[2]);
                 if (target == null) {
-                    MessageUtil.sendUnknownPlayerMessage(sender, args[2]);
+                    GY.getMsg().sendUnknownPlayerMessage(sender, args[2]);
                     return true;
                 }
                 kitData.setLastUse(target.getUniqueId(), args[1].toLowerCase(), 0);
-                MessageUtil.sendMessage(sender, "Задержка для набора '&#30578C" + args[1] + "&f' сброшена для игрока '&#30578C" + target.getName() + "&f'.");
+                GY.getMsg().sendMessage(sender, "Задержка для набора '&#30578C" + args[1] + "&f' сброшена для игрока '&#30578C" + target.getName() + "&f'.");
             }
 
             case "resetallcooldown" -> {
                 if (args.length != 1) {
-                    MessageUtil.sendUsageMessage(sender, "/kit resetallcooldown");
+                    GY.getMsg().sendUsageMessage(sender, "/kit resetallcooldown");
                     return true;
                 }
                 kitData.resetAllCooldowns();
-                MessageUtil.sendMessage(sender, "Все задержки для всех наборов и игроков сброшены.");
+                GY.getMsg().sendMessage(sender, "Все задержки для всех наборов и игроков сброшены.");
             }
 
-            default -> MessageUtil.sendMessage(sender, "Команда не найдена.");
+            default -> GY.getMsg().sendMessage(sender, "Команда не найдена.");
         }
 
         return true;

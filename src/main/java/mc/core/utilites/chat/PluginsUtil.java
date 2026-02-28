@@ -1,5 +1,6 @@
 package mc.core.utilites.chat;
 
+import mc.core.GY;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -19,7 +20,7 @@ public class PluginsUtil {
 
     public static void showPlugins(CommandSender sender) {
         sender.sendMessage("");
-        MessageUtil.sendMessage(sender, "&8Плагины сервера: ");
+        GY.getMsg().sendMessage(sender, "&8Плагины сервера: ");
         sender.sendMessage("");
 
         List<String> normalPluginNames = new ArrayList<>();
@@ -48,16 +49,16 @@ public class PluginsUtil {
         specialPlugins.sort(Comparator.comparingInt(String::length));
 
         if (!specialPlugins.isEmpty()) {
-            MessageUtil.sendMessage(sender, "&#30578CGY-Studio &7(" + specialPlugins.size() + ")");
+            GY.getMsg().sendMessage(sender, "&#30578CGY-Studio &7(" + specialPlugins.size() + ")");
             for (String plugin : specialPlugins) {
-                MessageUtil.sendMessage(sender, "  " + plugin);
+                GY.getMsg().sendMessage(sender, "  " + plugin);
             }
-            MessageUtil.sendMessage(sender, "");
+            GY.getMsg().sendMessage(sender, "");
         }
 
         if (!normalPluginNames.isEmpty()) {
-            MessageUtil.sendMessage(sender, "&7Обычные (" + normalPluginNames.size() + ")");
-            MessageUtil.sendMessage(sender, "  &f" + String.join("&8, &f", normalPluginNames));
+            GY.getMsg().sendMessage(sender, "&7Обычные (" + normalPluginNames.size() + ")");
+            GY.getMsg().sendMessage(sender, "  &f" + String.join("&8, &f", normalPluginNames));
         }
 
         sender.sendMessage("");

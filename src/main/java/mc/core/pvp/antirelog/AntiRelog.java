@@ -1,8 +1,8 @@
 package mc.core.pvp.antirelog;
 
 import mc.core.GY;
-import mc.core.utilites.chat.AnimateGradientUtil;
-import mc.core.utilites.chat.MessageUtil;
+
+import mc.north.utilites.chat.AnimateGradientUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -63,14 +63,14 @@ public class AntiRelog {
             AnimateGradientUtil.animateGradientTitleNoDelay(
                     player, "#30578C", "#DB5858", "ɴᴏʀᴛʜ-ᴍᴄ", "Режим боя активирован!", 1000
             );
-            MessageUtil.sendMessage(player, "Режим боя начался, противник: &#30578C" + target.getName());
+            GY.getMsg().sendMessage(player, "Режим боя начался, противник: &#30578C" + target.getName());
         }
 
         if (targetNew) {
             AnimateGradientUtil.animateGradientTitleNoDelay(
                     target, "#30578C", "#DB5858", "ɴᴏʀᴛʜ-ᴍᴄ", "Режим боя активирован!", 1000
             );
-            MessageUtil.sendMessage(target, "Режим боя начался, противник: &#30578C" + player.getName());
+            GY.getMsg().sendMessage(target, "Режим боя начался, противник: &#30578C" + player.getName());
         }
 
         endTimes.put(player.getUniqueId(), newEndTime);
@@ -115,7 +115,7 @@ public class AntiRelog {
                     1000
             );
 
-            MessageUtil.sendMessage(player, "Режим боя завершён.");
+            GY.getMsg().sendMessage(player, "Режим боя завершён.");
         }
     }
 
@@ -131,7 +131,7 @@ public class AntiRelog {
         if (bar == null) return;
 
         long remain = (endTime - System.currentTimeMillis()) / 1000;
-        bar.setTitle(MessageUtil.colorize("&#30578C⚔ &fРежим боя &8» &#30578C") + Math.max(0, remain) + " сек.");
+        bar.setTitle(GY.getMsg().colorize("&#30578C⚔ &fРежим боя &8» &#30578C") + Math.max(0, remain) + " сек.");
         bar.setProgress(Math.max(0, Math.min(1, (double) remain / 30)));
     }
 }

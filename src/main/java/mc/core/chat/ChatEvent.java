@@ -1,6 +1,7 @@
 package mc.core.chat;
 
-import mc.core.utilites.chat.MessageUtil;
+
+import mc.core.GY;
 import mc.core.utilites.data.PlayerData;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -50,7 +51,7 @@ public class ChatEvent implements Listener {
         event.setCancelled(true);
 
         if (!player.hasPermission(BYPASS_PERMISSION) && !canPlayerChat(player)) {
-            MessageUtil.sendMessage(player, "Подождите &#30578C" + getRemainingCooldown(player) + " сек. &fперед следующим сообщением!");
+            GY.getMsg().sendMessage(player, "Подождите &#30578C" + getRemainingCooldown(player) + " сек. &fперед следующим сообщением!");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
@@ -106,7 +107,7 @@ public class ChatEvent implements Listener {
                     .replace("{sender}", sender.getName())
                     .replace("{msgColor}", msgColor)
                     .replace("{message}", formatMentions(sender, message, online, msgColor));
-            online.sendMessage(MessageUtil.colorize(formatted));
+            online.sendMessage(GY.getMsg().colorize(formatted));
         }
     }
 
@@ -123,7 +124,7 @@ public class ChatEvent implements Listener {
                         .replace("{sender}", sender.getName())
                         .replace("{msgColor}", msgColor)
                         .replace("{message}", formatMentions(sender, message, online, msgColor));
-                online.sendMessage(MessageUtil.colorize(formatted));
+                online.sendMessage(GY.getMsg().colorize(formatted));
             }
         }
     }
@@ -145,7 +146,7 @@ public class ChatEvent implements Listener {
                 if (user != null) {
                     String prefix = user.getCachedData().getMetaData().getPrefix();
                     if (prefix != null) {
-                        return MessageUtil.colorize(prefix);
+                        return GY.getMsg().colorize(prefix);
                     }
                 }
             }

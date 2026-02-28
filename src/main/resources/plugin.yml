@@ -8,6 +8,7 @@ depend:
   - GY-Economic
   - PlaceholderAPI
   - ViaVersion
+  - GY-API
 commands:
   plugins:
     aliases:

@@ -4,7 +4,7 @@ import com.viaversion.viaversion.api.Via;
 import lombok.Getter;
 import mc.core.GY;
 import mc.core.command.PluginsCommand;
-import mc.core.utilites.chat.MessageUtil;
+
 import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
 import org.bukkit.Bukkit;
@@ -138,11 +138,11 @@ public class Events implements Listener {
 
         String color;
         if (healthPercent < 5) {
-            color = MessageUtil.colorize("#87C68E");
+            color = GY.getMsg().colorize("#87C68E");
         } else if (healthPercent < 15) {
-            color = MessageUtil.colorize("#C6AB87");
+            color = GY.getMsg().colorize("#C6AB87");
         } else {
-            color = MessageUtil.colorize("#D97676");
+            color = GY.getMsg().colorize("#D97676");
         }
 
         String formattedDamage = String.format("%.1f", damage);

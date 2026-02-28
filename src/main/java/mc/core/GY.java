@@ -4,12 +4,12 @@ import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaManager;
 import lombok.Getter;
 import mc.core.autorestart.AutoRestart;
-import mc.core.basecommands.base.CommandManager;
-import mc.core.basecommands.impl.EventCommand;
-import mc.core.basecommands.impl.player.FixCmd;
-import mc.core.basecommands.impl.player.RtpCmd;
-import mc.core.basecommands.impl.player.VanishCmd;
-import mc.core.basecommands.impl.world.RtpFallProtection;
+import mc.core.basecommands.CommandRegistry;
+import mc.core.basecommands.EventCommand;
+import mc.core.basecommands.player.FixCmd;
+import mc.core.basecommands.player.RtpCmd;
+import mc.core.basecommands.player.VanishCmd;
+import mc.core.basecommands.world.RtpFallProtection;
 import mc.core.chat.ChatEvent;
 import mc.core.chat.JoinEvent;
 import mc.core.command.PluginsCommand;
@@ -20,11 +20,12 @@ import mc.core.placeholder.PlayerTimePlaceholder;
 import mc.core.pvp.antirelog.AntiRelog;
 import mc.core.pvp.antirelog.AntiRelogEvent;
 import mc.core.pvp.command.PvpMenuEvent;
-import mc.core.utilites.chat.MessageUtil;
 import mc.core.utilites.data.HomeData;
 import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
 import mc.core.utilites.data.WarpData;
+import mc.north.commands.basecommands.CommandManager;
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,23 +36,21 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class GY extends JavaPlugin {
-
-    @Getter
-    private static GY instance;
-
-    @Getter
-    private CommandManager commandManager;
-
     private static final String RESET = "\u001B[0m";
     private static final String GRAY = "\u001B[90m";
     private static final String RED = "\u001B[91m";
     private static final String BLUE = "\u001B[94m";
 
     @Getter
+    private static GY instance;
+    @Getter
+    private CommandManager commandManager;
+    @Getter
     private AutoRestart autoRestart;
-
     @Getter
     private ViaManager versionManager;
+    @Getter
+    public static MessageUtil msg;
 
     private final Map<UUID, PlayerData> playerDataCache = new ConcurrentHashMap<>();
     public static PlayerData getPlayerData(UUID uuid) {
@@ -80,10 +79,12 @@ public final class GY extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        commandManager = new CommandManager();
         autoRestart = new AutoRestart();
         versionManager = Via.getManager();
+        msg = new MessageUtil("&#30578C&lɴ&#284C7D&lᴏ&#21416D&lʀ&#19365E&lᴛ&#112B4E&lʜ &8» &f", "&#30578C");
+        commandManager = new CommandManager(this, msg);
 
+        CommandRegistry.registerBaseCommands();
         AntiRelog.init();
         HomeData.loadHomes();
         SpawnData.init();
@@ -95,7 +96,7 @@ public final class GY extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");
-                MessageUtil.sendMessage(player, "&8(Админ)&f Плагин &aвключён.");
+                msg.sendMessage(player, "&8(Админ)&f Плагин &aвключён.");
                 player.sendMessage("");
             }
         }
@@ -131,7 +132,7 @@ public final class GY extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("gy-core.admin")) {
                 player.sendMessage("");
-                MessageUtil.sendMessage(player, "&8(Админ)&f Плагин &cвыключен.");
+                msg.sendMessage(player, "&8(Админ)&f Плагин &cвыключен.");
                 player.sendMessage("");
             }
         }

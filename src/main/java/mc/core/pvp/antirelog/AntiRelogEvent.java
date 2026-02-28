@@ -1,9 +1,10 @@
 package mc.core.pvp.antirelog;
 
-import mc.core.basecommands.impl.player.GodCmd;
-import mc.core.basecommands.impl.player.VanishCmd;
-import mc.core.utilites.chat.MessageUtil;
-import mc.core.utilites.math.MathUtil;
+import mc.core.GY;
+import mc.core.basecommands.player.GodCmd;
+import mc.core.basecommands.player.VanishCmd;
+
+import mc.north.utilites.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -73,7 +74,7 @@ public class AntiRelogEvent implements Listener {
         if (player.hasPermission("gy-core.admin")) return;
         if (AntiRelog.isInPvp(player)) {
             player.setHealth(0);
-            Bukkit.broadcast(MessageUtil.getGYString("Игрок &#30578C" + player.getName() + "&f покинул игру, во время боя."), "");
+            Bukkit.broadcast(GY.getMsg().getGYString("Игрок &#30578C" + player.getName() + "&f покинул игру, во время боя."), "");
         }
     }
 
@@ -88,7 +89,7 @@ public class AntiRelogEvent implements Listener {
 
         if (WHITELIST.stream().noneMatch(cmd::equalsIgnoreCase)) {
             e.setCancelled(true);
-            MessageUtil.sendMessage(player, "Команды запрещены во время боя.");
+            GY.getMsg().sendMessage(player, "Команды запрещены во время боя.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
@@ -114,7 +115,7 @@ public class AntiRelogEvent implements Listener {
         if (lastUse != null && now < (lastUse + delayMs)) {
             e.setCancelled(true);
             long remainMs = (lastUse + delayMs) - now;
-            MessageUtil.sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
+            GY.getMsg().sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
             return;
         }
@@ -148,7 +149,7 @@ public class AntiRelogEvent implements Listener {
         if (lastUse != null && now < (lastUse + delayMs)) {
             e.setCancelled(true);
             long remainMs = (lastUse + delayMs) - now;
-            MessageUtil.sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
+            GY.getMsg().sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
             return;
         }

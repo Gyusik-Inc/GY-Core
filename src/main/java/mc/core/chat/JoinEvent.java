@@ -1,9 +1,10 @@
 package mc.core.chat;
 
-import mc.core.utilites.chat.AnimateGradientUtil;
-import mc.core.utilites.chat.MessageUtil;
+import mc.core.GY;
+
 import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
+import mc.north.utilites.chat.AnimateGradientUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class JoinEvent implements Listener {
 
         if (!data.hasPlayedBefore()) {
             data.setFirstJoin();
-            Bukkit.broadcast(MessageUtil.getGYString(
+            Bukkit.broadcast(GY.getMsg().getGYString(
                     "Игрок &#30578C" + player.getName() + "&f первый раз зашел на сервер! &7(#" +
                             PlayerData.getTotalNewPlayers() + ")"), "");
             Location spawn = SpawnData.getSpawn();
@@ -39,8 +40,8 @@ public class JoinEvent implements Listener {
         );
 
         player.sendMessage("");
-        MessageUtil.sendMessage(player, "Добро пожаловать, #30578C" + player.getName());
-        MessageUtil.sendMessage(player, "Помощь по серверу - #30578C/help");
+        GY.getMsg().sendMessage(player, "Добро пожаловать, #30578C" + player.getName());
+        GY.getMsg().sendMessage(player, "Помощь по серверу - #30578C/help");
         player.sendMessage("");
     }
 

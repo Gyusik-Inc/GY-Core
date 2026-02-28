@@ -1,7 +1,8 @@
 package mc.core.kits;
 
 import lombok.Getter;
-import mc.core.utilites.chat.MessageUtil;
+
+import mc.core.GY;
 import mc.core.utilites.data.KitData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -47,7 +48,7 @@ public class KitPreviewGui implements Listener {
     public void openPreview(Player player, String kitName) {
         ItemStack[] kitItems = kitData.getKitItems(kitName.toLowerCase());
         if (kitItems == null) {
-            MessageUtil.sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
+            GY.getMsg().sendMessage(player, "Набор '&#30578C" + kitName + "&f' не найден.");
             return;
         }
 
@@ -55,7 +56,7 @@ public class KitPreviewGui implements Listener {
     }
 
     private void openPreviewPage(Player player, String kitName, ItemStack[] kitItems, int page) {
-        Inventory inv = Bukkit.createInventory(null, 54, MessageUtil.colorize("&#30578CПревью набора " + kitName));
+        Inventory inv = Bukkit.createInventory(null, 54, GY.getMsg().colorize("&#30578CПревью набора " + kitName));
 
         ItemStack blackPane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemStack lightBluePane = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
@@ -87,12 +88,12 @@ public class KitPreviewGui implements Listener {
         if (totalPages > 1) {
             ItemStack arrowPrev = new ItemStack(Material.SPECTRAL_ARROW);
             ItemMeta metaPrev = arrowPrev.getItemMeta();
-            metaPrev.setDisplayName(MessageUtil.colorize("&#30578CПредыдущая"));
+            metaPrev.setDisplayName(GY.getMsg().colorize("&#30578CПредыдущая"));
             arrowPrev.setItemMeta(metaPrev);
 
             ItemStack arrowNext = new ItemStack(Material.SPECTRAL_ARROW);
             ItemMeta metaNext = arrowNext.getItemMeta();
-            metaNext.setDisplayName(MessageUtil.colorize("&#30578CСледующая"));
+            metaNext.setDisplayName(GY.getMsg().colorize("&#30578CСледующая"));
             arrowNext.setItemMeta(metaNext);
 
 
@@ -120,7 +121,7 @@ public class KitPreviewGui implements Listener {
 
             Player player = (Player) e.getWhoClicked();
             String title = e.getView().getTitle();
-            String kitName = title.replace(MessageUtil.colorize("&#30578CПревью набора "), "");
+            String kitName = title.replace(GY.getMsg().colorize("&#30578CПревью набора "), "");
 
             ItemStack[] kitItems = kitData.getKitItems(kitName.toLowerCase());
             if (kitItems == null) return;
@@ -163,10 +164,10 @@ public class KitPreviewGui implements Listener {
     }
 
     private boolean isPreviewInventory(InventoryClickEvent e) {
-        return e.getView().getTitle().startsWith(MessageUtil.colorize("&#30578CПревью набора "));
+        return e.getView().getTitle().startsWith(GY.getMsg().colorize("&#30578CПревью набора "));
     }
 
     private boolean isPreviewInventory(InventoryDragEvent e) {
-        return e.getView().getTitle().startsWith(MessageUtil.colorize("&#30578CПревью набора "));
+        return e.getView().getTitle().startsWith(GY.getMsg().colorize("&#30578CПревью набора "));
     }
 }

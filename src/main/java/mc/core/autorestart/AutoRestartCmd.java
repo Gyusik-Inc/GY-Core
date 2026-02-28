@@ -1,9 +1,8 @@
 package mc.core.autorestart;
 
 import mc.core.GY;
-import mc.core.basecommands.base.BaseCommand;
-import mc.core.basecommands.base.BaseCommandInfo;
-import mc.core.utilites.chat.MessageUtil;
+import mc.north.commands.basecommands.BaseCommand;
+import mc.north.commands.basecommands.BaseCommandInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -19,8 +18,8 @@ public class AutoRestartCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (args.length != 1) {
-            MessageUtil.sendUsageMessage(sender, "/autorestart <время | cancel>");
-            MessageUtil.sendMessage(sender, "&7Примеры: &f30s  &75m  &f2h  &f90  &fcancel");
+            GY.getMsg().sendUsageMessage(sender, "/autorestart <время | cancel>");
+            GY.getMsg().sendMessage(sender, "&7Примеры: &f30s  &75m  &f2h  &f90  &fcancel");
             return true;
         }
 
@@ -29,28 +28,28 @@ public class AutoRestartCmd implements BaseCommand {
 
         if (input.equals("cancel")) {
             autoRestart.cancelRestart();
-            MessageUtil.sendMessage(sender, "Перезагрузка отменена.");
+            GY.getMsg().sendMessage(sender, "Перезагрузка отменена.");
             return true;
         }
 
         long seconds = parseTime(input);
 
         if (seconds <= 0) {
-            MessageUtil.sendMessage(sender, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
+            GY.getMsg().sendMessage(sender, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
             return true;
         }
 
         if (seconds < 10) {
-            MessageUtil.sendMessage(sender, "&cСлишком мало — минимум 10 секунд.");
+            GY.getMsg().sendMessage(sender, "&cСлишком мало — минимум 10 секунд.");
             return true;
         }
 
         try {
             autoRestart.startRestartInSeconds(seconds);
             String readableTime = formatReadableTime(seconds);
-            MessageUtil.sendMessage(sender, "Перезагрузка запланирована через &#30578C" + readableTime);
+            GY.getMsg().sendMessage(sender, "Перезагрузка запланирована через &#30578C" + readableTime);
         } catch (Exception e) {
-            MessageUtil.sendMessage(sender, "&cОшибка: " + e.getMessage());
+            GY.getMsg().sendMessage(sender, "&cОшибка: " + e.getMessage());
         }
 
         return true;

@@ -1,0 +1,64 @@
+package mc.core.basecommands.player;
+
+import mc.core.GY;
+import mc.north.commands.basecommands.BaseCommand;
+import mc.north.commands.basecommands.BaseCommandInfo;
+
+import mc.north.utilites.chat.AnimateGradientUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
+
+/**
+ * @author Gyusik - Я ебанутый помогите!
+ * @since 05.02.2026
+ */
+
+@BaseCommandInfo(name = "broadcast", permission = "gy-core.broadcast", cooldown = 120)
+public class BroadcastCmd implements BaseCommand {
+
+    @Override
+    public boolean execute(CommandSender sender, String label, String[] args) {
+
+        if (args.length == 0) {
+            GY.getMsg().sendUsageMessage(sender, "/bc [Сообщение]");
+            return true;
+        }
+
+        String message = String.join(" ", args);
+
+        if (message.length() > 80) {
+            GY.getMsg().sendMessage(sender, "Сообщение слишком длинное! Максимум 80 символов.");
+            return true;
+        }
+
+        Bukkit.broadcast(
+                GY.getMsg().colorize(
+                        "\n" +
+                                "&#30578C┃ &#30578CОбъявление\n" +
+                                "&#30578C┃ &7Содержимое: &f" + message + "\n" +
+                                "&#30578C┃ &7От: &#B1B7BE&n" + sender.getName() + "\n"
+                ),
+                ""
+        );
+
+        Bukkit.getOnlinePlayers().forEach(p ->
+                AnimateGradientUtil.animateGradientTitleNoDelay(
+                        p,
+                        "#30578C",
+                        "#7495C1",
+                        "ɴᴏʀᴛʜ-ᴍᴄ",
+                        "Объявление в чате!",
+                        1000
+                )
+        );
+
+        return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+        return List.of();
+    }
+}
