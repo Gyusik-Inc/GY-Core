@@ -20,7 +20,7 @@ public class CustomizationCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length != 2) {
-            GY.msg.sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard|mention> <enable|disable>");
+            GY.msg.sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard|mention|damage-text|enchant-text|modern-eco> <enable|disable>");
             return true;
         }
 
@@ -39,39 +39,79 @@ public class CustomizationCmd implements BaseCommand {
 
         switch (feature) {
             case "msg" -> {
-                data.setMsgEnabled(enable);
-                GY.msg.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
+                boolean current = data.isMsgEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Личные сообщения уже " + (enable ? "&aвключены." : "&cотключены."));
+                } else {
+                    data.setMsgEnabled(enable);
+                    GY.msg.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
+                }
             }
             case "modern-eco" -> {
-                data.setModernEcoEnabled(enable);
-                GY.msg.sendMessage(player, "Современный дизайн экономики " + (enable ? "&aвключен." : "&cотключен."));
+                boolean current = data.isModernEcoEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Современный дизайн экономики уже " + (enable ? "&aвключен." : "&cотключен."));
+                } else {
+                    data.setModernEcoEnabled(enable);
+                    GY.msg.sendMessage(player, "Современный дизайн экономики " + (enable ? "&aвключен." : "&cотключен."));
+                }
             }
             case "damage-text" -> {
-                data.setDamageTextEnabled(enable);
-                GY.msg.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
+                boolean current = data.isDamageTextEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Текст с уроном при ударе уже " + (enable ? "&aвключен." : "&cотключен."));
+                } else {
+                    data.setDamageTextEnabled(enable);
+                    GY.msg.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
+                }
             }
             case "enchant-text" -> {
-                data.setEnchantTextEnabled(enable);
-                GY.msg.sendMessage(player, "Текст зачарований " + (enable ? "&aвключен." : "&cотключен."));
+                boolean current = data.isEnchantTextEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Текст зачарований уже " + (enable ? "&aвключен." : "&cотключен."));
+                } else {
+                    data.setEnchantTextEnabled(enable);
+                    GY.msg.sendMessage(player, "Текст зачарований " + (enable ? "&aвключен." : "&cотключен."));
+                }
             }
             case "tp" -> {
-                data.setTpEnabled(enable);
-                GY.msg.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
+                boolean current = data.isTpEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Запросы на телепортацию уже " + (enable ? "&aвключены." : "&cотключены."));
+                } else {
+                    data.setTpEnabled(enable);
+                    GY.msg.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
+                }
             }
             case "pay" -> {
-                data.setPayEnabled(enable);
-                GY.msg.sendMessage(player, "Переводы денег " + (enable ? "&aвключены." : "&cотключены."));
+                boolean current = data.isPayEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Переводы денег уже " + (enable ? "&aвключены." : "&cотключены."));
+                } else {
+                    data.setPayEnabled(enable);
+                    GY.msg.sendMessage(player, "Переводы денег " + (enable ? "&aвключены." : "&cотключены."));
+                }
             }
             case "scoreboard" -> {
-                data.setScoreboardEnabled(enable);
-                GY.msg.sendMessage(player, "Scoreboard " + (enable ? "&aвключён." : "&cотключён."));
-                Bukkit.getServer().dispatchCommand(player, "sb");
+                boolean current = data.isScoreboardEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Scoreboard уже " + (enable ? "&aвключён." : "&cотключён."));
+                } else {
+                    data.setScoreboardEnabled(enable);
+                    GY.msg.sendMessage(player, "Scoreboard " + (enable ? "&aвключён." : "&cотключён."));
+                    Bukkit.getServer().dispatchCommand(player, "sb");
+                }
             }
             case "mention" -> {
-                data.setMentionSoundEnabled(enable);
-                GY.msg.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
+                boolean current = data.isMentionSoundEnabled();
+                if (enable == current) {
+                    GY.msg.sendMessage(player, "Звук при упоминании в чате уже " + (enable ? "&aвключён." : "&cотключён."));
+                } else {
+                    data.setMentionSoundEnabled(enable);
+                    GY.msg.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
+                }
             }
-            default -> GY.msg.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention, damage-text, modern-eco");
+            default -> GY.msg.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention, damage-text, enchant-text, modern-eco");
         }
 
         return true;

@@ -153,6 +153,10 @@ public class PlayerData {
         saveData();
     }
 
+    public boolean isScoreboardEnabled() {
+        return playerConfig.getBoolean("customization.scoreboard_enabled", true);
+    }
+
     public void setScoreboardEnabled(boolean enabled) {
         playerConfig.set("customization.scoreboard_enabled", enabled);
         saveData();
