@@ -5,6 +5,7 @@ import mc.north.commands.basecommands.BaseCommand;
 import mc.north.commands.basecommands.BaseCommandInfo;
 
 import mc.core.utilites.data.PlayerData;
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -23,24 +24,24 @@ public class MsgCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length < 2) {
-            GY.getMsg().sendUsageMessage(player, "/msg [Игрок] [Сообщение]");
+            GY.msg.sendUsageMessage(player, "/msg [Игрок] [Сообщение]");
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null || !target.isOnline()) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+            GY.msg.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         if (target.equals(player)) {
-            GY.getMsg().sendMessage(player, "&cНельзя писать самому себе.");
+            GY.msg.sendMessage(player, "&cНельзя писать самому себе.");
             return true;
         }
 
         PlayerData targetData = new PlayerData(target.getUniqueId());
         if (!targetData.isMsgEnabled()) {
-            GY.getMsg().sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
+            GY.msg.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -49,12 +50,12 @@ public class MsgCmd implements BaseCommand {
         lastMessageMap.put(player.getUniqueId(), target.getUniqueId());
         lastMessageMap.put(target.getUniqueId(), player.getUniqueId());
 
-        String toTarget = GY.getMsg().colorize(
+        String toTarget = MessageUtil.colorize(
                 "&#30578C✉ #30578CВам &7от &#B1B7BE" + player.getName() +
                         " &8» #30578C" + message
         );
 
-        String toSender = GY.getMsg().colorize(
+        String toSender = MessageUtil.colorize(
                 "&#30578C✉ #30578CВы &8→ &#B1B7BE" + target.getName() +
                         " &8» #30578C" + message
         );

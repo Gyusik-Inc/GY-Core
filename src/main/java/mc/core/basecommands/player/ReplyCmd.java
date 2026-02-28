@@ -5,6 +5,7 @@ import mc.north.commands.basecommands.BaseCommand;
 import mc.north.commands.basecommands.BaseCommandInfo;
 
 import mc.core.utilites.data.PlayerData;
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -24,32 +25,32 @@ public class ReplyCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length == 0) {
-            GY.getMsg().sendUsageMessage(player, "/reply [Сообщение]");
+            GY.msg.sendUsageMessage(player, "/reply [Сообщение]");
             return true;
         }
 
         UUID lastUUID = lastMessageMap.get(player.getUniqueId());
 
         if (lastUUID == null) {
-            GY.getMsg().sendMessage(player, "&cВам некому отвечать.");
+            GY.msg.sendMessage(player, "&cВам некому отвечать.");
             return true;
         }
 
         Player target = Bukkit.getPlayer(lastUUID);
 
         if (target == null || !target.isOnline()) {
-            GY.getMsg().sendMessage(player, "&cИгрок вышел с сервера.");
+            GY.msg.sendMessage(player, "&cИгрок вышел с сервера.");
             return true;
         }
 
         if (target.equals(player)) {
-            GY.getMsg().sendMessage(player, "&cОшибка ответа.");
+            GY.msg.sendMessage(player, "&cОшибка ответа.");
             return true;
         }
 
         PlayerData targetData = new PlayerData(target.getUniqueId());
         if (!targetData.isMsgEnabled()) {
-            GY.getMsg().sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
+            GY.msg.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил личные сообщения.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -59,12 +60,12 @@ public class ReplyCmd implements BaseCommand {
         lastMessageMap.put(player.getUniqueId(), target.getUniqueId());
         lastMessageMap.put(target.getUniqueId(), player.getUniqueId());
 
-        String toTarget = GY.getMsg().colorize(
+        String toTarget = MessageUtil.colorize(
                 "&#30578C✉ #30578CВам &7от &#B1B7BE" + player.getName() +
                         " &8» #30578C" + message
         );
 
-        String toSender = GY.getMsg().colorize(
+        String toSender = MessageUtil.colorize(
                 "&#30578C✉ #30578CВы &8→ &#B1B7BE" + target.getName() +
                         " &8» #30578C" + message
         );

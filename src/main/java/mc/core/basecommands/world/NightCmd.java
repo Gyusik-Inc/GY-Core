@@ -31,7 +31,7 @@ public class NightCmd implements BaseCommand {
         }
 
         TimeUtil.smoothTimeTransition(worlds, 15000, 200);
-        GY.getMsg().sendMessage(sender, "Начинаю смену времени на &#30578Cночь.");
+        GY.msg.sendMessage(sender, "Начинаю смену времени на &#30578Cночь.");
         if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         }

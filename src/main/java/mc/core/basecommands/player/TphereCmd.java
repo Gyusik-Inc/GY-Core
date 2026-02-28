@@ -22,7 +22,7 @@ public class TphereCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(player, "/tphere [Игрок]");
+            GY.msg.sendUsageMessage(player, "/tphere [Игрок]");
             return true;
         }
 
@@ -30,19 +30,19 @@ public class TphereCmd implements BaseCommand {
         Player target = Bukkit.getPlayerExact(targetName);
 
         if (target == null) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+            GY.msg.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         if (target.equals(player)) {
-            GY.getMsg().sendMessage(player, "Вы не можете телепортировать себя к себе.");
+            GY.msg.sendMessage(player, "Вы не можете телепортировать себя к себе.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
         target.teleport(player.getLocation());
-        GY.getMsg().sendMessage(target, "Вы были телепортированы к игроку &#30578C" + player.getName());
-        GY.getMsg().sendMessage(player, "Вы телепортировали игрока &#30578C" + target.getName() + " &fк себе.");
+        GY.msg.sendMessage(target, "Вы были телепортированы к игроку &#30578C" + player.getName());
+        GY.msg.sendMessage(player, "Вы телепортировали игрока &#30578C" + target.getName() + " &fк себе.");
 
         target.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);

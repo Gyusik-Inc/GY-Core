@@ -38,7 +38,7 @@ public class GamemodeCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(player, "/gm [0/1/2/3]");
+            GY.msg.sendUsageMessage(player, "/gm [0/1/2/3]");
             return true;
         }
 
@@ -48,19 +48,19 @@ public class GamemodeCmd implements BaseCommand {
     private boolean handleSelfGamemode(Player player, String modeArg) {
         GameMode gameMode = parseGameMode(modeArg.toLowerCase());
         if (gameMode == null) {
-            GY.getMsg().sendMessage(player, "&#c84f21Неверный режим! 0/1/2/3/survival/creative/adventure/spectator");
+            GY.msg.sendMessage(player, "&#c84f21Неверный режим! 0/1/2/3/survival/creative/adventure/spectator");
             return true;
         }
 
         String permission = "gy-core.gamemode." + gameMode.name().toLowerCase();
         if (!player.hasPermission(permission)) {
-            GY.getMsg().sendPermissionMessage(player);
+            GY.msg.sendPermissionMessage(player);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
         player.setGameMode(gameMode);
-        GY.getMsg().sendMessage(player, "&fВаш режим изменён на &#30578C" + getRussianName(gameMode));
+        GY.msg.sendMessage(player, "&fВаш режим изменён на &#30578C" + getRussianName(gameMode));
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }
@@ -68,25 +68,25 @@ public class GamemodeCmd implements BaseCommand {
     private boolean handleAdminGamemode(Player sender, String[] args) {
         GameMode gameMode = parseGameMode(args[0].toLowerCase());
         if (gameMode == null) {
-            GY.getMsg().sendMessage(sender, "&#c84f21Неверный режим!");
+            GY.msg.sendMessage(sender, "&#c84f21Неверный режим!");
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null) {
-            GY.getMsg().sendMessage(sender, "&#c84f21Игрок &#30578C" + args[1] + " &c84f21не в сети!");
+            GY.msg.sendMessage(sender, "&#c84f21Игрок &#30578C" + args[1] + " &c84f21не в сети!");
             sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
         if (target.equals(sender)) {
-            GY.getMsg().sendMessage(sender, "&#c84f21Используйте /gm [режим] для себя!");
+            GY.msg.sendMessage(sender, "&#c84f21Используйте /gm [режим] для себя!");
             return true;
         }
 
         target.setGameMode(gameMode);
-        GY.getMsg().sendMessage(sender, "&fИгроку &#30578C" + target.getName() + " &fустановлен режим &#30578C" + getRussianName(gameMode));
-        GY.getMsg().sendMessage(target, "&fВам установили режим &#30578C" + getRussianName(gameMode) + " &f(§7" + sender.getName() + "&f)");
+        GY.msg.sendMessage(sender, "&fИгроку &#30578C" + target.getName() + " &fустановлен режим &#30578C" + getRussianName(gameMode));
+        GY.msg.sendMessage(target, "&fВам установили режим &#30578C" + getRussianName(gameMode) + " &f(§7" + sender.getName() + "&f)");
 
         sender.playSound(sender.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         target.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);

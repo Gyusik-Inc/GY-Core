@@ -24,7 +24,7 @@ public class SetWarp implements BaseCommand {
         }
 
         if (args.length < 1) {
-            GY.getMsg().sendUsageMessage(player, "/setwarp [Название]");
+            GY.msg.sendUsageMessage(player, "/setwarp [Название]");
             return true;
         }
 
@@ -34,12 +34,12 @@ public class SetWarp implements BaseCommand {
         if (args[0].equalsIgnoreCase("admin")) {
 
             if (!player.hasPermission("gy-core.admin")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
 
             if (args.length < 2) {
-                GY.getMsg().sendMessage(player, "/setwarp admin <название>");
+                GY.msg.sendMessage(player, "/setwarp admin <название>");
                 return true;
             }
 
@@ -47,7 +47,7 @@ public class SetWarp implements BaseCommand {
             name = args[1];
 
             if (WarpData.getAdminWarp(name) != null) {
-                GY.getMsg().sendMessage(player, "Этот админ-варп уже существует и будет перезаписан.");
+                GY.msg.sendMessage(player, "Этот админ-варп уже существует и будет перезаписан.");
             }
 
         } else {
@@ -61,13 +61,13 @@ public class SetWarp implements BaseCommand {
             if (exists) {
                 UUID owner = WarpData.getWarp(name).owner();
                 if (owner != null && !owner.equals(player.getUniqueId())) {
-                    GY.getMsg().sendMessage(player, "Вы не можете перезаписать этот варп, он принадлежит другому игроку.");
+                    GY.msg.sendMessage(player, "Вы не можете перезаписать этот варп, он принадлежит другому игроку.");
                     return true;
                 }
             }
 
             if (!exists && WarpData.getPlayerWarpCount(player.getUniqueId()) >= limit) {
-                GY.getMsg().sendMessage(player, "Вы достигли лимита варпов &#30578C(" + limit + ")");
+                GY.msg.sendMessage(player, "Вы достигли лимита варпов &#30578C(" + limit + ")");
                 return true;
             }
         }
@@ -76,9 +76,9 @@ public class SetWarp implements BaseCommand {
         WarpData.setWarp(name, loc, adminWarp ? null : player.getUniqueId(), adminWarp);
 
         if (adminWarp) {
-            GY.getMsg().sendMessage(player, "Админ-варп &#30578C" + name + "&f установлен!");
+            GY.msg.sendMessage(player, "Админ-варп &#30578C" + name + "&f установлен!");
         } else {
-            GY.getMsg().sendMessage(player, "Варп &#30578C" + name + "&f установлен!");
+            GY.msg.sendMessage(player, "Варп &#30578C" + name + "&f установлен!");
         }
 
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);

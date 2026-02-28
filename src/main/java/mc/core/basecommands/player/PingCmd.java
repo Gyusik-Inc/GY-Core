@@ -39,7 +39,7 @@ public class PingCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(sender, "/ping [игрок]");
+            GY.msg.sendUsageMessage(sender, "/ping [игрок]");
             return true;
         }
 
@@ -47,7 +47,7 @@ public class PingCmd implements BaseCommand {
         Player target = Bukkit.getPlayer(targetName);
 
         if (target == null) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, targetName);
+            GY.msg.sendUnknownPlayerMessage(sender, targetName);
             return true;
         }
 
@@ -72,7 +72,7 @@ public class PingCmd implements BaseCommand {
             header = "Пинг игрока &#30578C" + displayName + "&f равен: " + color + ping;
         }
 
-        GY.getMsg().sendMessage(sender, header);
+        GY.msg.sendMessage(sender, header);
     }
 
     @Override

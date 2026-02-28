@@ -23,13 +23,13 @@ public class TpacceptCmd implements BaseCommand {
 
         UUID senderId = TpaCmd.getTarget(target.getUniqueId());
         if (senderId == null) {
-            GY.getMsg().sendMessage(target, "Нет активных запросов.");
+            GY.msg.sendMessage(target, "Нет активных запросов.");
             return true;
         }
 
         Player player = Bukkit.getPlayer(senderId);
         if (player == null || !player.isOnline()) {
-            GY.getMsg().sendMessage(target, "Игрок не в сети.");
+            GY.msg.sendMessage(target, "Игрок не в сети.");
             TpaCmd.removeRequest(senderId);
             return true;
         }
@@ -37,8 +37,8 @@ public class TpacceptCmd implements BaseCommand {
         TpaCmd.removeRequest(senderId);
 
         player.teleport(target.getLocation());
-        GY.getMsg().sendMessage(player, "Вы телепортировались к &#30578C" + target.getName());
-        GY.getMsg().sendMessage(target, "&#30578C" + player.getName() + "&f успешно телепортирован.");
+        GY.msg.sendMessage(player, "Вы телепортировались к &#30578C" + target.getName());
+        GY.msg.sendMessage(target, "&#30578C" + player.getName() + "&f успешно телепортирован.");
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
         target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
 

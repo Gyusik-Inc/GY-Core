@@ -18,8 +18,8 @@ public class AutoRestartCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(sender, "/autorestart <время | cancel>");
-            GY.getMsg().sendMessage(sender, "&7Примеры: &f30s  &75m  &f2h  &f90  &fcancel");
+            GY.msg.sendUsageMessage(sender, "/autorestart <время | cancel>");
+            GY.msg.sendMessage(sender, "&7Примеры: &f30s  &75m  &f2h  &f90  &fcancel");
             return true;
         }
 
@@ -28,28 +28,28 @@ public class AutoRestartCmd implements BaseCommand {
 
         if (input.equals("cancel")) {
             autoRestart.cancelRestart();
-            GY.getMsg().sendMessage(sender, "Перезагрузка отменена.");
+            GY.msg.sendMessage(sender, "Перезагрузка отменена.");
             return true;
         }
 
         long seconds = parseTime(input);
 
         if (seconds <= 0) {
-            GY.getMsg().sendMessage(sender, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
+            GY.msg.sendMessage(sender, "&cНеверный формат времени. Используй: 30s, 5m, 2h, 1d или просто число (секунды)");
             return true;
         }
 
         if (seconds < 10) {
-            GY.getMsg().sendMessage(sender, "&cСлишком мало — минимум 10 секунд.");
+            GY.msg.sendMessage(sender, "&cСлишком мало — минимум 10 секунд.");
             return true;
         }
 
         try {
             autoRestart.startRestartInSeconds(seconds);
             String readableTime = formatReadableTime(seconds);
-            GY.getMsg().sendMessage(sender, "Перезагрузка запланирована через &#30578C" + readableTime);
+            GY.msg.sendMessage(sender, "Перезагрузка запланирована через &#30578C" + readableTime);
         } catch (Exception e) {
-            GY.getMsg().sendMessage(sender, "&cОшибка: " + e.getMessage());
+            GY.msg.sendMessage(sender, "&cОшибка: " + e.getMessage());
         }
 
         return true;

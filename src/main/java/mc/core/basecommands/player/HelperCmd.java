@@ -26,7 +26,7 @@ public class HelperCmd implements BaseCommand {
         if (args.length == 1) {
             suspect = Bukkit.getPlayer(args[0]);
             if (suspect == null) {
-                GY.getMsg().sendUnknownPlayerMessage(player, args[0]);
+                GY.msg.sendUnknownPlayerMessage(player, args[0]);
                 return true;
             }
         } else if (args.length != 0) {
@@ -35,10 +35,10 @@ public class HelperCmd implements BaseCommand {
 
         String message;
         if (suspect != null) {
-            message = GY.getMsg().getGYString("Игрок &#30578C" + player.getName() +
+            message = GY.msg.getGYString("Игрок &#30578C" + player.getName() +
                     "&f подозревает &#30578C" + suspect.getName() + "&f!");
         } else {
-            message = GY.getMsg().getGYString("Игрок &#30578C" + player.getName() + "&f просит проспекать!");
+            message = GY.msg.getGYString("Игрок &#30578C" + player.getName() + "&f просит проспекать!");
         }
 
         Bukkit.broadcast(message, "gy-core.helper");

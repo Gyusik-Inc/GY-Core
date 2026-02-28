@@ -72,23 +72,23 @@ public class PvpCmd implements BaseCommand {
         UUID id = p.getUniqueId();
         if (isInAnyQueue(id)) {
             removePlayerFromQueue(id);
-            GY.getMsg().sendMessage(p, "Вы вышли из очереди PvP");
+            GY.msg.sendMessage(p, "Вы вышли из очереди PvP");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         } else if (slot == 10) {
             addToQueue(id, p);
-            Bukkit.broadcast(GY.getMsg().getGYString("Игрок &#30578C" + p.getName() + "&f ищет противника, &7обычного&f уровня. &7(/pvp)"), "");
-            GY.getMsg().sendMessage(p, "Поиск &7обычного &fсоперника.");
+            Bukkit.broadcast(GY.msg.getGYString("Игрок &#30578C" + p.getName() + "&f ищет противника, &7обычного&f уровня. &7(/pvp)"), "");
+            GY.msg.sendMessage(p, "Поиск &7обычного &fсоперника.");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
         } else if (slot == 16) {
             ArmorSetType set = getPlayerArmorSet(p);
             if (set == ArmorSetType.NONE) {
-                GY.getMsg().sendMessage(p, "Ваше снаряжение не подходит.");
+                GY.msg.sendMessage(p, "Ваше снаряжение не подходит.");
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
                 return;
             }
             addToGearQueue(id, p, set);
-            Bukkit.broadcast(GY.getMsg().getGYString("Игрок &#30578C" + p.getName() + "&f ищет противника, &#B1B7BEэлитного&f уровня! &7(/pvp)"), "");
-            GY.getMsg().sendMessage(p, "Поиск &#B1B7BEэлитного &fсоперника: &#30578C(" + set + ")");
+            Bukkit.broadcast(GY.msg.getGYString("Игрок &#30578C" + p.getName() + "&f ищет противника, &#B1B7BEэлитного&f уровня! &7(/pvp)"), "");
+            GY.msg.sendMessage(p, "Поиск &#B1B7BEэлитного &fсоперника: &#30578C(" + set + ")");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1.5f);
         }
         p.openInventory(PvpGuiMenu.createPvpMenu(p));
@@ -158,7 +158,7 @@ public class PvpCmd implements BaseCommand {
         gearQueue.removeIf(id -> {
             Player p = Bukkit.getPlayer(id);
             if (p == null || !p.isOnline() || getPlayerArmorSet(p) != armorTypes.get(id)) {
-                if (p != null) GY.getMsg().sendMessage(p, "Вы изменили броню! Выход из очереди.");
+                if (p != null) GY.msg.sendMessage(p, "Вы изменили броню! Выход из очереди.");
                 removePlayerFromQueue(id);
                 return true;
             }
@@ -173,14 +173,14 @@ public class PvpCmd implements BaseCommand {
 
         applyEffects(p1, p2);
         double dist = locs[0].distance(locs[1]);
-        GY.getMsg().sendMessage(p1, "Противник: &#30578C" + p2.getName() + "&f, расстояние: &#30578C" + String.format("%.1f", dist) + "м.");
-        GY.getMsg().sendMessage(p2, "Противник: &#30578C" + p1.getName() + "&f, расстояние: &#30578C" + String.format("%.1f", dist) + "м.");
+        GY.msg.sendMessage(p1, "Противник: &#30578C" + p2.getName() + "&f, расстояние: &#30578C" + String.format("%.1f", dist) + "м.");
+        GY.msg.sendMessage(p2, "Противник: &#30578C" + p1.getName() + "&f, расстояние: &#30578C" + String.format("%.1f", dist) + "м.");
 
         Bukkit.getOnlinePlayers().stream()
                 .filter(p -> p != p1 && p != p2)
                 .forEach(p -> {
                     String rival = p.equals(p1) ? p2.getName() : p1.getName();
-                    GY.getMsg().sendMessage(p, "Ваш соперник: &#30578C" + rival);
+                    GY.msg.sendMessage(p, "Ваш соперник: &#30578C" + rival);
                     AnimateGradientUtil.animateGradientTitle(p, "#30578C", "#7495C1", "ɴᴏʀᴛʜ-ᴍᴄ", "Соперник: " + rival, 500);
                 });
     }
@@ -237,11 +237,11 @@ public class PvpCmd implements BaseCommand {
     private static void broadcastQueues() {
         pvpQueue.forEach(id -> {
             Player p = Bukkit.getPlayer(id);
-            if (p != null) GY.getMsg().sendActionBar(p, "&7Обычная: &7" + pvpQueue.size(), true);
+            if (p != null) GY.msg.sendActionBar(p, "&7Обычная: &7" + pvpQueue.size(), true);
         });
         gearQueue.forEach(id -> {
             Player p = Bukkit.getPlayer(id);
-            if (p != null) GY.getMsg().sendActionBar(p, "&#B1B7BEЭлитная: &#30578C" + gearQueue.size(), true);
+            if (p != null) GY.msg.sendActionBar(p, "&#B1B7BEЭлитная: &#30578C" + gearQueue.size(), true);
         });
     }
 
@@ -249,7 +249,7 @@ public class PvpCmd implements BaseCommand {
         UUID id = p.getUniqueId();
         if (gearQueue.contains(id) && getPlayerArmorSet(p) != armorTypes.get(id)) {
             removePlayerFromQueue(id);
-            GY.getMsg().sendMessage(p, "Вы изменили броню! Выход из очереди.");
+            GY.msg.sendMessage(p, "Вы изменили броню! Выход из очереди.");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
         }
     }

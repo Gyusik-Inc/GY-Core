@@ -23,20 +23,20 @@ public class TpaDenyCmd implements BaseCommand {
 
         UUID senderId = TpaCmd.getTarget(target.getUniqueId());
         if (senderId == null) {
-            GY.getMsg().sendMessage(target, "Нет активных запросов.");
+            GY.msg.sendMessage(target, "Нет активных запросов.");
             return true;
         }
 
         Player player = Bukkit.getPlayer(senderId);
         if (player != null && player.isOnline()) {
-            GY.getMsg().sendMessage(player, target.getName() + " отклонил ваш запрос на телепортацию.");
+            GY.msg.sendMessage(player, target.getName() + " отклонил ваш запрос на телепортацию.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
         }
 
         TpaCmd.removeRequest(senderId);
         TpaCmd.teleportTasks.remove(senderId);
 
-        GY.getMsg().sendMessage(target, "Вы отклонили запрос телепортации.");
+        GY.msg.sendMessage(target, "Вы отклонили запрос телепортации.");
         target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
         return true;
     }

@@ -3,6 +3,7 @@ package mc.core.placeholder;
 import mc.core.GY;
 import mc.core.utilites.chat.AnimatedTextPlaceholder;
 
+import mc.north.utilites.chat.MessageUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class AnimatedLogo extends PlaceholderExpansion {
     private final AnimatedTextPlaceholder animatedText;
 
     public AnimatedLogo() {
-        this.animatedText = new AnimatedTextPlaceholder(GY.getMsg().colorize("ɴᴏʀᴛʜ-ᴍᴄ"), "#30578C", "#889DB8", 1);
+        this.animatedText = new AnimatedTextPlaceholder(MessageUtil.colorize("ɴᴏʀᴛʜ-ᴍᴄ"), "#30578C", "#889DB8", 1);
     }
 
     @Override

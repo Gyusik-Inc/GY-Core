@@ -4,6 +4,7 @@ import mc.core.GY;
 import mc.north.commands.basecommands.BaseCommand;
 import mc.north.commands.basecommands.BaseCommandInfo;
 
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class BalanceCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(sender, "/balance [игрок]");
+            GY.msg.sendUsageMessage(sender, "/balance [игрок]");
             return true;
         }
 
@@ -46,7 +47,7 @@ public class BalanceCmd implements BaseCommand {
         OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
 
         if (!target.hasPlayedBefore() && target.getUniqueId().version() == 4) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, targetName);
+            GY.msg.sendUnknownPlayerMessage(sender, targetName);
             return true;
         }
 
@@ -59,8 +60,8 @@ public class BalanceCmd implements BaseCommand {
         String header = "&#30578C┃ &7" + (isOwnBalance ? "&#30578CВаш баланс" : "Баланс &#30578C" + headerName);
 
         sender.sendMessage("");
-        sender.sendMessage(GY.getMsg().colorize(header));
-        sender.sendMessage(GY.getMsg().colorize("&#30578C┃"));
+        sender.sendMessage(MessageUtil.colorize(header));
+        sender.sendMessage(MessageUtil.colorize("&#30578C┃"));
 
         String lineMoney = "&#30578C┃ &7Монет: &e%gy_money%";
         String lineRub   = "&#30578C┃ &7Рублей: &#30578C%gy_rub%";
@@ -76,8 +77,8 @@ public class BalanceCmd implements BaseCommand {
         }
 
 
-        sender.sendMessage(GY.getMsg().colorize(lineMoney));
-        sender.sendMessage(GY.getMsg().colorize(lineRub));
+        sender.sendMessage(MessageUtil.colorize(lineMoney));
+        sender.sendMessage(MessageUtil.colorize(lineRub));
         sender.sendMessage("");
     }
 

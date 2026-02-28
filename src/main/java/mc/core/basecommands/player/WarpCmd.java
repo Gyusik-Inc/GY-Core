@@ -23,7 +23,7 @@ public class WarpCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length < 1 || args.length > 2) {
-            GY.getMsg().sendUsageMessage(player, "/warp [Название]");
+            GY.msg.sendUsageMessage(player, "/warp [Название]");
             return true;
         }
 
@@ -35,7 +35,7 @@ public class WarpCmd implements BaseCommand {
             }
             targetPlayer = Bukkit.getPlayerExact(args[1]);
             if (targetPlayer == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[1]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[1]);
                 return true;
             }
         }
@@ -44,16 +44,16 @@ public class WarpCmd implements BaseCommand {
         if (entry == null) entry = WarpData.getWarp(warpName);
 
         if (entry == null) {
-            GY.getMsg().sendMessage(player, "Варп не найден.");
+            GY.msg.sendMessage(player, "Варп не найден.");
             return true;
         }
 
         targetPlayer.teleport(entry.location());
-        GY.getMsg().sendMessage(targetPlayer, "Телепортация на варп &#30578C" + warpName);
+        GY.msg.sendMessage(targetPlayer, "Телепортация на варп &#30578C" + warpName);
         targetPlayer.playSound(targetPlayer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
 
         if (targetPlayer != player) {
-            GY.getMsg().sendMessage(player, "Вы телепортировали игрока &#30578C" + targetPlayer.getName() + "&f на варп &#30578C" + warpName);
+            GY.msg.sendMessage(player, "Вы телепортировали игрока &#30578C" + targetPlayer.getName() + "&f на варп &#30578C" + warpName);
         }
 
         return true;

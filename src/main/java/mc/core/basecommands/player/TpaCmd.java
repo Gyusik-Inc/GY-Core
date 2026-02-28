@@ -30,24 +30,24 @@ public class TpaCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(sender, "/tpa [Игрок]");
+            GY.msg.sendUsageMessage(sender, "/tpa [Игрок]");
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null || !target.isOnline()) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+            GY.msg.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         if (target.equals(player)) {
-            GY.getMsg().sendMessage(player, "&cНельзя отправить запрос себе!");
+            GY.msg.sendMessage(player, "&cНельзя отправить запрос себе!");
             return true;
         }
 
         PlayerData targetData = new PlayerData(target.getUniqueId());
         if (!targetData.isTpEnabled()) {
-            GY.getMsg().sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил телепортацию.");
+            GY.msg.sendMessage(player, "&fИгрок '&#30578C" + target.getName() + "&f' отключил телепортацию.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -58,8 +58,8 @@ public class TpaCmd implements BaseCommand {
             @Override
             public void run() {
                 if (tpaRequests.remove(player.getUniqueId()) != null) {
-                    GY.getMsg().sendMessage(player, "Ваш запрос на телепортацию к &#30578C" + target.getName() + " &fистёк.");
-                    GY.getMsg().sendMessage(target, "Запрос на телепортацию от &#30578C" + player.getName() + " &fистёк.");
+                    GY.msg.sendMessage(player, "Ваш запрос на телепортацию к &#30578C" + target.getName() + " &fистёк.");
+                    GY.msg.sendMessage(target, "Запрос на телепортацию от &#30578C" + player.getName() + " &fистёк.");
                 }
             }
         }.runTaskLater(GY.getInstance(), 20L * 60);
@@ -72,12 +72,12 @@ public class TpaCmd implements BaseCommand {
                 .hoverEvent(HoverEvent.showText(Component.text("Клик")));
         Component messageComp = Component.empty().append(accept).append(deny);
 
-        GY.getMsg().sendMessage(target, "&#30578C" + player.getName() + "&f хочет телепортироваться к тебе!");
-        GY.getMsg().sendMessage(target, "Используй: &#30578C/tpaccept");
+        GY.msg.sendMessage(target, "&#30578C" + player.getName() + "&f хочет телепортироваться к тебе!");
+        GY.msg.sendMessage(target, "Используй: &#30578C/tpaccept");
         target.sendMessage(messageComp);
         target.playSound(target.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
-        GY.getMsg().sendMessage(player, "Запрос отправлен игроку &#30578C" + target.getName());
+        GY.msg.sendMessage(player, "Запрос отправлен игроку &#30578C" + target.getName());
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
 
         return true;

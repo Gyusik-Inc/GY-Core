@@ -2,6 +2,7 @@ package mc.core.autorestart;
 
 import lombok.Getter;
 import mc.core.GY;
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -125,12 +126,12 @@ public class AutoRestart {
 
     private void broadcastMessage(String message) {
         String prefix = "\n&#30578C┃ &#30578CОбъявление\n&#30578C┃ &7Содержимое: &f" + message + "\n&#30578C┃ &7От: &#B1B7BE&nCONSOLE\n";
-        Bukkit.broadcast(GY.getMsg().colorize(prefix), "");
+        Bukkit.broadcast(MessageUtil.colorize(prefix), "");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendTitle(
-                    GY.getMsg().colorize("&#30578CПерезагрузка"),
-                    GY.getMsg().colorize("&7" + message),
+                    MessageUtil.colorize("&#30578CПерезагрузка"),
+                    MessageUtil.colorize("&7" + message),
                     10, 70, 10
             );
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);

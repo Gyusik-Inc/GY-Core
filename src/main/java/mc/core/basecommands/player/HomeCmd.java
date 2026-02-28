@@ -24,7 +24,7 @@ public class HomeCmd implements BaseCommand {
         }
 
         if (args.length == 0) {
-            GY.getMsg().sendUsageMessage(player, "/home [Дом, list]");
+            GY.msg.sendUsageMessage(player, "/home [Дом, list]");
             return true;
         }
 
@@ -34,25 +34,25 @@ public class HomeCmd implements BaseCommand {
             if (args.length == 2 && player.hasPermission("gy-core.home.admin")) {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target == null) {
-                    GY.getMsg().sendUnknownPlayerMessage(player, args[1]);
+                    GY.msg.sendUnknownPlayerMessage(player, args[1]);
                     return true;
                 }
                 var homes = HomeData.getHomes(target.getUniqueId());
                 if (homes.isEmpty()) {
-                    GY.getMsg().sendMessage(player, "У игрока " + target.getName() + " нет установленных домов.");
+                    GY.msg.sendMessage(player, "У игрока " + target.getName() + " нет установленных домов.");
                 } else {
                     String list = homes.entrySet().stream()
                             .map(e -> e.getKey() + " §7(" + formatLocation(e.getValue().location()) + " Мир: " + e.getValue().location().getWorld().getName() + ")")
                             .collect(Collectors.joining(", "));
-                    GY.getMsg().sendMessage(player, "Дома игрока &#30578C" + target.getName() + ": &#30578C" + list);
+                    GY.msg.sendMessage(player, "Дома игрока &#30578C" + target.getName() + ": &#30578C" + list);
                 }
             } else {
                 var homes = HomeData.getHomes(player.getUniqueId());
                 if (homes.isEmpty()) {
-                    GY.getMsg().sendMessage(player, "У вас нет установленных домов.");
+                    GY.msg.sendMessage(player, "У вас нет установленных домов.");
                 } else {
                     String list = String.join(", ", homes.keySet());
-                    GY.getMsg().sendMessage(player, "Ваши дома: &#30578C" + list);
+                    GY.msg.sendMessage(player, "Ваши дома: &#30578C" + list);
                 }
             }
             return true;
@@ -60,14 +60,14 @@ public class HomeCmd implements BaseCommand {
 
         String homeName = args[0];
         if (!HomeData.hasHome(player.getUniqueId(), homeName)) {
-            GY.getMsg().sendMessage(player, "Дом с названием '&#30578C" + homeName + "&f' не найден.");
+            GY.msg.sendMessage(player, "Дом с названием '&#30578C" + homeName + "&f' не найден.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
         Location loc = HomeData.getHome(player.getUniqueId(), homeName).location();
         player.teleport(loc);
-        GY.getMsg().sendMessage(player, "Вы телепортировались в дом '&#30578C" + homeName + "&f'.");
+        GY.msg.sendMessage(player, "Вы телепортировались в дом '&#30578C" + homeName + "&f'.");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }

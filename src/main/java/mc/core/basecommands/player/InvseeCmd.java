@@ -4,6 +4,7 @@ import mc.core.GY;
 import mc.north.commands.basecommands.BaseCommand;
 import mc.north.commands.basecommands.BaseCommandInfo;
 
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ public class InvseeCmd implements BaseCommand {
 
     public static void openInvseeMenu(Player viewer, Player target) {
         INVSEE_SESSIONS.put(viewer.getUniqueId(), target.getUniqueId());
-        Inventory invsee = Bukkit.createInventory(viewer, 54, GY.getMsg().colorize("Инвентарь &#30578C" + target.getName()));
+        Inventory invsee = Bukkit.createInventory(viewer, 54, MessageUtil.colorize("Инвентарь &#30578C" + target.getName()));
         updateInvsee(invsee, target);
         viewer.openInventory(invsee);
     }
@@ -73,18 +74,18 @@ public class InvseeCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(sender, "/invsee [Игрок]");
+            GY.msg.sendUsageMessage(sender, "/invsee [Игрок]");
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+            GY.msg.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         if (target == player) {
-            GY.getMsg().sendMessage(player, "Нельзя смотреть свой инвентарь.");
+            GY.msg.sendMessage(player, "Нельзя смотреть свой инвентарь.");
             return true;
         }
 

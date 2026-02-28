@@ -20,12 +20,12 @@ public class DelWarp implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (!(sender instanceof Player player)) {
-            GY.getMsg().sendMessage(sender, "Только игрок!");
+            GY.msg.sendMessage(sender, "Только игрок!");
             return true;
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(player, "/delwarp [Название]");
+            GY.msg.sendUsageMessage(player, "/delwarp [Название]");
             return true;
         }
 
@@ -36,11 +36,11 @@ public class DelWarp implements BaseCommand {
         );
 
         if (!success) {
-            GY.getMsg().sendMessage(player, "Вы не можете удалить этот варп.");
+            GY.msg.sendMessage(player, "Вы не можете удалить этот варп.");
             return true;
         }
 
-        GY.getMsg().sendMessage(player, "Варп &#30578C" + args[0] + "&f удалён.");
+        GY.msg.sendMessage(player, "Варп &#30578C" + args[0] + "&f удалён.");
         return true;
     }
 

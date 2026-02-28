@@ -36,7 +36,7 @@ public class RtpCmd implements TabExecutor {
         } else if (args[0].equalsIgnoreCase("near")) {
             handleNear(player);
         } else {
-            GY.getMsg().sendUsageMessage(sender, "/rtp, /rtp near");
+            GY.msg.sendUsageMessage(sender, "/rtp, /rtp near");
         }
 
         return true;
@@ -47,7 +47,7 @@ public class RtpCmd implements TabExecutor {
         Location safeLocation = findSafeLocation(world, 0, 0, 500);
 
         if (safeLocation == null) {
-            GY.getMsg().sendMessage(player, "Не найдено безопасное место в радиусе 500 блоков.");
+            GY.msg.sendMessage(player, "Не найдено безопасное место в радиусе 500 блоков.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
@@ -64,7 +64,7 @@ public class RtpCmd implements TabExecutor {
         Location finalSafeLocation = safeLocation;
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
             teleportWithSkyFall(player, finalSafeLocation);
-            GY.getMsg().sendMessage(player,
+            GY.msg.sendMessage(player,
                     "Успешная телепортация! §7(" +
                             (int) finalSafeLocation.getX() + ", " +
                             (int) finalSafeLocation.getY() + ", " +
@@ -79,7 +79,7 @@ public class RtpCmd implements TabExecutor {
         worldPlayers.remove(player);
 
         if (worldPlayers.isEmpty()) {
-            GY.getMsg().sendMessage(player, "В этом мире нет других игроков.");
+            GY.msg.sendMessage(player, "В этом мире нет других игроков.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
@@ -91,7 +91,7 @@ public class RtpCmd implements TabExecutor {
 
         do {
             if (selectionAttempts >= maxSelectionAttempts) {
-                GY.getMsg().sendMessage(player, "Нет подходящих игроков поблизости.");
+                GY.msg.sendMessage(player, "Нет подходящих игроков поблизости.");
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                 return;
             }
@@ -109,13 +109,13 @@ public class RtpCmd implements TabExecutor {
 
         Location safeLocation = findSafeNearLocation(world, targetLoc, 50, 95);
         if (safeLocation == null) {
-            GY.getMsg().sendMessage(player, "Не найдено безопасное место рядом с игроком.");
+            GY.msg.sendMessage(player, "Не найдено безопасное место рядом с игроком.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
 
         if (distance2D(player.getLocation(), target.getLocation()) <= 30) {
-            GY.getMsg().sendMessage(player, "Игрок слишком близко.");
+            GY.msg.sendMessage(player, "Игрок слишком близко.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
@@ -134,7 +134,7 @@ public class RtpCmd implements TabExecutor {
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
             teleportWithSkyFall(player, finalSafeLocation);
 
-            GY.getMsg().sendMessage(player,
+            GY.msg.sendMessage(player,
                     "Ближайший игрок §f&#30578C" + finalTarget.getName() +
                             " §7(" + (int) finalSafeLocation.getX() + ", " + (int) finalSafeLocation.getY() + ", " + (int) finalSafeLocation.getZ() + ")");
             player.playSound(finalSafeLocation, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);

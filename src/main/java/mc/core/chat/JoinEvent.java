@@ -4,6 +4,7 @@ import mc.core.GY;
 
 import mc.core.utilites.data.PlayerData;
 import mc.core.utilites.data.SpawnData;
+import mc.core.utilites.version.VersionCache;
 import mc.north.utilites.chat.AnimateGradientUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @author Gyusik - Я ебанутый помогите!
@@ -23,10 +25,11 @@ public class JoinEvent implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         PlayerData data = new PlayerData(player.getUniqueId());
+        VersionCache.cache(player);
 
         if (!data.hasPlayedBefore()) {
             data.setFirstJoin();
-            Bukkit.broadcast(GY.getMsg().getGYString(
+            Bukkit.broadcast(GY.msg.getGYString(
                     "Игрок &#30578C" + player.getName() + "&f первый раз зашел на сервер! &7(#" +
                             PlayerData.getTotalNewPlayers() + ")"), "");
             Location spawn = SpawnData.getSpawn();
@@ -40,10 +43,14 @@ public class JoinEvent implements Listener {
         );
 
         player.sendMessage("");
-        GY.getMsg().sendMessage(player, "Добро пожаловать, #30578C" + player.getName());
-        GY.getMsg().sendMessage(player, "Помощь по серверу - #30578C/help");
+        GY.msg.sendMessage(player, "Добро пожаловать, #30578C" + player.getName());
+        GY.msg.sendMessage(player, "Помощь по серверу - #30578C/help");
         player.sendMessage("");
     }
 
 
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        VersionCache.remove(e.getPlayer());
+    }
 }

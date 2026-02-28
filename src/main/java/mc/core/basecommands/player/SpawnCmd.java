@@ -21,7 +21,7 @@ public class SpawnCmd implements BaseCommand {
 
         if (SpawnData.getSpawn() == null) {
             if (sender instanceof Player p) {
-                GY.getMsg().sendMessage(p, "Спавн не найден.");
+                GY.msg.sendMessage(p, "Спавн не найден.");
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             } else {
                 sender.sendMessage("Спавн не найден.");
@@ -33,24 +33,24 @@ public class SpawnCmd implements BaseCommand {
 
             Player target = Bukkit.getPlayerExact(args[0]);
             if (target == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
 
             if (sender instanceof Player player && !player.hasPermission("gy-core.admin")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
 
             target.teleport(SpawnData.getSpawn());
             target.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
 
-            GY.getMsg().sendMessage(target, "Вы были телепортированы на &#30578Cспавн.");
+            GY.msg.sendMessage(target, "Вы были телепортированы на &#30578Cспавн.");
 
             if (sender instanceof Player player) {
-                GY.getMsg().sendMessage(player, "Вы телепортировали игрока &#30578C" + target.getName() + "&f на спавн.");
+                GY.msg.sendMessage(player, "Вы телепортировали игрока &#30578C" + target.getName() + "&f на спавн.");
             } else {
-                GY.getMsg().sendMessage(sender, "Игрок &#30578C" + target.getName() + " &fтелепортирован на спавн.");
+                GY.msg.sendMessage(sender, "Игрок &#30578C" + target.getName() + " &fтелепортирован на спавн.");
             }
 
             return true;
@@ -61,7 +61,7 @@ public class SpawnCmd implements BaseCommand {
         }
 
         player.teleport(SpawnData.getSpawn());
-        GY.getMsg().sendMessage(player, "Успешная телепортация на &#30578Cспавн.");
+        GY.msg.sendMessage(player, "Успешная телепортация на &#30578Cспавн.");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
 
         return true;

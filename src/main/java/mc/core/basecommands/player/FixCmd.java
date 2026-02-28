@@ -37,7 +37,7 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 0) {
             if (!player.hasPermission("gy-core.fix")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
             handleFixHand(player);
@@ -46,7 +46,7 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
             if (!player.hasPermission("gy-core.fix.other")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
             handleFixAll(player, player, false);
@@ -55,19 +55,19 @@ public class FixCmd implements TabExecutor {
 
         if (args.length == 2 && args[0].equalsIgnoreCase("all")) {
             if (!player.hasPermission("gy-core.fix.admin")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
             Player target = player.getServer().getPlayerExact(args[1]);
             if (target == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[1]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[1]);
                 return true;
             }
             handleFixAll(player, target, true);
             return true;
         }
 
-        GY.getMsg().sendMessage(player, "Использование: /fix, /fix all");
+        GY.msg.sendMessage(player, "Использование: /fix, /fix all");
         return true;
     }
 
@@ -76,17 +76,17 @@ public class FixCmd implements TabExecutor {
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().isAir()) {
-            GY.getMsg().sendMessage(player, "Этот предмет нельзя починить");
+            GY.msg.sendMessage(player, "Этот предмет нельзя починить");
             return;
         }
 
         if (!(item.getItemMeta() instanceof Damageable dmg)) {
-            GY.getMsg().sendMessage(player, "Этот предмет нельзя починить");
+            GY.msg.sendMessage(player, "Этот предмет нельзя починить");
             return;
         }
 
         if (dmg.getDamage() == 0) {
-            GY.getMsg().sendMessage(player, "Этот предмет нельзя починить");
+            GY.msg.sendMessage(player, "Этот предмет нельзя починить");
             return;
         }
 
@@ -96,7 +96,7 @@ public class FixCmd implements TabExecutor {
 
         if (left > 0 && !player.hasPermission("gy-core.fix.admin")) {
             long sec = left / 1000;
-            GY.getMsg().sendMessage(player, "Подождите &#30578C" + sec + " сек. перед следующим использованием.");
+            GY.msg.sendMessage(player, "Подождите &#30578C" + sec + " сек. перед следующим использованием.");
             return;
         }
 
@@ -104,7 +104,7 @@ public class FixCmd implements TabExecutor {
         item.setItemMeta(dmg);
 
         fixHandCooldowns.put(uuid, now);
-        GY.getMsg().sendMessage(player, "Предмет успешно починен.");
+        GY.msg.sendMessage(player, "Предмет успешно починен.");
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1f, 1f);
     }
 
@@ -117,7 +117,7 @@ public class FixCmd implements TabExecutor {
             long left = FIX_ALL_COOLDOWN - (now - lastUse);
             if (left > 0) {
                 long sec = left / 1000;
-                GY.getMsg().sendMessage(executor, "Подождите &#30578C" + sec + " сек. перед следующим использованием.");
+                GY.msg.sendMessage(executor, "Подождите &#30578C" + sec + " сек. перед следующим использованием.");
                 return;
             }
         }
@@ -146,7 +146,7 @@ public class FixCmd implements TabExecutor {
         inv.setItemInOffHand(off);
 
         if (!isAdmin && !repairedSomething) {
-            GY.getMsg().sendMessage(executor, "Вещи для починки не найдены.");
+            GY.msg.sendMessage(executor, "Вещи для починки не найдены.");
             return;
         }
 
@@ -155,11 +155,11 @@ public class FixCmd implements TabExecutor {
         }
 
         if (executor.equals(target)) {
-            GY.getMsg().sendMessage(executor, "Весь ваш инвентарь был починен.");
+            GY.msg.sendMessage(executor, "Весь ваш инвентарь был починен.");
             executor.playSound(executor.getLocation(), Sound.BLOCK_ANVIL_USE, 1f, 1f);
         } else {
-            GY.getMsg().sendMessage(executor, "Вы починили инвентарь игрока &#30578C" + target.getName());
-            GY.getMsg().sendMessage(target, "Ваш инвентарь был починен игроком &#30578C" + executor.getName());
+            GY.msg.sendMessage(executor, "Вы починили инвентарь игрока &#30578C" + target.getName());
+            GY.msg.sendMessage(target, "Ваш инвентарь был починен игроком &#30578C" + executor.getName());
             target.playSound(target.getLocation(), Sound.BLOCK_ANVIL_USE, 1f, 1f);
         }
     }

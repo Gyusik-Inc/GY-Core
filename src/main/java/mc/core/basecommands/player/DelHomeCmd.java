@@ -21,14 +21,14 @@ public class DelHomeCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(player, "/delhome [Дом]");
+            GY.msg.sendUsageMessage(player, "/delhome [Дом]");
             return true;
         }
 
         String homeName = args[0];
 
         if (!HomeData.hasHome(player.getUniqueId(), homeName)) {
-            GY.getMsg().sendMessage(player, "Дом с названием '&#30578C" + homeName + "&f' не найден.");
+            GY.msg.sendMessage(player, "Дом с названием '&#30578C" + homeName + "&f' не найден.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -36,7 +36,7 @@ public class DelHomeCmd implements BaseCommand {
         HomeData.getHomes(player.getUniqueId()).remove(homeName);
         HomeData.saveHomes();
 
-        GY.getMsg().sendMessage(player, "Дом '&#30578C" + homeName + "&f' успешно удалён!");
+        GY.msg.sendMessage(player, "Дом '&#30578C" + homeName + "&f' успешно удалён!");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }

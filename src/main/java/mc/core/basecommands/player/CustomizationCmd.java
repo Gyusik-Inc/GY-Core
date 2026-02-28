@@ -20,7 +20,7 @@ public class CustomizationCmd implements BaseCommand {
         if (!(sender instanceof Player player)) return true;
 
         if (args.length != 2) {
-            GY.getMsg().sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard|mention> <enable|disable>");
+            GY.msg.sendMessage(player, "Использование: &#30578C/customization <msg|tp|pay|scoreboard|mention> <enable|disable>");
             return true;
         }
 
@@ -33,41 +33,41 @@ public class CustomizationCmd implements BaseCommand {
         if (action.equals("enable")) enable = true;
         else if (action.equals("disable")) enable = false;
         else {
-            GY.getMsg().sendMessage(player, "&cДоступные действия: enable, disable");
+            GY.msg.sendMessage(player, "&cДоступные действия: enable, disable");
             return true;
         }
 
         switch (feature) {
             case "msg" -> {
                 data.setMsgEnabled(enable);
-                GY.getMsg().sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
+                GY.msg.sendMessage(player, "Личные сообщения " + (enable ? "&aвключены." : "&cотключены."));
             }
             case "modern-eco" -> {
                 data.setModernEcoEnabled(enable);
-                GY.getMsg().sendMessage(player, "Современный дизайн экономики " + (enable ? "&aвключен." : "&cотключен."));
+                GY.msg.sendMessage(player, "Современный дизайн экономики " + (enable ? "&aвключен." : "&cотключен."));
             }
             case "damage-text" -> {
                 data.setDamageTextEnabled(enable);
-                GY.getMsg().sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
+                GY.msg.sendMessage(player, "Текст с уроном при ударе " + (enable ? "&aвключен." : "&cотключен."));
             }
             case "tp" -> {
                 data.setTpEnabled(enable);
-                GY.getMsg().sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
+                GY.msg.sendMessage(player, "Запросы на телепортацию " + (enable ? "&aвключены." : "&cотключены."));
             }
             case "pay" -> {
                 data.setPayEnabled(enable);
-                GY.getMsg().sendMessage(player, "Переводы денег " + (enable ? "&aвключены." : "&cотключены."));
+                GY.msg.sendMessage(player, "Переводы денег " + (enable ? "&aвключены." : "&cотключены."));
             }
             case "scoreboard" -> {
                 data.setScoreboardEnabled(enable);
-                GY.getMsg().sendMessage(player, "Scoreboard " + (enable ? "&aвключён." : "&cотключён."));
+                GY.msg.sendMessage(player, "Scoreboard " + (enable ? "&aвключён." : "&cотключён."));
                 Bukkit.getServer().dispatchCommand(player, "sb");
             }
             case "mention" -> {
                 data.setMentionSoundEnabled(enable);
-                GY.getMsg().sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
+                GY.msg.sendMessage(player, "Звук при упоминании в чате " + (enable ? "&aвключён." : "&cотключён."));
             }
-            default -> GY.getMsg().sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention, damage-text, modern-eco");
+            default -> GY.msg.sendMessage(player, "&cДоступные функции: msg, tp, pay, scoreboard, mention, damage-text, modern-eco");
         }
 
         return true;

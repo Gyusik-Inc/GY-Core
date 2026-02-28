@@ -31,12 +31,12 @@ public class EcCmd implements BaseCommand {
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            GY.getMsg().sendUnknownPlayerMessage(viewer, args[0]);
+            GY.msg.sendUnknownPlayerMessage(viewer, args[0]);
             return true;
         }
 
         viewer.openInventory(target.getEnderChest());
-        GY.getMsg().sendMessage(viewer, "Вы открыли эндер-сундук игрока '&#30578C" + target.getName() + "&f'");
+        GY.msg.sendMessage(viewer, "Вы открыли эндер-сундук игрока '&#30578C" + target.getName() + "&f'");
         viewer.playSound(viewer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }

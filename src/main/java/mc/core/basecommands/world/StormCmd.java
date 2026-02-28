@@ -33,7 +33,7 @@ public class StormCmd implements BaseCommand {
             world.setWeatherDuration(48000);
         }
 
-        GY.getMsg().sendMessage(sender, "&#30578CШтормовая&f погода установлена.");
+        GY.msg.sendMessage(sender, "&#30578CШтормовая&f погода установлена.");
         if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
         }

@@ -22,7 +22,7 @@ public class SetHomeCmd implements BaseCommand {
         }
 
         if (args.length != 1) {
-            GY.getMsg().sendUsageMessage(player, "/sethome [Дом]");
+            GY.msg.sendUsageMessage(player, "/sethome [Дом]");
             return true;
         }
 
@@ -30,7 +30,7 @@ public class SetHomeCmd implements BaseCommand {
         if (player.hasPermission("gy-core.home.admin")) maxHomes = 999;
 
         if (HomeData.getHomes(player.getUniqueId()).size() >= maxHomes) {
-            GY.getMsg().sendMessage(player, "Вы достигли лимита домов &#30578C(" + maxHomes + ")");
+            GY.msg.sendMessage(player, "Вы достигли лимита домов &#30578C(" + maxHomes + ")");
             return true;
         }
 
@@ -38,7 +38,7 @@ public class SetHomeCmd implements BaseCommand {
         Location loc = player.getLocation();
         HomeData.setHome(player.getUniqueId(), homeName, loc);
 
-        GY.getMsg().sendMessage(player, "Дом '&#30578C" + homeName + "&f' установлен!");
+        GY.msg.sendMessage(player, "Дом '&#30578C" + homeName + "&f' установлен!");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }

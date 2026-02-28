@@ -38,13 +38,13 @@ public class TpCmd implements BaseCommand {
             return teleportToCoords(player, args);
         }
 
-        GY.getMsg().sendUsageMessage(sender, "/tp [Игрок] | /tp [x y z]| /tp [Мир] [x y z]");
+        GY.msg.sendUsageMessage(sender, "/tp [Игрок] | /tp [x y z]| /tp [Мир] [x y z]");
         return true;
     }
 
     private boolean teleportToPlayer(Player player, String targetName) {
         if (targetName.equalsIgnoreCase(player.getName())) {
-            GY.getMsg().sendMessage(player, "Нельзя телепортироваться к себе!");
+            GY.msg.sendMessage(player, "Нельзя телепортироваться к себе!");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
@@ -59,13 +59,13 @@ public class TpCmd implements BaseCommand {
         }
 
         if (loc == null) {
-            GY.getMsg().sendMessage(player, "Нет информации о последнем местоположении игрока '&#30578C" + targetName + "&f'.");
+            GY.msg.sendMessage(player, "Нет информации о последнем местоположении игрока '&#30578C" + targetName + "&f'.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }
 
         player.teleport(loc);
-        GY.getMsg().sendMessage(player, "Вы телепортировались к игроку '&#30578C" + targetName + "&f'.");
+        GY.msg.sendMessage(player, "Вы телепортировались к игроку '&#30578C" + targetName + "&f'.");
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }
@@ -78,7 +78,7 @@ public class TpCmd implements BaseCommand {
             if (args.length == 4) {
                 World targetWorld = Bukkit.getWorld(args[0]);
                 if (targetWorld == null) {
-                    GY.getMsg().sendMessage(player, "&#c84f21Мир '&#30578C" + args[0] + "&c84f21' не найден.");
+                    GY.msg.sendMessage(player, "&#c84f21Мир '&#30578C" + args[0] + "&c84f21' не найден.");
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                     return true;
                 }
@@ -95,13 +95,13 @@ public class TpCmd implements BaseCommand {
             Location targetLoc = new Location(world, x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch());
             player.teleport(targetLoc);
 
-            GY.getMsg().sendMessage(player, String.format("Телепортация на локацию &7(%s %.0f, %.0f, %.0f)",
+            GY.msg.sendMessage(player, String.format("Телепортация на локацию &7(%s %.0f, %.0f, %.0f)",
                     world.getName(), x, y, z));
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
             return true;
 
         } catch (NumberFormatException e) {
-            GY.getMsg().sendMessage(player, "&#c84f21Координаты должны быть числами!");
+            GY.msg.sendMessage(player, "&#c84f21Координаты должны быть числами!");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return true;
         }

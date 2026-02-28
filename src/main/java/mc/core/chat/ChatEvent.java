@@ -3,6 +3,7 @@ package mc.core.chat;
 
 import mc.core.GY;
 import mc.core.utilites.data.PlayerData;
+import mc.north.utilites.chat.MessageUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -51,7 +52,7 @@ public class ChatEvent implements Listener {
         event.setCancelled(true);
 
         if (!player.hasPermission(BYPASS_PERMISSION) && !canPlayerChat(player)) {
-            GY.getMsg().sendMessage(player, "Подождите &#30578C" + getRemainingCooldown(player) + " сек. &fперед следующим сообщением!");
+            GY.msg.sendMessage(player, "Подождите &#30578C" + getRemainingCooldown(player) + " сек. &fперед следующим сообщением!");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return;
         }
@@ -107,7 +108,7 @@ public class ChatEvent implements Listener {
                     .replace("{sender}", sender.getName())
                     .replace("{msgColor}", msgColor)
                     .replace("{message}", formatMentions(sender, message, online, msgColor));
-            online.sendMessage(GY.getMsg().colorize(formatted));
+            online.sendMessage(MessageUtil.colorize(formatted));
         }
     }
 
@@ -124,7 +125,7 @@ public class ChatEvent implements Listener {
                         .replace("{sender}", sender.getName())
                         .replace("{msgColor}", msgColor)
                         .replace("{message}", formatMentions(sender, message, online, msgColor));
-                online.sendMessage(GY.getMsg().colorize(formatted));
+                online.sendMessage(MessageUtil.colorize(formatted));
             }
         }
     }
@@ -146,7 +147,7 @@ public class ChatEvent implements Listener {
                 if (user != null) {
                     String prefix = user.getCachedData().getMetaData().getPrefix();
                     if (prefix != null) {
-                        return GY.getMsg().colorize(prefix);
+                        return MessageUtil.colorize(prefix);
                     }
                 }
             }

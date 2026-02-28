@@ -59,7 +59,7 @@ public class VanishCmd implements BaseCommand {
             nowVanished = true;
         }
 
-        GY.getMsg().sendMessage(player, nowVanished ? "Вы скрыты от игроков." : "Вы снова видимы игрокам.");
+        GY.msg.sendMessage(player, nowVanished ? "Вы скрыты от игроков." : "Вы снова видимы игрокам.");
         return true;
     }
 

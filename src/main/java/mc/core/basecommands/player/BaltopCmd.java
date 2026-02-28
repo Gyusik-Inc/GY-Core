@@ -55,7 +55,7 @@ public class BaltopCmd implements BaseCommand {
         if (page > totalPages) page = totalPages;
 
         sender.sendMessage(Component.text(" "));
-        mc.core.GY.getMsg().sendMessage(sender, "&7Топ игроков по балансу &#30578C(" + page + "&8/&#30578C" + totalPages + ")");
+        mc.core.GY.msg.sendMessage(sender, "&7Топ игроков по балансу &#30578C(" + page + "&8/&#30578C" + totalPages + ")");
         sender.sendMessage(Component.text(" "));
 
         int startIndex = (page - 1) * PAGE_SIZE;
@@ -87,7 +87,7 @@ public class BaltopCmd implements BaseCommand {
         if (sender instanceof Player player) {
             Player online = Bukkit.getPlayer(player.getUniqueId());
             if (online != null && online.hasPermission("gy-core.admin")) {
-                mc.core.GY.getMsg().sendMessage(sender, "Ваше место: &#30578CАдмин");
+                mc.core.GY.msg.sendMessage(sender, "Ваше место: &#30578CАдмин");
             } else {
                 int playerRank = 1;
                 double playerBalance = 0;
@@ -102,7 +102,7 @@ public class BaltopCmd implements BaseCommand {
                         ? ((double) (sortedList.size() - playerRank) / (sortedList.size() - 1)) * 100
                         : 100;
 
-                mc.core.GY.getMsg().sendMessage(sender, "Ваше место: &#30578C#" + playerRank +
+                mc.core.GY.msg.sendMessage(sender, "Ваше место: &#30578C#" + playerRank +
                         " &7(Вы богаче: &#30578C#&n" + String.format("%.1f", percentile) + "&7 игроков)");
             }
         }

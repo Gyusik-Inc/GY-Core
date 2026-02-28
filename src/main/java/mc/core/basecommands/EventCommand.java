@@ -143,7 +143,7 @@ public class EventCommand implements Listener {
     public void onBlockBreak(BlockBreakEvent e) {
         if (GodCmd.isGod(e.getPlayer())) {
             e.setCancelled(true);
-            GY.getMsg().sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
+            GY.msg.sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
@@ -152,7 +152,7 @@ public class EventCommand implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (GodCmd.isGod(e.getPlayer())) {
             e.setCancelled(true);
-            GY.getMsg().sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
+            GY.msg.sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
@@ -161,7 +161,7 @@ public class EventCommand implements Listener {
     public void onPickup(EntityPickupItemEvent e) {
         if (e.getEntity() instanceof Player player && GodCmd.isGod(player)) {
             e.setCancelled(true);
-            GY.getMsg().sendActionBar(player, "Запрещено в &#30578C/god", true);
+            GY.msg.sendActionBar(player, "Запрещено в &#30578C/god", true);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
@@ -170,7 +170,7 @@ public class EventCommand implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         if (GodCmd.isGod(e.getPlayer()) && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             e.setCancelled(true);
-            GY.getMsg().sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
+            GY.msg.sendActionBar(e.getPlayer(), "Запрещено в &#30578C/god", true);
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }

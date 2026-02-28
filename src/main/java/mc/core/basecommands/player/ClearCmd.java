@@ -30,19 +30,19 @@ public class ClearCmd implements BaseCommand {
         }
 
         if (!sender.hasPermission("gy-core.clear.others")) {
-            GY.getMsg().sendPermissionMessage(sender);
+            GY.msg.sendPermissionMessage(sender);
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+            GY.msg.sendUnknownPlayerMessage(sender, args[0]);
             return true;
         }
 
         clearInventory(target);
-        GY.getMsg().sendMessage(sender, "Вы очистили инвентарь игрока &#30578C" + target.getName());
-        GY.getMsg().sendMessage(target, "Ваш инвентарь был очищен &#30578C" + sender.getName());
+        GY.msg.sendMessage(sender, "Вы очистили инвентарь игрока &#30578C" + target.getName());
+        GY.msg.sendMessage(target, "Ваш инвентарь был очищен &#30578C" + sender.getName());
         target.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         return true;
     }

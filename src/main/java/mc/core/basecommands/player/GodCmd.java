@@ -25,13 +25,13 @@ public class GodCmd implements BaseCommand {
 
         if (args.length > 0) {
             if (!player.hasPermission("gy-core.admin")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
 
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
 
@@ -57,10 +57,10 @@ public class GodCmd implements BaseCommand {
         String status = isGod ? "&cвыключен." : "&aвключён.";
 
         if (target == sender) {
-            GY.getMsg().sendMessage(target, "Режим бога " + status);
+            GY.msg.sendMessage(target, "Режим бога " + status);
         } else {
-            GY.getMsg().sendMessage(sender, "Режим бога для &#30578C" + target.getName() + " " + status);
-            GY.getMsg().sendMessage(target, "Режим бога " + status + " &7(§e" + sender.getName() + "&7)");
+            GY.msg.sendMessage(sender, "Режим бога для &#30578C" + target.getName() + " " + status);
+            GY.msg.sendMessage(target, "Режим бога " + status + " &7(§e" + sender.getName() + "&7)");
         }
 
         return true;
@@ -75,7 +75,7 @@ public class GodCmd implements BaseCommand {
         if (godPlayers.remove(uuid)) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            GY.getMsg().sendMessage(player, "Режим бога &cвыключен.");
+            GY.msg.sendMessage(player, "Режим бога &cвыключен.");
         }
     }
 

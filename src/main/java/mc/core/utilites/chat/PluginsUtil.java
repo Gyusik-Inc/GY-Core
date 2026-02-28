@@ -20,7 +20,7 @@ public class PluginsUtil {
 
     public static void showPlugins(CommandSender sender) {
         sender.sendMessage("");
-        GY.getMsg().sendMessage(sender, "&8Плагины сервера: ");
+        GY.msg.sendMessage(sender, "&8Плагины сервера: ");
         sender.sendMessage("");
 
         List<String> normalPluginNames = new ArrayList<>();
@@ -49,16 +49,16 @@ public class PluginsUtil {
         specialPlugins.sort(Comparator.comparingInt(String::length));
 
         if (!specialPlugins.isEmpty()) {
-            GY.getMsg().sendMessage(sender, "&#30578CGY-Studio &7(" + specialPlugins.size() + ")");
+            GY.msg.sendMessage(sender, "&#30578CGY-Studio &7(" + specialPlugins.size() + ")");
             for (String plugin : specialPlugins) {
-                GY.getMsg().sendMessage(sender, "  " + plugin);
+                GY.msg.sendMessage(sender, "  " + plugin);
             }
-            GY.getMsg().sendMessage(sender, "");
+            GY.msg.sendMessage(sender, "");
         }
 
         if (!normalPluginNames.isEmpty()) {
-            GY.getMsg().sendMessage(sender, "&7Обычные (" + normalPluginNames.size() + ")");
-            GY.getMsg().sendMessage(sender, "  &f" + String.join("&8, &f", normalPluginNames));
+            GY.msg.sendMessage(sender, "&7Обычные (" + normalPluginNames.size() + ")");
+            GY.msg.sendMessage(sender, "  &f" + String.join("&8, &f", normalPluginNames));
         }
 
         sender.sendMessage("");

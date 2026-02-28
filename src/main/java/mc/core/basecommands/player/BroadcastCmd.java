@@ -5,6 +5,7 @@ import mc.north.commands.basecommands.BaseCommand;
 import mc.north.commands.basecommands.BaseCommandInfo;
 
 import mc.north.utilites.chat.AnimateGradientUtil;
+import mc.north.utilites.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -22,19 +23,19 @@ public class BroadcastCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (args.length == 0) {
-            GY.getMsg().sendUsageMessage(sender, "/bc [Сообщение]");
+            GY.msg.sendUsageMessage(sender, "/bc [Сообщение]");
             return true;
         }
 
         String message = String.join(" ", args);
 
         if (message.length() > 80) {
-            GY.getMsg().sendMessage(sender, "Сообщение слишком длинное! Максимум 80 символов.");
+            GY.msg.sendMessage(sender, "Сообщение слишком длинное! Максимум 80 символов.");
             return true;
         }
 
         Bukkit.broadcast(
-                GY.getMsg().colorize(
+                MessageUtil.colorize(
                         "\n" +
                                 "&#30578C┃ &#30578CОбъявление\n" +
                                 "&#30578C┃ &7Содержимое: &f" + message + "\n" +

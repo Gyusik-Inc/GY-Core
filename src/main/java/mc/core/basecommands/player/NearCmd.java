@@ -48,7 +48,7 @@ public class NearCmd implements BaseCommand {
         boolean foundAny = false;
         boolean isAdminViewer = player.hasPermission(ADMIN_PERMISSION);
 
-        GY.getMsg().sendMessage(player, "&7Окружающие игроки: ");
+        GY.msg.sendMessage(player, "&7Окружающие игроки: ");
 
         for (Player target : player.getWorld().getPlayers()) {
 
@@ -130,7 +130,7 @@ public class NearCmd implements BaseCommand {
         }
 
         if (!foundAny) {
-            GY.getMsg().sendMessage(player, "Игроки не найдены.");
+            GY.msg.sendMessage(player, "Игроки не найдены.");
         }
 
         return true;

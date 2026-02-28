@@ -33,7 +33,7 @@ public class SunCmd implements BaseCommand {
             world.setWeatherDuration(48000);
         }
 
-        GY.getMsg().sendMessage(sender, "&#30578CЯсная &fпогода установлена.");
+        GY.msg.sendMessage(sender, "&#30578CЯсная &fпогода установлена.");
         if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         }

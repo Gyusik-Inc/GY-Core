@@ -74,7 +74,7 @@ public class AntiRelogEvent implements Listener {
         if (player.hasPermission("gy-core.admin")) return;
         if (AntiRelog.isInPvp(player)) {
             player.setHealth(0);
-            Bukkit.broadcast(GY.getMsg().getGYString("Игрок &#30578C" + player.getName() + "&f покинул игру, во время боя."), "");
+            Bukkit.broadcast(GY.msg.getGYString("Игрок &#30578C" + player.getName() + "&f покинул игру, во время боя."), "");
         }
     }
 
@@ -89,7 +89,7 @@ public class AntiRelogEvent implements Listener {
 
         if (WHITELIST.stream().noneMatch(cmd::equalsIgnoreCase)) {
             e.setCancelled(true);
-            GY.getMsg().sendMessage(player, "Команды запрещены во время боя.");
+            GY.msg.sendMessage(player, "Команды запрещены во время боя.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
         }
     }
@@ -115,7 +115,7 @@ public class AntiRelogEvent implements Listener {
         if (lastUse != null && now < (lastUse + delayMs)) {
             e.setCancelled(true);
             long remainMs = (lastUse + delayMs) - now;
-            GY.getMsg().sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
+            GY.msg.sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
             return;
         }
@@ -149,7 +149,7 @@ public class AntiRelogEvent implements Listener {
         if (lastUse != null && now < (lastUse + delayMs)) {
             e.setCancelled(true);
             long remainMs = (lastUse + delayMs) - now;
-            GY.getMsg().sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
+            GY.msg.sendMessage(p, "Задержка: &#30578C" + MathUtil.formatTime(remainMs));
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0.5f);
             return;
         }

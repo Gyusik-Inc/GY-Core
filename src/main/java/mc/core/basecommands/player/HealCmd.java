@@ -23,13 +23,13 @@ public class HealCmd implements BaseCommand {
 
         if (args.length > 0) {
             if (!player.hasPermission("gy-core.heal.others")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
 
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
         }
@@ -43,10 +43,10 @@ public class HealCmd implements BaseCommand {
         target.setSaturation(20.0f);
 
         if (target == player) {
-            GY.getMsg().sendMessage(player, "Вы исцелены.");
+            GY.msg.sendMessage(player, "Вы исцелены.");
         } else {
-            GY.getMsg().sendMessage(player, "Игрок &#30578C" + target.getName() + "&f исцелен.");
-            GY.getMsg().sendMessage(target, "Вы исцелены.");
+            GY.msg.sendMessage(player, "Игрок &#30578C" + target.getName() + "&f исцелен.");
+            GY.msg.sendMessage(target, "Вы исцелены.");
         }
 
         return true;

@@ -23,13 +23,13 @@ public class FeedCmd implements BaseCommand {
 
         if (args.length > 0) {
             if (!player.hasPermission("gy-core.heal.admin")) {
-                GY.getMsg().sendPermissionMessage(player);
+                GY.msg.sendPermissionMessage(player);
                 return true;
             }
 
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                GY.getMsg().sendUnknownPlayerMessage(sender, args[0]);
+                GY.msg.sendUnknownPlayerMessage(sender, args[0]);
                 return true;
             }
         }
@@ -38,10 +38,10 @@ public class FeedCmd implements BaseCommand {
         target.setSaturation(20.0f);
 
         if (target == player) {
-            GY.getMsg().sendMessage(player, "Голод восстановлен.");
+            GY.msg.sendMessage(player, "Голод восстановлен.");
         } else {
-            GY.getMsg().sendMessage(player, "Голод для &#30578C" + target.getName() + "&f восстановлен.");
-            GY.getMsg().sendMessage(target, "Голод восстановлен.");
+            GY.msg.sendMessage(player, "Голод для &#30578C" + target.getName() + "&f восстановлен.");
+            GY.msg.sendMessage(target, "Голод восстановлен.");
         }
 
         return true;

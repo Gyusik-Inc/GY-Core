@@ -18,7 +18,7 @@ public class DelSpawnCmd implements BaseCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
 
         if (SpawnData.getSpawn() == null) {
-            GY.getMsg().sendMessage(sender, "Спавн не найден.");
+            GY.msg.sendMessage(sender, "Спавн не найден.");
             if (sender instanceof Player player) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             }
@@ -26,7 +26,7 @@ public class DelSpawnCmd implements BaseCommand {
         }
 
         SpawnData.deleteSpawn();
-        GY.getMsg().sendMessage(sender, "Точка &#30578Cспавна &fуспешно удалена.");
+        GY.msg.sendMessage(sender, "Точка &#30578Cспавна &fуспешно удалена.");
         if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         }

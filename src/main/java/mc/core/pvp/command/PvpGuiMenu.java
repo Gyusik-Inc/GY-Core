@@ -56,7 +56,7 @@ public class PvpGuiMenu {
 
     private static ItemStack barrierExit() {
         ItemStack b = BARRIER.clone();
-        b.editMeta(m -> m.setDisplayName(GY.getMsg().colorize("&cВыйти из очереди")));
+        b.editMeta(m -> m.setDisplayName(MessageUtil.colorize("&cВыйти из очереди")));
         hideAll(b);
         return b;
     }
@@ -73,11 +73,11 @@ public class PvpGuiMenu {
     private static ItemStack info() {
         ItemStack item = new ItemStack(Material.PAPER);
         item.editMeta(m -> {
-            m.setDisplayName(GY.getMsg().colorize("&#30578C&nИнформация:"));
+            m.setDisplayName(MessageUtil.colorize("&#30578C&nИнформация:"));
             m.setLore(List.of(
                     " ",
-                    GY.getMsg().colorize("&7☁ &7Обычная: &7" + PvpCmd.getPvpQueueSize()),
-                    GY.getMsg().colorize("&#30578C★ &#B1B7BEЭлитная: &#30578C" + PvpCmd.getGearQueueSize()),
+                    MessageUtil.colorize("&7☁ &7Обычная: &7" + PvpCmd.getPvpQueueSize()),
+                    MessageUtil.colorize("&#30578C★ &#B1B7BEЭлитная: &#30578C" + PvpCmd.getGearQueueSize()),
                     " "
             ));
         });
@@ -88,11 +88,11 @@ public class PvpGuiMenu {
     private static ItemStack noArmor() {
         ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         item.editMeta(m -> {
-            m.setDisplayName(GY.getMsg().colorize("&cНевозможно начать поиск"));
+            m.setDisplayName(MessageUtil.colorize("&cНевозможно начать поиск"));
             m.setLore(Arrays.asList(
                     "",
-                    GY.getMsg().colorize(" &7Ваше снаряжение &cне подходит "),
-                    GY.getMsg().colorize(" &7для &#B1B7BE&nэлитного&7 подбора. "),
+                    MessageUtil.colorize(" &7Ваше снаряжение &cне подходит "),
+                    MessageUtil.colorize(" &7для &#B1B7BE&nэлитного&7 подбора. "),
                     ""
             ));
         });
@@ -103,7 +103,7 @@ public class PvpGuiMenu {
     private static void setSlots(Inventory inv, List<Integer> slots, Material mat, String name) {
         ItemStack item = new ItemStack(mat);
         item.editMeta(m -> {
-            m.setDisplayName(GY.getMsg().colorize(name));
+            m.setDisplayName(MessageUtil.colorize(name));
             m.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         });
         slots.forEach(s -> inv.setItem(s, item));
@@ -113,13 +113,13 @@ public class PvpGuiMenu {
     private static ItemStack sword() {
         ItemStack s = new ItemStack(Material.FIRE_CHARGE);
         s.editMeta(m -> {
-            m.setDisplayName(GY.getMsg().colorize("&#30578CВойти в очередь"));
+            m.setDisplayName(MessageUtil.colorize("&#30578CВойти в очередь"));
             m.setLore(List.of(
                     "",
-                    GY.getMsg().colorize("  &7Обычная очередь, без &#30578Cсортировки "),
-                    GY.getMsg().colorize("  &7игроков по &#30578Cснаряжению. "),
+                    MessageUtil.colorize("  &7Обычная очередь, без &#30578Cсортировки "),
+                    MessageUtil.colorize("  &7игроков по &#30578Cснаряжению. "),
                     "",
-                    GY.getMsg().colorize(" &#30578C➥ Нажмите, &fчтобы войти."),
+                    MessageUtil.colorize(" &#30578C➥ Нажмите, &fчтобы войти."),
                     ""));
             m.addEnchant(Enchantment.SHARPNESS, 1, true);
             m.addItemFlags(ItemFlag.values());
@@ -129,7 +129,7 @@ public class PvpGuiMenu {
 
     private static ItemStack barrier() {
         ItemStack b = new ItemStack(Material.BARRIER);
-        b.editMeta(m -> m.setDisplayName(GY.getMsg().colorize("&cВыйти из очереди")));
+        b.editMeta(m -> m.setDisplayName(MessageUtil.colorize("&cВыйти из очереди")));
         hideAll(b);
         return b;
     }
@@ -137,14 +137,14 @@ public class PvpGuiMenu {
     private static ItemStack gear() {
         ItemStack c = new ItemStack(Material.AMETHYST_SHARD);
         c.editMeta(m -> {
-            m.setDisplayName(GY.getMsg().colorize("&#B1B7BE☄ &nЭлитная очередь"));
+            m.setDisplayName(MessageUtil.colorize("&#B1B7BE☄ &nЭлитная очередь"));
             m.setLore(List.of(
                     "",
-                    GY.getMsg().colorize("  &7Особенность &#B1B7BEэлитной &7очереди, заключается "),
-                    GY.getMsg().colorize("  &7в том, что в неё могут &#B1B7BEвступить&7 только игроки,"),
-                    GY.getMsg().colorize("  &7с &#B1B7BEалмазной &7бронёй и выше "),
+                    MessageUtil.colorize("  &7Особенность &#B1B7BEэлитной &7очереди, заключается "),
+                    MessageUtil.colorize("  &7в том, что в неё могут &#B1B7BEвступить&7 только игроки,"),
+                    MessageUtil.colorize("  &7с &#B1B7BEалмазной &7бронёй и выше "),
                     "",
-                    GY.getMsg().colorize(" &#30578C➥ Нажмите, &fчтобы войти."),
+                    MessageUtil.colorize(" &#30578C➥ Нажмите, &fчтобы войти."),
                     ""
             ));
             m.addEnchant(Enchantment.PROTECTION, 1, true);

@@ -23,7 +23,7 @@ public class SetSpawnCmd implements BaseCommand {
 
         SpawnData.setSpawn(player.getLocation());
         Location loc = SpawnData.getSpawn();
-        GY.getMsg().sendMessage(player,
+        GY.msg.sendMessage(player,
                 "Спавн установлен. &#30578CЛокация: &7"
                         + loc.getBlockX() + ", "
                         + loc.getBlockY() + ", "

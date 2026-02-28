@@ -32,7 +32,7 @@ public class DayCmd implements BaseCommand {
 
         TimeUtil.smoothTimeTransition(worlds, 1000, 200);
 
-        GY.getMsg().sendMessage(sender, "Начинаю смену времени на &#30578Cдень.");
+        GY.msg.sendMessage(sender, "Начинаю смену времени на &#30578Cдень.");
         if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
         }
