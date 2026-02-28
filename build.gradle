@@ -26,7 +26,7 @@ dependencies {
     compileOnly files('libs/GY-Economic-1.0.jar')
     compileOnly files('libs/placeholderapi-2.11.17.jar')
     compileOnly "com.viaversion:viaversion-api:5.7.1"
-    implementation 'com.github.Gyusik-Inc:GY-API:1.0.7'
+    implementation 'com.github.Gyusik-Inc:GY-API:1.0.9'
     compileOnly 'net.luckperms:api:5.4'
 }
 
@@ -44,10 +44,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-}
-
-jar {
-    destinationDirectory = file('C:/GT/Server 1.21.4/plugins')
 }
 
 tasks.withType(JavaCompile).configureEach {
