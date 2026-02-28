@@ -125,7 +125,16 @@ public class Events implements Listener {
     private final Set<Entity> activeDisplays = ConcurrentHashMap.newKeySet();
 
     private void spawnDamageText(Entity target, double damage, Player damager) {
+        mc.core.GY.refreshPlayerData(damager);
+        if (!mc.core.GY.getPlayerData(damager).isDamageTextEnabled()) return;
+
+        if (target instanceof Player targetPlayer) {
+            mc.core.GY.refreshPlayerData(targetPlayer);
+            if (!mc.core.GY.getPlayerData(targetPlayer).isDamageTextEnabled()) return;
+        }
+
         boolean useTextDisplay = VersionCache.supportsTextDisplay(damager);
+
         int side = Math.random() < 0.5 ? -1 : 1;
         Vector lookDir = damager.getLocation()
                 .getDirection()
@@ -135,6 +144,7 @@ public class Events implements Listener {
         Vector perp = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize().multiply(side * 0.7);
         double heightOffset = target.getHeight() + (Math.random() - 0.5) * 0.4;
         Location spawnLoc = target.getLocation().clone().add(perp).add(0, heightOffset, 0);
+
         double currentHealth = (target instanceof LivingEntity le) ? le.getHealth() : 20.0;
         double healthPercent = (damage / currentHealth) * 100.0;
         String color;
@@ -148,31 +158,27 @@ public class Events implements Listener {
 
         String formattedDamage = String.format("%.1f", damage);
         String text = color + "-" + formattedDamage;
-        Entity displayEntity;
-        if (useTextDisplay) {
-            displayEntity =
-                    target.getWorld().spawn(
-                            spawnLoc,
-                            TextDisplay.class,
-                            d -> {
-                                d.setText(text);
-                                d.setBillboard(Display.Billboard.CENTER);
-                                d.setAlignment(TextDisplay.TextAlignment.CENTER);
-                                d.setShadowed(true);
-                                d.setGlowing(true);
-                                d.setPersistent(false);
-                                d.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
-                                d.setSeeThrough(true);
-                                d.setDisplayWidth(1.2f);
-                                d.setDisplayHeight(0.3f);
-                            }
-                    );
 
+        Entity displayEntity;
+
+        if (useTextDisplay) {
+            String finalText = text;
+            displayEntity = target.getWorld().spawn(spawnLoc, TextDisplay.class, d -> {
+                d.setText(finalText);
+                d.setBillboard(Display.Billboard.CENTER);
+                d.setAlignment(TextDisplay.TextAlignment.CENTER);
+                d.setShadowed(true);
+                d.setGlowing(true);
+                d.setPersistent(false);
+                d.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
+                d.setSeeThrough(true);
+                d.setDisplayWidth(1.2f);
+                d.setDisplayHeight(0.3f);
+                d.setInvisible(true);
+            });
         } else {
-            Location farLoc = spawnLoc.clone().add(0, 200, 0);
-            displayEntity = target.getWorld().spawnEntity(farLoc, EntityType.ARMOR_STAND);
+            displayEntity = target.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
             ArmorStand as = (ArmorStand) displayEntity;
-            as.setVisible(false);
             as.setCustomName(text);
             as.setCustomNameVisible(true);
             as.setMarker(true);
@@ -181,15 +187,20 @@ public class Events implements Listener {
             as.setSmall(true);
             as.setCollidable(false);
             as.setSilent(true);
-            as.teleport(spawnLoc);
+            as.setVisible(false);
+            as.setInvisible(true);
         }
+
+        displayEntity.setGravity(false);
+        displayEntity.setInvulnerable(true);
 
         activeDisplays.add(displayEntity);
         Bukkit.getScheduler().runTaskLater(GY.getInstance(), () -> {
-                    if (!displayEntity.isDead()) {
-                        displayEntity.remove();
-                    }
-                    activeDisplays.remove(displayEntity); }, 30L);
+            if (!displayEntity.isDead()) {
+                displayEntity.remove();
+            }
+            activeDisplays.remove(displayEntity);
+        }, 30L);
     }
 
 
